@@ -130,8 +130,8 @@ CAPTION "About GxSingleCam"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "GxSingleCam Version 1.0 ",0 ,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2015",0 ,42,26,114,8
+    LTEXT           "GxSingleCam Version 1.0 ",0,42,14,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2015",0,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
@@ -145,8 +145,8 @@ BEGIN
     PUSHBUTTON      "Close Device",IDC_BTN_CLOSE_DEVICE,451,17,76,14
     PUSHBUTTON      "Acquisition Start",IDC_BTN_START_SNAP,346,41,76,14
     PUSHBUTTON      "Acquisition Stop",IDC_BTN_STOP_SNAP,451,41,76,14
-    CONTROL         "Save as BMP",0 ,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,75,60,10
-    CONTROL         "", 0 ,"Static",SS_BLACKFRAME,7,7,329,332
+    CONTROL         "Save as BMP",0,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,75,60,10
+    CONTROL         "",IDC_SHOW_PICTURE_STATIC,"Static",SS_BLACKFRAME,7,7,329,332
     GROUPBOX        "Device Control",IDC_STATIC,338,7,197,53
     GROUPBOX        "Image Saving",IDC_STATIC,338,67,197,48
     LTEXT           "(The acquired images will be saved in the foler named ""GxSingleCam"" which is in the same path with the application of GxSingleCam.exe.)",IDC_STATIC,355,85,172,24
@@ -189,17 +189,6 @@ IDD_GXSINGLECAM_DIALOG AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-/*STRINGTABLE
-BEGIN
-    IDS_ABOUTBOX            "About GxSingleCam(&A)..."
-END*/
 
 #endif    // Inglese (Stati Uniti) resources
 /////////////////////////////////////////////////////////////////////////////

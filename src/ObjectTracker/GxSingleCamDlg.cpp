@@ -66,18 +66,8 @@ BEGIN_MESSAGE_MAP(CGxSingleCamDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_CLOSE_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnCloseDevice)
 	ON_BN_CLICKED(IDC_BTN_START_SNAP, &CGxSingleCamDlg::OnBnClickedBtnStartSnap)
 	ON_BN_CLICKED(IDC_BTN_STOP_SNAP, &CGxSingleCamDlg::OnBnClickedBtnStopSnap)
-	/*ON_CBN_SELCHANGE(IDC_COMBO_TRIGGER_MODE, &CGxSingleCamDlg::OnCbnSelchangeComboTriggerMode)
-	ON_CBN_SELCHANGE(IDC_COMBO_TRIGGER_SOURCE, &CGxSingleCamDlg::OnCbnSelchangeComboTriggerSource)
-	ON_CBN_SELCHANGE(IDC_COMBO_TRIGGER_ACTIVE, &CGxSingleCamDlg::OnCbnSelchangeComboTriggerActive)
-	ON_BN_CLICKED(IDC_CHECK_SAVE_BMP, &CGxSingleCamDlg::OnBnClickedCheckSaveBmp)*/
 	ON_WM_CLOSE()
-	/*ON_CBN_SELCHANGE(IDC_COMBO_BALANCE_WHITE_AUTO, &CGxSingleCamDlg::OnCbnSelchangeComboBalanceWhiteAuto)
-	ON_CBN_SELCHANGE(IDC_COMBO_BALANCE_WHITE_SELECT, &CGxSingleCamDlg::OnCbnSelchangeComboBalanceWhiteSelect)
-	ON_BN_CLICKED(IDC_BTN_SOFTTRIGGER, &CGxSingleCamDlg::OnBnClickedBtnSofttrigger)
-	ON_EN_KILLFOCUS(IDC_EDIT_GAIN, &CGxSingleCamDlg::OnEnKillfocusEditGain)
-	ON_EN_KILLFOCUS(IDC_EDIT_BALANCE_WHITE_SERISE, &CGxSingleCamDlg::OnEnKillfocusEditBalanceWhiteSerise)*/
 	ON_WM_TIMER()
-	//ON_EN_KILLFOCUS(IDC_EDIT_SHUTTER, &CGxSingleCamDlg::OnEnKillfocusEditShutter)
 
 END_MESSAGE_MAP()
 
@@ -268,8 +258,6 @@ void CGxSingleCamDlg::OnBnClickedBtnOpenDevice()
 		//initialize device param
 		__InitParam();
 
-		//Initialize UI
-		__InitUI();
 		m_bIsOpen = true;
 
 		//Update UI
@@ -383,58 +371,6 @@ void CGxSingleCamDlg::__InitParam()
 }
 
 //---------------------------------------------------------------------------------
-/**
-\brief   Initialize UI
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
-void CGxSingleCamDlg::__InitUI()
-{
-	//Check whether the device support color filter
-	if (m_bColorFilter)
-	{
-		//Initialize combox widget
-		/*m_nTriggerModeOld        = __InitComBox("TriggerMode",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_MODE),
-			                                    m_bTriggerMode);
-		m_nTriggerSourceOld      = __InitComBox("TriggerSource",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_SOURCE),
-			                                     m_bTriggerSource);
-		m_nTriggerActiveOld      = __InitComBox("TriggerActivation",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_ACTIVE),
-			                                     m_bTriggerActive);
-		m_nBanlanceWhiteRatioOld = __InitComBox("BalanceRatioSelector",
-			                                     (CComboBox*)GetDlgItem(IDC_COMBO_BALANCE_WHITE_SELECT),
-			                                     m_bBalanceWhiteRatioSelect);
-		m_nBalanceWhiteAutoOld   = __InitComBox("BalanceWhiteAuto",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_BALANCE_WHITE_AUTO),
-			                                     m_bBalanceWhiteAuto);*/
-	}
-	else
-	{
-		//Initialize combox widget
-		/*m_nTriggerModeOld        = __InitComBox("TriggerMode",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_MODE),
-			                                    m_bTriggerMode);
-		m_nTriggerSourceOld      = __InitComBox("TriggerSource",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_SOURCE),
-			                                    m_bTriggerSource);
-		m_nTriggerActiveOld      = __InitComBox("TriggerActivation",
-			                                    (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_ACTIVE),
-			                                    m_bTriggerActive);*/
-	}
-	
-	//Initialize ExposureTime Widget
-	__InitShutterTime();
-	
-	//Initialize Gain Widget
-	__InitGain();
-
-	//Initialize white balance ratio Widget
-	__InitBalanceWhiteRatio();
-
-}
 
 //---------------------------------------------------------------------------------
 /**
@@ -482,112 +418,6 @@ int CGxSingleCamDlg::__InitComBox(gxstring strName, CComboBox* pComboBox, bool b
 
 //---------------------------------------------------------------------------------
 /**
-\brief   Initialize ExposureTime Widget
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
-void CGxSingleCamDlg::__InitShutterTime()
-{
-	CStatic* pStcShutterShow;// = (CStatic*)GetDlgItem(IDC_STATIC_SHUTTER_TIME);
-	CEdit* pEditShutterVal;// = (CEdit*)GetDlgItem(IDC_EDIT_SHUTTER);
-
-	//Check the pointer of widget is null or not
-	if (pEditShutterVal == NULL || pStcShutterShow == NULL)
-	{
-		return;
-	}
-
-	CString   strShutterTime      = "";       ///< Current exposure time value
-	gxstring  strShutterUnit      = "";       ///< exposure time unit
-
-	//Get the current value of exposure time
-	m_dEditShutterValue   = m_objFeatureControlPtr->GetFloatFeature("ExposureTime")->GetValue();
-
-	//Get the unit of exposure time
-    strShutterUnit = m_objFeatureControlPtr->GetFloatFeature("ExposureTime")->GetUnit();
-	strShutterTime.Format("ExposureTime(%.4f~%.4f)%s",m_dShutterValueMin,m_dShutterValueMax,strShutterUnit.c_str());
-	pStcShutterShow->SetWindowText(strShutterTime);
-	
-	UpdateData(FALSE);
-}
-
-//---------------------------------------------------------------------------------
-/**
-\brief   Initialize Gain Widget
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
-void CGxSingleCamDlg::__InitGain()
-{
-	CStatic* pStcGainShow;// = (CStatic*)GetDlgItem(IDC_STATIC_GAIN);
-	CEdit* pEditGainVal;// = (CEdit*)GetDlgItem(IDC_EDIT_GAIN);
-
-	//Check the pointer of widget is null or not
-	if (pEditGainVal == NULL || pStcGainShow == NULL)
-	{
-		return;
-	}
-
-	CString  strGain      = "";     ///< Current gain value
-	string strGainUnit    = "";     ///< the unit of gain
-
-	//Get the current value of gain
-	m_dEditGainValue = m_objFeatureControlPtr->GetFloatFeature("Gain")->GetValue();
-	
-	//Get the unit of gain
-	strGainUnit = m_objFeatureControlPtr->GetFloatFeature("Gain")->GetUnit().c_str();
-	strGain.Format("Gain(%.4f~%.4f)%s",m_dGainValueMin,m_dGainValueMax,strGainUnit.c_str());
-	pStcGainShow->SetWindowText(strGain);
-	
-	UpdateData(FALSE);
-
-}
-
-//---------------------------------------------------------------------------------
-/**
-\brief   Initialize white balance ratio Widget
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
-void CGxSingleCamDlg::__InitBalanceWhiteRatio()
-{
-	//Check whether the device support color filter
-	if (!m_bColorFilter)
-	{
-		return;
-	}
-
-	CStatic* pStcBalanceRatioShow;// = (CStatic*)GetDlgItem(IDC_STATIC_BALANCE_RATIO);
-	CEdit* pEditBalanceRatioVal;// = (CEdit*)GetDlgItem(IDC_EDIT_BALANCE_WHITE_SERISE);
-
-	//Check the pointer of widget is null or not
-	if (pEditBalanceRatioVal == NULL || pStcBalanceRatioShow == NULL)
-	{
-		return;
-	}
-
-	CString strBalanceRatio      = "";        ///< Current white balance ratio value
-	string  strBalanceRatioUnit  = "";        ///< The unit of white balance ratio
-
-	//Get the value of white balance ratio
-	m_dEditBalanceRatioValue = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetValue();
-
-	//Get the unit of white balance ratio
-	strBalanceRatioUnit = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetUnit().c_str();
-
-	//Update the content of widget
-	strBalanceRatio.Format("AutoWhiteBalanceRatio(%.4f~%.4f)%s",m_dBalanceWhiteRatioMin,
-		                    m_dBalanceWhiteRatioMax,strBalanceRatioUnit.c_str());
-    pStcBalanceRatioShow->SetWindowText(strBalanceRatio);
-	
-	UpdateData(FALSE);
-
-}
-//---------------------------------------------------------------------------------
-/**
 \brief   Update UI
 
 \return  void
@@ -599,26 +429,6 @@ void CGxSingleCamDlg::__UpdateUI()
 	GetDlgItem(IDC_BTN_CLOSE_DEVICE)->EnableWindow(m_bIsOpen);
 	GetDlgItem(IDC_BTN_START_SNAP)->EnableWindow(m_bIsOpen && !m_bIsSnap);
 	GetDlgItem(IDC_BTN_STOP_SNAP)->EnableWindow(m_bIsOpen && m_bIsSnap);
-	/*GetDlgItem(IDC_COMBO_TRIGGER_MODE)->EnableWindow(m_bIsOpen && m_bTriggerMode);
-	GetDlgItem(IDC_COMBO_TRIGGER_SOURCE)->EnableWindow(m_bIsOpen && m_bTriggerSource);
-	GetDlgItem(IDC_BTN_SOFTTRIGGER)->EnableWindow(m_bIsOpen);
-	GetDlgItem(IDC_COMBO_TRIGGER_ACTIVE)->EnableWindow(m_bIsOpen && m_bTriggerActive);
-	GetDlgItem(IDC_EDIT_SHUTTER)->EnableWindow(m_bIsOpen);
-	GetDlgItem(IDC_EDIT_GAIN)->EnableWindow(m_bIsOpen);
-	GetDlgItem(IDC_CHECK_SAVE_BMP)->EnableWindow(m_bIsOpen);
-	GetDlgItem(IDC_COMBO_BALANCE_WHITE_AUTO)->EnableWindow(m_bIsOpen 
-		                                                   && m_bBalanceWhiteAuto
-														   && m_bColorFilter);
-
-	GetDlgItem(IDC_COMBO_BALANCE_WHITE_SELECT)->EnableWindow(m_bIsOpen 
-		                                                     && m_bBalanceWhiteRatioSelect
-															 && m_bColorFilter);
-
-	GetDlgItem(IDC_EDIT_BALANCE_WHITE_SERISE)->EnableWindow(m_bIsOpen
-		                                                   && m_strBalanceWhiteAutoMode == "Off"
-		                                                   && m_bBalanceWhiteRatioSelect
-														   && m_bColorFilter);*/
-
 
 }
 

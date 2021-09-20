@@ -115,17 +115,6 @@ private:
 	/// Initialize combox
 	int __InitComBox(gxstring strName, CComboBox* pComboBox, bool bIsImplemented);
 
-	/// Initialize ExposureTime Widget
-	void __InitShutterTime();
-
-	/// Initialize Gain Widget
-	void __InitGain();
-
-	/// Initialize white balance ratio Widget
-	void __InitBalanceWhiteRatio();
-
-	/// Initialize UI
-	void __InitUI();
 
 	/// Update UI
 	void __UpdateUI();	

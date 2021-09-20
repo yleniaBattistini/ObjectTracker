@@ -13,6 +13,8 @@
 #define IDC_BTN_STOP_SNAP               1014
 #define IDC_BTN_START_SNAP              1015
 #define IDC_BTN_OPEN_DEVICE             1017
+#define IDC_STATIC_PRODUCTVERSION       1021
+#define IDC_STATIC_LEGALCOPYRIGHT       1022
 
 // Next default values for new objects
 // 
