@@ -10,8 +10,8 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_STATIC_PRODUCTVERSION, m_strStaticProductVersion);
-	DDX_Text(pDX, IDC_STATIC_LEGALCOPYRIGHT, m_strStaticLegalCopyright);
+	//DDX_Text(pDX, IDC_STATIC_PRODUCTVERSION, m_strStaticProductVersion);
+	//DDX_Text(pDX, IDC_STATIC_LEGALCOPYRIGHT, m_strStaticLegalCopyright);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
