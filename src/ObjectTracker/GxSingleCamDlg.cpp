@@ -1,11 +1,7 @@
-// GxSingleCamDlg.cpp : Defines the class behaviors for the application.
-//
-
 #include "stdafx.h"
 #include "GxSingleCam.h"
 #include "GxSingleCamDlg.h"
 #include "FileVersion.h"
-#include "AboutDlg.h"
 
 using namespace std;
 
@@ -13,55 +9,22 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
-// CGxSingleCamDlg Dialog
-CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent /*=NULL*/)
+CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent)
 	: CDialog(CGxSingleCamDlg::IDD, pParent)
 	, m_bIsOpen(false)
 	, m_bIsSnap(false)
-	, m_bColorFilter(false)
-	, m_bTriggerMode(false)
-	, m_bTriggerSource(false)
-	, m_bTriggerActive(false)
-	, m_bBalanceWhiteAuto(false)
-	, m_bBalanceWhiteRatioSelect(false)
 	, m_strSavePath("")
-	, m_strBalanceWhiteAutoMode("Off")
 	, m_pWnd(NULL)
     , m_pSampleCaptureEventHandle(NULL)
 	, m_pBitmap(NULL)
 	, m_bCheckSaveBmp(FALSE)
-	, m_dEditShutterValue(0)
-	, m_dEditGainValue(0)
-	, m_dEditBalanceRatioValue(0)
-	, m_nTriggerModeOld(0)
-	, m_nTriggerSourceOld(0)
-	, m_nTriggerActiveOld(0)
-	, m_nBalanceWhiteAutoOld(0)
-	, m_nBanlanceWhiteRatioOld(0)
-	, m_dShutterValueMax(0)
-	, m_dShutterValueMin(0)
-	, m_dGainValueMax(0)
-	, m_dGainValueMin(0)
-	, m_dBalanceWhiteRatioMax(0)
-	, m_dBalanceWhiteRatioMin(0)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-}
-
-void CGxSingleCamDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	/*DDX_Check(pDX, IDC_CHECK_SAVE_BMP, m_bCheckSaveBmp);
-	DDX_Text(pDX, IDC_EDIT_SHUTTER, m_dEditShutterValue);
-	DDX_Text(pDX, IDC_EDIT_GAIN, m_dEditGainValue);
-	DDX_Text(pDX, IDC_EDIT_BALANCE_WHITE_SERISE, m_dEditBalanceRatioValue);*/
 }
 
 BEGIN_MESSAGE_MAP(CGxSingleCamDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BTN_OPEN_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnOpenDevice)
 	ON_BN_CLICKED(IDC_BTN_CLOSE_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnCloseDevice)
 	ON_BN_CLICKED(IDC_BTN_START_SNAP, &CGxSingleCamDlg::OnBnClickedBtnStartSnap)
@@ -75,29 +38,6 @@ END_MESSAGE_MAP()
 BOOL CGxSingleCamDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	// Add "About..." menu item to system menu.
-
-	// IDM_ABOUTBOX must be in the system command range.
-	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
-	ASSERT(IDM_ABOUTBOX < 0xF000);
-
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
-	if (pSysMenu != NULL)
-	{
-		CString strAboutMenu;
-		//strAboutMenu.LoadString(IDS_ABOUTBOX);
-		if (!strAboutMenu.IsEmpty())
-		{
-			pSysMenu->AppendMenu(MF_SEPARATOR);
-			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
-		}
-	}
-
-	// Set the icon for this dialog.  The framework does this automatically
-	//  when the application's main window is not a dialog
-	SetIcon(m_hIcon, TRUE);			// Set big icon
-	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
 	try
@@ -120,10 +60,6 @@ BOOL CGxSingleCamDlg::OnInitDialog()
 		m_strSavePath = strSavePath.substr(0,nPos);
 		m_strSavePath = m_strSavePath +"\\GxSingleCamImages";
 
-		//Setting a timer
-		SetTimer(0,1000,NULL);
-
-		//Update UI
 		__UpdateUI();
 	}
 	catch (CGalaxyException& e)
@@ -154,63 +90,8 @@ BOOL CGxSingleCamDlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-void CGxSingleCamDlg::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
-	{
-		char strFileName[MAX_PATH] = {'\0'};
-		GetModuleFileName(NULL, strFileName, MAX_PATH);
-		CFileVersion fv(strFileName);
-		CAboutDlg dlgAbout;
-		dlgAbout.m_strStaticProductVersion = _T("Version: ") + fv.GetProductVersion();
-		dlgAbout.m_strStaticLegalCopyright = fv.GetLegalCopyright();
-		dlgAbout.DoModal();
-	}
-	else
-	{
-		CDialog::OnSysCommand(nID, lParam);
-	}
-}
-
-// If you add a minimize button to your dialog, you will need the code below
-//  to draw the icon.  For MFC applications using the document/view model,
-//  this is automatically done for you by the framework.
-
-void CGxSingleCamDlg::OnPaint()
-{
-	if (IsIconic())
-	{
-		CPaintDC dc(this); // device context for painting
-
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-		// Make the icon in the center of client rectangle
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// Draw the icon
-		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
-		CDialog::OnPaint();
-	}
-}
-
-// The system calls this function to obtain the cursor to display while the user drags
-//  the minimized window.
-HCURSOR CGxSingleCamDlg::OnQueryDragIcon()
-{
-	return static_cast<HCURSOR>(m_hIcon);
-}
-
 void CGxSingleCamDlg::OnBnClickedBtnOpenDevice()
 {
-	// TODO: Add your control notification handler code here
 	bool bIsDeviceOpen = false;         ///< The flag indicates whether the device has been opened.
 	bool bIsStreamOpen = false;         ///< The flag indicates whether the stream has been opened.
 
@@ -255,12 +136,10 @@ void CGxSingleCamDlg::OnBnClickedBtnOpenDevice()
 			throw exception("The device has been opend doesn't has stream!");
 		}
 
-		//initialize device param
 		__InitParam();
 
 		m_bIsOpen = true;
 
-		//Update UI
 		__UpdateUI();
 	}
 	catch (CGalaxyException& e)
@@ -311,118 +190,12 @@ void CGxSingleCamDlg::OnBnClickedBtnOpenDevice()
 	}
 }
 
-//---------------------------------------------------------------------------------
-/**
-\brief   initialize device param
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
 void CGxSingleCamDlg::__InitParam()
 {
-	bool bBalanceWhiteAutoRead = false;         ///< The flag indicated whether auto white balance is available to read or not.
-
 	//Set the continuous frame acquisition mode
 	m_objFeatureControlPtr->GetEnumFeature("AcquisitionMode")->SetValue("Continuous");
-
-	//Check whether support selecting trigger mode
-	m_bTriggerMode = m_objFeatureControlPtr->IsImplemented("TriggerMode");
-	if (m_bTriggerMode)
-	{
-		//Set the TriggerMode off
-		m_objFeatureControlPtr->GetEnumFeature("TriggerMode")->SetValue("Off");
-	}
-
-	//Check whether support color filter
-	m_bColorFilter = m_objFeatureControlPtr->IsImplemented("PixelColorFilter");
-
-	//Check whether support selecting trigger source
-	m_bTriggerSource = m_objFeatureControlPtr->IsImplemented("TriggerSource");
-
-	//Check whether support selecting trigger activation
-	m_bTriggerActive = m_objFeatureControlPtr->IsImplemented("TriggerActivation");
-
-	//Check whether support auto white balance
-	m_bBalanceWhiteAuto = m_objFeatureControlPtr->IsImplemented("BalanceWhiteAuto");
-
-	//Get the flag whether auto white balance is available to read or not.
-	bBalanceWhiteAutoRead   = m_objFeatureControlPtr->IsReadable("BalanceWhiteAuto");
-
-	//If support auto white balance and is readable, get the value of auto white balance
-	if (m_bBalanceWhiteAuto)
-	{
-		if (bBalanceWhiteAutoRead)
-		{
-			m_strBalanceWhiteAutoMode = m_objFeatureControlPtr->GetEnumFeature("BalanceWhiteAuto")
-				                                              ->GetValue();
-		}
-	}
-
-	//Get the flag whether support white balance ratio selector or not.
-	m_bBalanceWhiteRatioSelect = m_objFeatureControlPtr->IsImplemented("BalanceRatioSelector");
-
-	//Get the max and min value for exposuer time , gain and white balance ratio
-	m_dShutterValueMax      = m_objFeatureControlPtr->GetFloatFeature("ExposureTime")->GetMax();
-	m_dShutterValueMin      = m_objFeatureControlPtr->GetFloatFeature("ExposureTime")->GetMin();
-	m_dGainValueMax         = m_objFeatureControlPtr->GetFloatFeature("Gain")->GetMax();
-	m_dGainValueMin         = m_objFeatureControlPtr->GetFloatFeature("Gain")->GetMin();
-	m_dBalanceWhiteRatioMax = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetMax();
-	m_dBalanceWhiteRatioMin = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetMin();
 }
 
-//---------------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------------
-/**
-\brief   Initialize combox
-\param   strName         [in]    function name
-\param   pComboBox       [in]    the pointer of combox widget
-\param   bIsImplemented  [in]    whether support the function on the emFeatureID variable behalf
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
-int CGxSingleCamDlg::__InitComBox(gxstring strName, CComboBox* pComboBox, bool bIsImplemented)
-{
-	if ((pComboBox == NULL) || (!bIsImplemented))
-	{
-		return -1;
-	}
-
-	int     nCurSel = 0;
-	string  strCurrentEnumList = "";                 // the current function of devoice
-	GxIAPICPP::gxstring_vector vectorEnumEntryList;  // the enumeration item list
-	CEnumFeaturePointer objEnumFeaturePtr = m_objFeatureControlPtr->GetEnumFeature(strName);
-
-	//Clear all content of the combox widget
-	pComboBox->ResetContent();
-
-	//Get the current value of strName
-	strCurrentEnumList = objEnumFeaturePtr->GetValue().c_str();
-
-	//Get the enumeration item list of th strName
-	vectorEnumEntryList = objEnumFeaturePtr->GetEnumEntryList();
-	for (uint32_t i = 0; i<vectorEnumEntryList.size(); i++)
-	{
-		string strEnumList = vectorEnumEntryList[i].c_str();
-		pComboBox->SetItemData(pComboBox->AddString(strEnumList.c_str()), i);
-		if (strCurrentEnumList == vectorEnumEntryList[i].c_str())
-		{
-			nCurSel = i;
-		}
-	}
-
-	pComboBox->SetCurSel(nCurSel);
-	return nCurSel;
-}
-
-//---------------------------------------------------------------------------------
-/**
-\brief   Update UI
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
 void CGxSingleCamDlg::__UpdateUI()
 {
 	GetDlgItem(IDC_BTN_OPEN_DEVICE)->EnableWindow(!m_bIsOpen);
@@ -434,7 +207,6 @@ void CGxSingleCamDlg::__UpdateUI()
 
 void CGxSingleCamDlg::OnBnClickedBtnCloseDevice()
 {
-	// TODO: Add your control notification handler code here
 	//lose focus
 	SetFocus();
 
@@ -495,7 +267,6 @@ void CGxSingleCamDlg::OnBnClickedBtnCloseDevice()
 
 void CGxSingleCamDlg::OnBnClickedBtnStartSnap()
 {
-	// TODO: Add your control notification handler code here
 	try
 	{
 		//Register the CaptureCallback function
@@ -525,7 +296,6 @@ void CGxSingleCamDlg::OnBnClickedBtnStartSnap()
 
 void CGxSingleCamDlg::OnBnClickedBtnStopSnap()
 {
-	// TODO: Add your control notification handler code here
 	try
 	{
 		//Send AcquisitionStop command 
@@ -553,221 +323,15 @@ void CGxSingleCamDlg::OnBnClickedBtnStopSnap()
 	}
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnSofttrigger()
-{
-	// TODO: Add your control notification handler code here
-	try
-	{
-		//Send TriggerSoftware command(It is valid in the status of opening trigger mode)
-		m_objFeatureControlPtr->GetCommandFeature("TriggerSoftware")->Execute();
-	}
-	catch (CGalaxyException& e)
-	{
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		MessageBox(e.what());
-		return;	
-	}
-}
-void CGxSingleCamDlg::OnCbnSelchangeComboTriggerMode()
-{
-	// TODO: Add your control notification handler code here
-	CComboBox* pCombo =NULL;
-	try
-	{
-		int       nCurSel           = 0;
-		gxstring  strCurrentText    = "";
-		CString   strCurrentContent = "";       ///< The current value of combox
-
-		//pCombo = (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_MODE);
-		nCurSel = pCombo->GetCurSel();
-		pCombo->GetLBText(nCurSel,strCurrentContent);
-		strCurrentText = strCurrentContent.GetBuffer(0);
-
-		//Set the value with combox to device
-		m_objFeatureControlPtr->GetEnumFeature("TriggerMode")->SetValue(strCurrentText);
-		m_nTriggerModeOld = nCurSel;
-	}
-	catch (CGalaxyException& e)
-	{
-		pCombo->SetCurSel(m_nTriggerModeOld);
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		pCombo->SetCurSel(m_nTriggerModeOld);
-		MessageBox(e.what());
-		return;	
-	}
-}
-
-void CGxSingleCamDlg::OnCbnSelchangeComboTriggerSource()
-{
-	// TODO: Add your control notification handler code here
-	CComboBox* pCombo =NULL;
-	try
-	{
-		int       nCurSel           = 0;
-		gxstring  strCurrentText    = "";
-		CString   strCurrentContent = "";       ///< The current value of combox
-
-		//pCombo = (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_SOURCE);
-		nCurSel = pCombo->GetCurSel();
-		pCombo->GetLBText(nCurSel,strCurrentContent);
-		strCurrentText = strCurrentContent.GetBuffer(0);
-
-		//Set the value with combox to device
-		m_objFeatureControlPtr->GetEnumFeature("TriggerSource")->SetValue(strCurrentText);
-		m_nTriggerSourceOld = nCurSel;
-	}
-	catch (CGalaxyException& e)
-	{
-		pCombo->SetCurSel(m_nTriggerSourceOld);
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		pCombo->SetCurSel(m_nTriggerSourceOld);
-		MessageBox(e.what());
-		return;	
-	}
-}
-
-void CGxSingleCamDlg::OnCbnSelchangeComboTriggerActive()
-{
-	// TODO: Add your control notification handler code here
-	CComboBox* pCombo =NULL;
-	try
-	{
-		int       nCurSel           = 0;
-		gxstring  strCurrentText    = "";
-		CString   strCurrentContent = "";       ///< The current value of combox
-
-		//pCombo = (CComboBox*)GetDlgItem(IDC_COMBO_TRIGGER_ACTIVE);
-		nCurSel = pCombo->GetCurSel();
-		pCombo->GetLBText(nCurSel,strCurrentContent);
-		strCurrentText = strCurrentContent.GetBuffer(0);
-
-		//Set the value with combox to device
-		m_objFeatureControlPtr->GetEnumFeature("TriggerActivation")->SetValue(strCurrentText);
-		m_nTriggerActiveOld = nCurSel;
-	}
-	catch (CGalaxyException& e)
-	{
-		pCombo->SetCurSel(m_nTriggerActiveOld);
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		pCombo->SetCurSel(m_nTriggerActiveOld);
-		MessageBox(e.what());
-		return;	
-	}
-}
-
-void CGxSingleCamDlg::OnCbnSelchangeComboBalanceWhiteAuto()
-{
-	// TODO: Add your control notification handler code here
-	CComboBox* pCombo =NULL;
-	try
-	{
-		int       nCurSel           = 0;
-		gxstring  strCurrentText    = "";
-		CString   strCurrentContent = "";      ///< The current value of combox
-
-		//pCombo = (CComboBox*)GetDlgItem(IDC_COMBO_BALANCE_WHITE_AUTO);
-		nCurSel = pCombo->GetCurSel();
-		pCombo->GetLBText(nCurSel,strCurrentContent);
-		strCurrentText = strCurrentContent.GetBuffer(0);
-
-		//Record the current value of auto white balance
-		m_strBalanceWhiteAutoMode = strCurrentText;
-
-		//Set the value with combox to device
-		m_objFeatureControlPtr->GetEnumFeature("BalanceWhiteAuto")->SetValue(strCurrentText);
-
-		if (strCurrentText == "Off")
-		{
-			//GetDlgItem(IDC_EDIT_BALANCE_WHITE_SERISE)->EnableWindow(TRUE);
-			m_dEditBalanceRatioValue = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetValue();
-			UpdateData(FALSE);
-		}
-		else
-		{
-			//GetDlgItem(IDC_EDIT_BALANCE_WHITE_SERISE)->EnableWindow(FALSE);
-		}
-
-		m_nBalanceWhiteAutoOld = nCurSel;
-	}
-	catch (CGalaxyException& e)
-	{
-		pCombo->SetCurSel(m_nBalanceWhiteAutoOld);
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		pCombo->SetCurSel(m_nBalanceWhiteAutoOld);
-		MessageBox(e.what());
-		return;	
-	}
-}
-
-void CGxSingleCamDlg::OnCbnSelchangeComboBalanceWhiteSelect()
-{
-	// TODO: Add your control notification handler code here
-	CComboBox* pCombo =NULL;
-	try
-	{
-		int       nCurSel           = 0;      
-		gxstring  strCurrentText    = "";
-		CString   strCurrentContent = "";        ///< The current value of combox
-
-		//pCombo = (CComboBox*)GetDlgItem(IDC_COMBO_BALANCE_WHITE_SELECT);
-		nCurSel = pCombo->GetCurSel();
-		pCombo->GetLBText(nCurSel,strCurrentContent);
-		strCurrentText = strCurrentContent.GetBuffer(0);
-
-		//Set the value with combox to device
-		m_objFeatureControlPtr->GetEnumFeature("BalanceRatioSelector")->SetValue(strCurrentText);
-		m_dEditBalanceRatioValue = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetValue();
-		UpdateData(FALSE);
-		m_nBanlanceWhiteRatioOld = nCurSel;
-	}
-	catch (CGalaxyException& e)
-	{
-		pCombo->SetCurSel(m_nBanlanceWhiteRatioOld);
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		pCombo->SetCurSel(m_nBanlanceWhiteRatioOld);
-		MessageBox(e.what());
-		return;	
-	}
-}
-
 void CGxSingleCamDlg::OnBnClickedCheckSaveBmp()
 {
-	// TODO: Add your control notification handler code here
-		UpdateData(TRUE);
+	UpdateData(TRUE);
 }
 
 void CGxSingleCamDlg::OnClose()
 {
-	// TODO: Add your message handler code here and/or call default
 	try
 	{
-		//Kill the timer
-		KillTimer(0);
-
 		//If the device is acquiring image then stop it.
 		if (m_bIsSnap)
 		{
@@ -844,185 +408,6 @@ void CGxSingleCamDlg::OnClose()
 	CDialog::OnClose();
 }
 
-void CGxSingleCamDlg::OnEnKillfocusEditShutter()
-{
-	// TODO: Add your control notification handler code here
-	// Check whether the device has been closed
-	if (!m_bIsOpen)
-	{
-		return;
-	}
-     
-	double dShutterValueOld = m_dEditShutterValue;
-	try
-	{
-		UpdateData(TRUE);
-
-		//Check the input value whether is in the range of exposure time or not.
-        //If the input value is bigger than the max value, it will be set the max value,otherwise is min value.
-		if (m_dEditShutterValue > m_dShutterValueMax )
-		{
-			m_dEditShutterValue = m_dShutterValueMax;
-		}
-		if (m_dEditShutterValue < m_dShutterValueMin)
-		{
-			m_dEditShutterValue = m_dShutterValueMin;
-		}
-
-		m_objFeatureControlPtr->GetFloatFeature("ExposureTime")->SetValue(m_dEditShutterValue);
-	}
-	catch (CGalaxyException& e)
-	{
-		m_dEditShutterValue = dShutterValueOld;
-		MessageBox(e.what());
-	}
-	catch (std::exception& e)
-	{
-		m_dEditShutterValue = dShutterValueOld;
-		MessageBox(e.what());
-	}
-
-	UpdateData(FALSE);
-
-}
-
-void CGxSingleCamDlg::OnEnKillfocusEditGain()
-{
-	// TODO: Add your control notification handler code here
-	//Check whether the device has been closed
-	if (!m_bIsOpen)
-	{
-		return;
-	}
-    
-	double dGainValueOld = m_dEditGainValue;
-	try
-	{
-		UpdateData(TRUE);
-
-		//Check the input value whether is in the range of gain or not.
-        //If the input value is bigger than the max value, it will be set the max value,otherwise is min value.
-		if (m_dEditGainValue > m_dGainValueMax )
-		{
-			m_dEditGainValue = m_dGainValueMax;
-		}
-		if (m_dEditGainValue < m_dGainValueMin)
-		{
-			m_dEditGainValue = m_dGainValueMin;
-		}
-		m_objFeatureControlPtr->GetFloatFeature("Gain")->SetValue(m_dEditGainValue);
-	}
-	catch (CGalaxyException& e)
-	{
-		m_dEditGainValue = dGainValueOld;
-		MessageBox(e.what());
-	}
-	catch (std::exception& e)
-	{
-		m_dEditGainValue = dGainValueOld;
-		MessageBox(e.what());
-	}
-
-	UpdateData(FALSE);
-}
-
-void CGxSingleCamDlg::OnEnKillfocusEditBalanceWhiteSerise()
-{
-	// TODO: Add your control notification handler code here
-	//Check whether the device has been closed
-	if (!m_bIsOpen)
-	{
-		return;
-	}
-
-    double dBalanceWhiteRatioOld = m_dEditBalanceRatioValue;
-	try
-	{
-		UpdateData(TRUE);
-
-		//Check the input value whether is in the range of white balance ratio or not.
-        //If the input value is bigger than the max value, it will be set the max value,otherwise is min value.
-		if (m_dEditBalanceRatioValue > m_dBalanceWhiteRatioMax)
-		{
-			m_dEditBalanceRatioValue = m_dBalanceWhiteRatioMax;
-		}
-		if ((m_dEditBalanceRatioValue < m_dBalanceWhiteRatioMin))
-		{
-			m_dEditBalanceRatioValue = m_dBalanceWhiteRatioMin;
-		}
-		m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->SetValue(m_dEditBalanceRatioValue);
-	}
-	catch (CGalaxyException& e)
-	{
-		m_dEditBalanceRatioValue = dBalanceWhiteRatioOld;
-		MessageBox(e.what());
-	}
-	catch (std::exception& e)
-	{
-		m_dEditBalanceRatioValue = dBalanceWhiteRatioOld;
-		MessageBox(e.what());
-	}
-
-	UpdateData(FALSE);
-}
-
-void CGxSingleCamDlg::OnTimer(UINT_PTR nIDEvent)
-{
-	// TODO: Add your message handler code here and/or call default
-	try
-	{
-		CString strText  = "";    // the content widget will display
-		CComboBox* pComBox;// = (CComboBox*)GetDlgItem(IDC_COMBO_BALANCE_WHITE_AUTO);
-
-
-		//When setting the value of once to device,after setting successfuly, it will became off  automatically by the device itself.
-		//The program update the content of UI through reading the white balance current value from device regularly
-		if (m_strBalanceWhiteAutoMode == "Once")
-		{
-			//Get the value of auto white balance
-			m_strBalanceWhiteAutoMode = m_objFeatureControlPtr->GetEnumFeature("BalanceWhiteAuto")->GetValue();
-			GxIAPICPP::gxstring_vector vecBalanceWhiteAutoEnumCount;
-			vecBalanceWhiteAutoEnumCount = m_objFeatureControlPtr->GetEnumFeature("BalanceWhiteAuto")
-				                                                 ->GetEnumEntryList();
-
-			//Check whether the auto white balance value is off or not
-			if (m_strBalanceWhiteAutoMode == "Off")
-			{
-				for (uint32_t i = 0; i< vecBalanceWhiteAutoEnumCount.size(); i++)
-				{
-					pComBox->GetLBText(i,strText);
-					if (strText == "Off")
-					{
-						// Select the item of off in the auto white balance UI widget, that is from once to off.
-						pComBox->SetCurSel(i);
-						//GetDlgItem(IDC_EDIT_BALANCE_WHITE_SERISE)->EnableWindow(TRUE);
-						m_dEditBalanceRatioValue = m_objFeatureControlPtr->GetFloatFeature("BalanceRatio")->GetValue();
-						UpdateData(FALSE);
-						break;
-					}
-				}
-			}
-		}
-	}
-	catch (CGalaxyException)
-	{
-		return;
-	}
-	catch (std::exception)
-	{
-		return;
-	}
-	CDialog::OnTimer(nIDEvent);
-}
-
-//----------------------------------------------------------------------------------
-/**
-\brief   Save the image as BMP format
-\param   image information
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
 void CGxSingleCamDlg::SavePicture(CImageDataPointer& objImageDataPointer)
 {
 	try
@@ -1058,43 +443,4 @@ void CGxSingleCamDlg::SavePicture(CImageDataPointer& objImageDataPointer)
 		
 	}
 
-}
-BOOL CGxSingleCamDlg::PreTranslateMessage(MSG* pMsg)
-{
-	CWnd  *pWnd   = NULL;
-	int   nCtrlID = 0;             //< save the widget ID 
-
-	//Check whether is the message sent by enter key. 
-	if ((pMsg->message == WM_KEYDOWN) && (pMsg->wParam == VK_RETURN))   
-	{    
-		//Get the window (or widget) pointer whitch has the input focus.
-		pWnd = GetFocus();
-
-		//Get the widget ID that has the current focus.
-		nCtrlID = pWnd->GetDlgCtrlID();
-
-		//Check the type of ID.
-		switch(nCtrlID)
-		{
-		/*case IDC_EDIT_SHUTTER:
-		case IDC_EDIT_GAIN:
-		case IDC_EDIT_BALANCE_WHITE_SERISE:
-
-			//lose the focus.
-			SetFocus();
-
-			break;*/
-
-		default:
-			break;
-		}
-
-		return TRUE;
-	}   
-	if ((pMsg->message == WM_KEYDOWN) && (pMsg->wParam == VK_ESCAPE))  
-	{   
-		return  TRUE; 
-	}
-
-	return CDialog::PreTranslateMessage(pMsg);
 }

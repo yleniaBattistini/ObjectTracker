@@ -236,7 +236,6 @@
   <ItemGroup>
     <ClCompile Include="FileVersion.cpp" />
     <ClCompile Include="GXBitmap.cpp" />
-    <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="GxSingleCam.cpp" />
     <ClCompile Include="GxSingleCamDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -247,7 +246,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="GxSingleCam.h" />
     <ClInclude Include="GxSingleCamDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -255,7 +253,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\GxSingleCam.ico" />
     <None Include="res\GxSingleCam.rc2" />
     <None Include="ClassesDescription.txt" />
   </ItemGroup>

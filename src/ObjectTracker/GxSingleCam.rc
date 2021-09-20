@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Cinese (semplificato, Repubblica popolare cinese) resources
+// Chinese (Simplified, PRC) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -60,25 +60,16 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Cinese (semplificato, Repubblica popolare cinese) resources
+#endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Inglese (Stati Uniti) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\GxSingleCam.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -124,17 +115,6 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About GxSingleCam"
-FONT 9, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "GxSingleCam Version 1.0 ",0,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2015",0,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
-END
-
 IDD_GXSINGLECAM_DIALOG DIALOGEX 0, 0, 545, 346
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
@@ -161,14 +141,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
-    IDD_ABOUTBOX, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 163
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 55
-    END
-
     IDD_GXSINGLECAM_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -190,7 +162,7 @@ BEGIN
     0
 END
 
-#endif    // Inglese (Stati Uniti) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
