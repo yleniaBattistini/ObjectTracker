@@ -1,0 +1,24 @@
+@startuml PC_ARDUINO
+
+participant "PC" as pc
+participant "Arduino" as arduino
+
+== Connection ==
+pc -> arduino : connect
+arduino -> pc : ack
+
+== Mode update ==
+pc -> arduino : mode manual
+arduino -> pc : ack
+pc -> arduino : mode auto
+arduino -> pc : ack
+
+== State updates ==
+pc -> arduino : detected
+pc -> arduino : not_detected
+
+== Disconnection ==
+pc -> arduino : disconnect
+arduino -> pc : ack
+
+@enduml
