@@ -1,113 +1,39 @@
-//------------------------------------------------------------------------
-/**
-\file		GXBitmap.cpp
-\brief		This class is mainly used for image display and storage.Image display and storage can be adaptive black and white camera and color camera.
-            the image can be stored as BMP or RAW format
-*/
-//------------------------------------------------------------------------
 #include "stdafx.h"
 #include "GXBitmap.h"
 #include <iostream>
 #include<string> 
 using namespace std;
 
-//---------------------------------------------------------------------------------
-/**
-\brief   The construction function
-\param   objCGXDevicePointer[in]     the pointer for device
-\param   pWnd[in]                    Form pointer
-\return  void
-*/
-//----------------------------------------------------------------------------------
-CGXBitmap::CGXBitmap(CGXDevicePointer& objCGXDevicePointer,CWnd* pWnd)
-:m_pWnd(pWnd)
-,m_hDC(NULL)
-,m_bIsColor(false)
-,m_nImageHeight(0)
-,m_nImageWidth(0)
-,m_pBmpInfo(NULL)
+CGXBitmap::CGXBitmap(CWnd* display, int64_t width, int64_t height) :
+	imageDisplay(display),
+	hdc(NULL),
+	imageWidth(width),
+	imageHeight(height),
+	bitmapInfo(NULL)
 {
-	if ((objCGXDevicePointer.IsNull())||(NULL == pWnd))
+	if (imageDisplay == NULL)
 	{
 		throw std::runtime_error("Argument is error");
 	}
 
-	HWND hWnd = pWnd->m_hWnd;
+	HWND hWnd = display->m_hWnd;
 	if (!::IsWindow(hWnd))
 	{
 		throw std::runtime_error("The HWND must be form");
 	}
 
-	m_hDC  = ::GetDC(m_pWnd->m_hWnd);
-	memset(m_chBmpBuf,0,sizeof(m_chBmpBuf));
-	gxstring strValue = "";
+	hdc = ::GetDC(imageDisplay->m_hWnd);
+	memset(bitmapBuffer, 0, sizeof(bitmapBuffer));
 
-	//Get the image width and height
-	m_nImageWidth = (int64_t)objCGXDevicePointer->GetRemoteFeatureControl()->GetIntFeature("Width")->GetValue();
-	m_nImageHeight = (int64_t)objCGXDevicePointer->GetRemoteFeatureControl()->GetIntFeature("Height")->GetValue();
-
-	//Check whether the color camera
-	if (objCGXDevicePointer->GetRemoteFeatureControl()->IsImplemented("PixelColorFilter"))
-	{
-		strValue = objCGXDevicePointer->GetRemoteFeatureControl()->GetEnumFeature("PixelColorFilter")->GetValue();
-
-		if ("None" != strValue)
-		{
-			m_bIsColor = true;
-		}
-	}
-
-	if (m_bIsColor)
-	{
-		__ColorPrepareForShowImg();
-	} 
-	else
-	{
-		__MonoPrepareForShowImg();
-	}
+	__ColorPrepareForShowImg();
 }
 
-//---------------------------------------------------------------------------------
-/**
-\brief  The destruction function 
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
 CGXBitmap::~CGXBitmap(void)
 {
-	//Release resource
-	::ReleaseDC(m_pWnd->m_hWnd, m_hDC);
+	::ReleaseDC(imageDisplay->m_hWnd, hdc);
 }
 
-//----------------------------------------------------------------------------------
-/**
-\brief     Check whether the PixelFormat is 8 bit
-\param     emPixelFormatEntry[in]  Image format
-\return    true:  is 8 bit,   false:  is not 8 bit
-*/
-//----------------------------------------------------------------------------------
-bool CGXBitmap::__IsPixelFormat8(GX_PIXEL_FORMAT_ENTRY emPixelFormatEntry)
-{
-	bool bIsPixelFormat8 = false;
-	const unsigned  PIXEL_FORMATE_BIT = 0x00FF0000;  
-	unsigned uiPixelFormatEntry = (unsigned)emPixelFormatEntry;
-	if ((uiPixelFormatEntry & PIXEL_FORMATE_BIT) == GX_PIXEL_8BIT)
-	{
-		bIsPixelFormat8 = true;
-	}
-	return bIsPixelFormat8;
-}
-
-
-//----------------------------------------------------------------------------------
-/**
-\brief     Get the best Bit by GX_PIXEL_FORMAT_ENTRY
-\param     emPixelFormatEntry[in]   Image format
-\return    the best Bit
-*/
-//----------------------------------------------------------------------------------
-GX_VALID_BIT_LIST CGXBitmap::GetBestValudBit(GX_PIXEL_FORMAT_ENTRY emPixelFormatEntry)
+GX_VALID_BIT_LIST CGXBitmap::GetBestValueBit(GX_PIXEL_FORMAT_ENTRY emPixelFormatEntry)
 {
 	GX_VALID_BIT_LIST emValidBits = GX_BIT_0_7;
 	switch (emPixelFormatEntry)
@@ -159,76 +85,23 @@ GX_VALID_BIT_LIST CGXBitmap::GetBestValudBit(GX_PIXEL_FORMAT_ENTRY emPixelFormat
 	return emValidBits;
 }
 
-//---------------------------------------------------------------------------------
-/**
-\brief   Prepare resources for displaying color camera images
-
-\return  void
-*/
-//----------------------------------------------------------------------------------
 void CGXBitmap::__ColorPrepareForShowImg()
 {
-	//--------------------------------------------------------------------
-	//---------------------------Initialize bitmap header---------------------------
-	m_pBmpInfo								= (BITMAPINFO *)m_chBmpBuf;
-	m_pBmpInfo->bmiHeader.biSize			= sizeof(BITMAPINFOHEADER);
-	m_pBmpInfo->bmiHeader.biWidth			= (LONG)m_nImageWidth;
-	m_pBmpInfo->bmiHeader.biHeight			= (LONG)m_nImageHeight;
+	bitmapInfo = (BITMAPINFO *)bitmapBuffer;
+	bitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bitmapInfo->bmiHeader.biWidth = (LONG)imageWidth;
+	bitmapInfo->bmiHeader.biHeight = (LONG)imageHeight;
 
-	m_pBmpInfo->bmiHeader.biPlanes			= 1;
-	m_pBmpInfo->bmiHeader.biBitCount        = 24;
-	m_pBmpInfo->bmiHeader.biCompression		= BI_RGB;
-	m_pBmpInfo->bmiHeader.biSizeImage		= 0;
-	m_pBmpInfo->bmiHeader.biXPelsPerMeter	= 0;
-	m_pBmpInfo->bmiHeader.biYPelsPerMeter	= 0;
-	m_pBmpInfo->bmiHeader.biClrUsed			= 0;
-	m_pBmpInfo->bmiHeader.biClrImportant	= 0;
+	bitmapInfo->bmiHeader.biPlanes = 1;
+	bitmapInfo->bmiHeader.biBitCount = 24;
+	bitmapInfo->bmiHeader.biCompression = BI_RGB;
+	bitmapInfo->bmiHeader.biSizeImage = 0;
+	bitmapInfo->bmiHeader.biXPelsPerMeter = 0;
+	bitmapInfo->bmiHeader.biYPelsPerMeter = 0;
+	bitmapInfo->bmiHeader.biClrUsed = 0;
+	bitmapInfo->bmiHeader.biClrImportant = 0;
 }
 
-//---------------------------------------------------------------------------------
-/**
-\brief   Prepare resources for displaying black and white images
-
-\return  void 
-*/
-//----------------------------------------------------------------------------------
-void CGXBitmap::__MonoPrepareForShowImg()
-{
-	//---------------------------------------------------------------------
-	//----------------------Initialize bitmap---------------------------------
-	m_pBmpInfo								= (BITMAPINFO *)m_chBmpBuf;
-	m_pBmpInfo->bmiHeader.biSize			= sizeof(BITMAPINFOHEADER);
-	m_pBmpInfo->bmiHeader.biWidth			= (LONG)m_nImageWidth;
-	m_pBmpInfo->bmiHeader.biHeight			= (LONG)m_nImageHeight;	
-
-	m_pBmpInfo->bmiHeader.biPlanes			= 1;
-	m_pBmpInfo->bmiHeader.biBitCount		= 8; // black and white image is 8
-	m_pBmpInfo->bmiHeader.biCompression		= BI_RGB;
-	m_pBmpInfo->bmiHeader.biSizeImage		= 0;
-	m_pBmpInfo->bmiHeader.biXPelsPerMeter	= 0;
-	m_pBmpInfo->bmiHeader.biYPelsPerMeter	= 0;
-	m_pBmpInfo->bmiHeader.biClrUsed			= 0;
-	m_pBmpInfo->bmiHeader.biClrImportant	= 0;
-
-	// black and white image need initialize palette
-	for(int i=0;i<256;i++)
-	{
-		m_pBmpInfo->bmiColors[i].rgbBlue	=i;
-		m_pBmpInfo->bmiColors[i].rgbGreen	=i;
-		m_pBmpInfo->bmiColors[i].rgbRed		=i;
-		m_pBmpInfo->bmiColors[i].rgbReserved=i;
-	}
-}
-
-//----------------------------------------------------------------------------------
-/**
-\brief     whether compatible
-\param     pBmpInfo[in]    BITMAPINFO pointer
-\param     nWidth[in]      Image width
-\param     nHeight[in]     Image height
-\return    true: compatible , false: not compatible
-*/
-//----------------------------------------------------------------------------------
 bool CGXBitmap::__IsCompatible(BITMAPINFO *pBmpInfo, uint64_t nWidth, uint64_t nHeight)
 {
 	if (pBmpInfo == NULL
@@ -241,141 +114,49 @@ bool CGXBitmap::__IsCompatible(BITMAPINFO *pBmpInfo, uint64_t nWidth, uint64_t n
 	return true;
 }
 
-//----------------------------------------------------------------------------------
-/**
-\brief     Update Bitmap information
-\param     objCImageDataPointer  Image data
-\return    void
-*/
-//----------------------------------------------------------------------------------
 void CGXBitmap::__UpdateBitmap(CImageDataPointer& objCImageDataPointer)
 {
-	if (!__IsCompatible(m_pBmpInfo, objCImageDataPointer->GetWidth(), objCImageDataPointer->GetHeight()))
+	if (!__IsCompatible(bitmapInfo, objCImageDataPointer->GetWidth(), objCImageDataPointer->GetHeight()))
 	{
-		m_nImageWidth = objCImageDataPointer->GetWidth();
-		m_nImageHeight = objCImageDataPointer->GetHeight();
-		if (m_bIsColor)
-		{
-			__ColorPrepareForShowImg();
-		} 
-		else
-		{
-			__MonoPrepareForShowImg();
-		}
+		imageWidth = objCImageDataPointer->GetWidth();
+		imageHeight = objCImageDataPointer->GetHeight();
+		__ColorPrepareForShowImg();
 	}
 }
 
-//---------------------------------------------------------------------------------
-/**
-\brief   Display image
-\param   pBuffer[in]   Image data Buffer pointer
-\return  void
-*/
-//----------------------------------------------------------------------------------
 void CGXBitmap::__DrawImg(BYTE* pBuffer)
 {
-	int nWndWidth  = 0;
+	int nWndWidth = 0;
 	int nWndHeight = 0;
 
 	// Prepare for drawing images
 	RECT objRect;
-	m_pWnd->GetClientRect(&objRect);	
+	imageDisplay->GetClientRect(&objRect);	
 	nWndWidth  = objRect.right - objRect.left;
 	nWndHeight = objRect.bottom - objRect.top;
 
-	::SetStretchBltMode(m_hDC, COLORONCOLOR);
-	::StretchDIBits(m_hDC,
+	::SetStretchBltMode(hdc, COLORONCOLOR);
+	::StretchDIBits(hdc,
 		0,						
 		0,
 		nWndWidth,
 		nWndHeight,
 		0,
 		0,
-		(int)m_nImageWidth,
-		(int)m_nImageHeight,
+		(int)imageWidth,
+		(int)imageHeight,
 		pBuffer,
-		m_pBmpInfo,
+		bitmapInfo,
 		DIB_RGB_COLORS,
 		SRCCOPY
 		);
 }
 
-//---------------------------------------------------------------------------------
-/**
-\brief   Display image and frame rate to UI
-\param   pBuffer[in]         Image data Buffer pointer
-\param   strDeviceSNFPS[in]  frame rate
-\return  void
-*/
-//----------------------------------------------------------------------------------
-void CGXBitmap::__DrawImg(BYTE* pBuffer, char* strDeviceSNFPS)
+int64_t CGXBitmap::__GetStride(int64_t nWidth)
 {
-	
-	int nWndWidth  = 0;
-	int nWndHeight = 0;
-
-	// Prepare for drawing images
-	RECT objRect;
-	m_pWnd->GetClientRect(&objRect);	
-	nWndWidth  = objRect.right - objRect.left;
-	nWndHeight = objRect.bottom - objRect.top;
-
-	HDC      objMemDC = ::CreateCompatibleDC(m_hDC);
-	HBITMAP  objMemBmp= CreateCompatibleBitmap(m_hDC, nWndWidth, nWndHeight);
-	::SelectObject(objMemDC,objMemBmp);
-
-	::SetStretchBltMode(objMemDC, COLORONCOLOR);
-	::StretchDIBits(objMemDC,
-		0,						
-		0,
-		nWndWidth,
-		nWndHeight,
-		0,
-		0,
-		(int)m_nImageWidth,
-		(int)m_nImageHeight,
-		pBuffer,
-		m_pBmpInfo,
-		DIB_RGB_COLORS,
-		SRCCOPY
-		);
-
-	TextOut(objMemDC,0,0,strDeviceSNFPS,(int)strlen(strDeviceSNFPS));
-	StretchBlt(m_hDC,
-		0,
-		0,
-		nWndWidth,
-		nWndHeight,
-		objMemDC,
-		0,
-		0,
-		nWndWidth,
-		nWndHeight,
-		SRCCOPY);
-
-	::DeleteDC(objMemDC);
-	DeleteObject(objMemBmp);
-}
-//----------------------------------------------------------------------------------
-/**
-\brief     Calculate the number of bytes occupied by width
-\param     nWidth[in]      Image width
-\param     bIsColor[in]    Whether is a color camera
-\return    The number of bytes of an image line
-*/
-//----------------------------------------------------------------------------------
-int64_t CGXBitmap::__GetStride(int64_t nWidth, bool bIsColor)
-{
-	return bIsColor ? nWidth * 3 : nWidth;
+	return nWidth * 3;
 }
 
-//----------------------------------------------------------------------------------
-/**
-\brief     Display image
-\param     objCImageDataPointer[in]   Image data pointer
-\return    void
-*/
-//----------------------------------------------------------------------------------
 void CGXBitmap::Show(CImageDataPointer& objCImageDataPointer)
 {
 	GX_VALID_BIT_LIST emValidBits = GX_BIT_0_7;
@@ -389,96 +170,11 @@ void CGXBitmap::Show(CImageDataPointer& objCImageDataPointer)
 	//Check whether update bitmap information
 	__UpdateBitmap(objCImageDataPointer);
 
-	emValidBits = GetBestValudBit(objCImageDataPointer->GetPixelFormat());
-	if (m_bIsColor)
-	{
-		pBuffer = (BYTE*)objCImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
-	}
-	else
-	{
-		if (__IsPixelFormat8(objCImageDataPointer->GetPixelFormat()))
-		{
-			pBuffer = (BYTE*)objCImageDataPointer->GetBuffer();
-		}
-		else
-		{
-			pBuffer = (BYTE*)objCImageDataPointer->ConvertToRaw8(emValidBits);
-		}
-	}
+	emValidBits = GetBestValueBit(objCImageDataPointer->GetPixelFormat());
+	pBuffer = (BYTE*)objCImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
 	__DrawImg(pBuffer);
 }
 
-//----------------------------------------------------------------------------------
-/**
-\brief     Display image and frame rate
-\param     objCImageDataPointer[in]  Image data pointer
-\param     strDeviceSNFPS[in]        frame rate
-\return    void
-*/
-//----------------------------------------------------------------------------------
-void CGXBitmap::Show(CImageDataPointer& objCImageDataPointer,char* strDeviceSNFPS)
-{
-	GX_VALID_BIT_LIST emValidBits = GX_BIT_0_7;
-	BYTE* pBuffer = NULL;
-
-	if (objCImageDataPointer.IsNull())
-	{
-		throw std::runtime_error("NULL pointer dereferenced");
-	}
-
-	//Check whether update bitmap information
-	__UpdateBitmap(objCImageDataPointer);
-
-	emValidBits = GetBestValudBit(objCImageDataPointer->GetPixelFormat());
-	if (m_bIsColor)
-	{
-		pBuffer = (BYTE*)objCImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
-	}
-	else
-	{
-		if (__IsPixelFormat8(objCImageDataPointer->GetPixelFormat()))
-		{
-			pBuffer = (BYTE*)objCImageDataPointer->GetBuffer();
-		}
-		else
-		{
-			pBuffer = (BYTE*)objCImageDataPointer->ConvertToRaw8(emValidBits);
-		}
-	}
-	__DrawImg(pBuffer,strDeviceSNFPS);
-}
-
-//----------------------------------------------------------------------------------
-/**
-\brief     Process and Display the image
-\param     objCfg[in]                 Image processing adjustment parameter object
-\param     objCImageDataPointer[in]   Image data pointer
-\return    void
-*/
-//----------------------------------------------------------------------------------
-void CGXBitmap::ShowImageProcess(CImageProcessConfigPointer& objCfg,CImageDataPointer& objCImageDataPointer)
-{
-	if ((objCfg.IsNull())||(objCImageDataPointer.IsNull()))
-	{
-		throw std::runtime_error("NULL pointer dereferenced");
-	}
-
-	//Check whether update bitmap information
-	__UpdateBitmap(objCImageDataPointer);
-
-	BYTE* pBuffer = (BYTE*)objCImageDataPointer->ImageProcess(objCfg);
-	__DrawImg(pBuffer);
-
-}
-
-//----------------------------------------------------------------------------------
-/**
-\brief     the image are stored as BMP format
-\param     objCImageDataPointer[in]  Image data pointer
-\param     strFilePath[in]           file name
-\return    void
-*/
-//----------------------------------------------------------------------------------
 void CGXBitmap::SaveBmp(CImageDataPointer& objCImageDataPointer,const std::string& strFilePath)
 {
 	GX_VALID_BIT_LIST emValidBits = GX_BIT_0_7;
@@ -492,35 +188,18 @@ void CGXBitmap::SaveBmp(CImageDataPointer& objCImageDataPointer,const std::strin
 	//Check whether update bitmap information
 	__UpdateBitmap(objCImageDataPointer);
 
-	emValidBits = GetBestValudBit(objCImageDataPointer->GetPixelFormat());
+	emValidBits = GetBestValueBit(objCImageDataPointer->GetPixelFormat());
+	pBuffer = (BYTE*)objCImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
 
-	if (m_bIsColor)
-	{
-		pBuffer = (BYTE*)objCImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
-	}
-	else
-	{
-		if (__IsPixelFormat8(objCImageDataPointer->GetPixelFormat()))
-		{
-			pBuffer = (BYTE*)objCImageDataPointer->GetBuffer();
-		}
-		else
-		{
-			pBuffer = (BYTE*)objCImageDataPointer->ConvertToRaw8(emValidBits);
-		}
-	}
-
-	DWORD		         dwImageSize = (DWORD)(__GetStride(m_nImageWidth,m_bIsColor) * m_nImageHeight);
-	BITMAPFILEHEADER     stBfh	     = {0};
-	DWORD		         dwBytesRead = 0;
+	DWORD dwImageSize = (DWORD)(__GetStride(imageWidth) * imageHeight);
+	BITMAPFILEHEADER stBfh = {0};
+	DWORD dwBytesRead = 0;
 
 	stBfh.bfType	= (WORD)'M' << 8 | 'B';			 //Define file type
-	stBfh.bfOffBits = m_bIsColor ?sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER)
-		:sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (256 * 4);
+	stBfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 	stBfh.bfSize	= stBfh.bfOffBits + dwImageSize; //File size
 
-	DWORD dwBitmapInfoHeader = m_bIsColor ?sizeof(BITMAPINFOHEADER)
-		:sizeof(BITMAPINFOHEADER) + (256 * 4);
+	DWORD dwBitmapInfoHeader = sizeof(BITMAPINFOHEADER);
 
 	//Create file
 	HANDLE hFile = ::CreateFile(strFilePath.c_str(),
@@ -537,48 +216,8 @@ void CGXBitmap::SaveBmp(CImageDataPointer& objCImageDataPointer,const std::strin
 	}
 
 	::WriteFile(hFile, &stBfh, sizeof(BITMAPFILEHEADER), &dwBytesRead, NULL);
-	::WriteFile(hFile, m_pBmpInfo, dwBitmapInfoHeader, &dwBytesRead, NULL);
+	::WriteFile(hFile, bitmapInfo, dwBitmapInfoHeader, &dwBytesRead, NULL);
 	::WriteFile(hFile, pBuffer, dwImageSize, &dwBytesRead, NULL);
 
 	CloseHandle(hFile);
-}
-
-//----------------------------------------------------------------------------------
-/**
-\brief     the image are stored as Raw format
-\param     objCImageDataPointer[in]  Image data pointer
-\param     strFilePath[in]           File name
-\return    void
-*/
-//----------------------------------------------------------------------------------
-void CGXBitmap::SaveRaw(CImageDataPointer& objCImageDataPointer,const std::string& strFilePath)
-{
-	if ((objCImageDataPointer.IsNull())||(strFilePath == ""))
-	{
-		throw std::runtime_error("Argument is error");
-	}
-
-	DWORD   dwImageSize = (DWORD)objCImageDataPointer->GetPayloadSize();  // Write the length of the file
-	DWORD   dwBytesRead = 0;                // Read the length of the file
-
-	BYTE* pbuffer = (BYTE*)objCImageDataPointer->GetBuffer();
-
-	// Create file
-	HANDLE hFile = ::CreateFile(strFilePath.c_str(),
-		GENERIC_WRITE,
-		FILE_SHARE_READ,
-		NULL,
-		CREATE_ALWAYS,														
-		FILE_ATTRIBUTE_NORMAL,
-		NULL);
-
-	if (hFile == INVALID_HANDLE_VALUE)     // If the creation fails, it will return
-	{
-		throw std::runtime_error("Handle is invalid");
-	}
-	else                                 // Save Raw image         
-	{ 
-		::WriteFile(hFile, pbuffer, dwImageSize, &dwBytesRead, NULL);
-		CloseHandle(hFile);
-	}
 }

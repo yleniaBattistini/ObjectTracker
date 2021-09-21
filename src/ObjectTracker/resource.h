@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// File di inclusione generato con Microsoft Visual C++.
-// Utilizzato da GxSingleCam.rc
+// Microsoft Visual C++ generated include file.
+// Used by GxSingleCam.rc
 //
 #define IDC_PICTURE_SHOW_STATIC         0
 #define IDC_CHK_MOVEMENT                1
