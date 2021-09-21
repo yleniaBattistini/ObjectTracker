@@ -11,8 +11,8 @@ using namespace std;
 
 CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent)
 	: CDialog(CGxSingleCamDlg::IDD, pParent)
-	, m_bIsOpen(false)
-	, m_bIsSnap(false)
+	, m_bIsStart(false)
+	, m_bIsConnected(false)
 	, m_strSavePath("")
 	, m_pWnd(NULL)
     , m_pSampleCaptureEventHandle(NULL)
@@ -25,13 +25,14 @@ BEGIN_MESSAGE_MAP(CGxSingleCamDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BTN_OPEN_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnOpenDevice)
-	ON_BN_CLICKED(IDC_BTN_CLOSE_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnCloseDevice)
-	ON_BN_CLICKED(IDC_BTN_START_SNAP, &CGxSingleCamDlg::OnBnClickedBtnStartSnap)
-	ON_BN_CLICKED(IDC_BTN_STOP_SNAP, &CGxSingleCamDlg::OnBnClickedBtnStopSnap)
+	ON_BN_CLICKED(IDC_BTN_START_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnStartDevice)
+	ON_BN_CLICKED(IDC_BTN_STOP_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnStopDevice)
+	ON_BN_CLICKED(IDC_BTN_CONNECT_ARDU, &CGxSingleCamDlg::OnBnClickedBtnConnectArduino)
+	ON_BN_CLICKED(IDC_BTN_DISCONNECT_ARDU, &CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino)
 	ON_WM_CLOSE()
 	ON_WM_TIMER()
 
+	ON_BN_CLICKED(1, &CGxSingleCamDlg::OnBnClicked1)
 END_MESSAGE_MAP()
 
 // CGxSingleCamDlg message handlers
@@ -90,7 +91,7 @@ BOOL CGxSingleCamDlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnOpenDevice()
+void CGxSingleCamDlg::OnBnClickedBtnStartDevice()
 {
 	bool bIsDeviceOpen = false;         ///< The flag indicates whether the device has been opened.
 	bool bIsStreamOpen = false;         ///< The flag indicates whether the stream has been opened.
@@ -138,9 +139,31 @@ void CGxSingleCamDlg::OnBnClickedBtnOpenDevice()
 
 		__InitParam();
 
-		m_bIsOpen = true;
+		try
+		{
+			//Register the CaptureCallback function
+			m_objStreamPtr->RegisterCaptureCallback(m_pSampleCaptureEventHandle, this);
 
-		__UpdateUI();
+			//Start stream capturing
+			m_objStreamPtr->StartGrab();
+
+			//Send AcquisitionStart command 
+			m_objFeatureControlPtr->GetCommandFeature("AcquisitionStart")->Execute();
+			m_bIsStart = true;
+
+			//Update UI
+			__UpdateUI();
+		}
+		catch (CGalaxyException& e)
+		{
+			MessageBox(e.what());
+			return;
+		}
+		catch (std::exception& e)
+		{
+			MessageBox(e.what());
+			return;
+		}
 	}
 	catch (CGalaxyException& e)
 	{
@@ -198,104 +221,17 @@ void CGxSingleCamDlg::__InitParam()
 
 void CGxSingleCamDlg::__UpdateUI()
 {
-	GetDlgItem(IDC_BTN_OPEN_DEVICE)->EnableWindow(!m_bIsOpen);
-	GetDlgItem(IDC_BTN_CLOSE_DEVICE)->EnableWindow(m_bIsOpen);
-	GetDlgItem(IDC_BTN_START_SNAP)->EnableWindow(m_bIsOpen && !m_bIsSnap);
-	GetDlgItem(IDC_BTN_STOP_SNAP)->EnableWindow(m_bIsOpen && m_bIsSnap);
+	GetDlgItem(IDC_BTN_START_DEVICE)->EnableWindow(!m_bIsStart);
+	GetDlgItem(IDC_BTN_STOP_DEVICE)->EnableWindow(m_bIsStart);
+	GetDlgItem(IDC_BTN_CONNECT_ARDU)->EnableWindow(m_bIsStart && !m_bIsConnected);
+	GetDlgItem(IDC_BTN_DISCONNECT_ARDU)->EnableWindow(m_bIsStart && m_bIsConnected);
 
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnCloseDevice()
+void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
 {
 	//lose focus
 	SetFocus();
-
-	try
-	{
-		//If the device is acquiring image then stop it.
-		if (m_bIsSnap)
-		{
-			//Send AcquisitionStop command 
-			m_objFeatureControlPtr->GetCommandFeature("AcquisitionStop")->Execute();
-
-			//Stop stream capturing
-			m_objStreamPtr->StopGrab();
-
-			//Unregister the CaptureCallback function
-			m_objStreamPtr->UnregisterCaptureCallback();
-		}
-	}
-	catch(CGalaxyException)
-	{
-		//do noting
-	}
-    
-	try
-	{
-		//Close stream
-		m_objStreamPtr->Close();
-
-	}
-	catch(CGalaxyException)
-	{
-		//do noting
-	}
-	try
-	{
-		//Close device
-		m_objDevicePtr->Close();
-	}
-	catch(CGalaxyException)
-	{
-		//do noting
-	}
-
-	
-
-	m_bIsOpen = false;
-	m_bIsSnap = false;
-
-	//Update UI
-	__UpdateUI();
-	if (m_pBitmap != NULL)
-	{
-		delete m_pBitmap;
-		m_pBitmap = NULL;
-	}
-
-}
-
-void CGxSingleCamDlg::OnBnClickedBtnStartSnap()
-{
-	try
-	{
-		//Register the CaptureCallback function
-		m_objStreamPtr->RegisterCaptureCallback(m_pSampleCaptureEventHandle,this);
-
-		//Start stream capturing
-		m_objStreamPtr->StartGrab();
-
-	   //Send AcquisitionStart command 
-		m_objFeatureControlPtr->GetCommandFeature("AcquisitionStart")->Execute();
-		m_bIsSnap = true;
-
-		//Update UI
-		__UpdateUI();
-	}
-	catch (CGalaxyException& e)
-	{
-		MessageBox(e.what());
-		return;	
-	}
-	catch (std::exception& e)
-	{
-		MessageBox(e.what());
-		return;	
-	}
-}
-
-void CGxSingleCamDlg::OnBnClickedBtnStopSnap()
-{
 	try
 	{
 		//Send AcquisitionStop command 
@@ -306,21 +242,79 @@ void CGxSingleCamDlg::OnBnClickedBtnStopSnap()
 
 		//Unregister the CaptureCallback function
 		m_objStreamPtr->UnregisterCaptureCallback();
-		m_bIsSnap = false;
+
+		try
+		{
+			//If the device is acquiring image then stop it.
+			if (m_bIsStart)
+			{
+				//Send AcquisitionStop command 
+				m_objFeatureControlPtr->GetCommandFeature("AcquisitionStop")->Execute();
+
+				//Stop stream capturing
+				m_objStreamPtr->StopGrab();
+
+				//Unregister the CaptureCallback function
+				m_objStreamPtr->UnregisterCaptureCallback();
+			}
+		}
+		catch (CGalaxyException)
+		{
+			//do noting
+		}
+
+		try
+		{
+			//Close stream
+			m_objStreamPtr->Close();
+
+		}
+		catch (CGalaxyException)
+		{
+			//do noting
+		}
+		try
+		{
+			//Close device
+			m_objDevicePtr->Close();
+		}
+		catch (CGalaxyException)
+		{
+			//do noting
+		}
+
+		m_bIsStart = false;
 
 		//Update UI
 		__UpdateUI();
+		if (m_pBitmap != NULL)
+		{
+			delete m_pBitmap;
+			m_pBitmap = NULL;
+		}
 	}
 	catch (CGalaxyException& e)
 	{
 		MessageBox(e.what());
-		return;	
+		return;
 	}
 	catch (std::exception& e)
 	{
 		MessageBox(e.what());
-		return;	
+		return;
 	}
+	
+
+}
+
+void CGxSingleCamDlg::OnBnClickedBtnConnectArduino()
+{
+	
+}
+
+void CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino()
+{
+	
 }
 
 void CGxSingleCamDlg::OnBnClickedCheckSaveBmp()
@@ -333,7 +327,7 @@ void CGxSingleCamDlg::OnClose()
 	try
 	{
 		//If the device is acquiring image then stop it.
-		if (m_bIsSnap)
+		if (m_bIsStart)
 		{
 			//Send AcquisitionStop command 
 			m_objFeatureControlPtr->GetCommandFeature("AcquisitionStop")->Execute();
@@ -344,30 +338,13 @@ void CGxSingleCamDlg::OnClose()
 			//Unregister the CaptureCallback function
 			m_objStreamPtr->UnregisterCaptureCallback();
 
-			m_bIsSnap = false;
-		}
-	}
-	catch (CGalaxyException)
-	{
-		//do noting
-	}
-	catch (std::exception)
-	{
-		//do noting
-	}
-
-	try
-	{
-		//Check whether the device has been closed
-		if (m_bIsOpen)
-		{
 			//Close stream
 			m_objStreamPtr->Close();
 
 			//Close device
 			m_objDevicePtr->Close();
 
-			m_bIsOpen = false;
+			m_bIsStart = false;
 		}
 	}
 	catch (CGalaxyException)
@@ -378,6 +355,7 @@ void CGxSingleCamDlg::OnClose()
 	{
 		//do noting
 	}
+
 
 	try
 	{
@@ -443,4 +421,10 @@ void CGxSingleCamDlg::SavePicture(CImageDataPointer& objImageDataPointer)
 		
 	}
 
+}
+
+
+void CGxSingleCamDlg::OnBnClicked1()
+{
+	// TODO: aggiungere qui il codice del gestore di notifiche del controllo
 }

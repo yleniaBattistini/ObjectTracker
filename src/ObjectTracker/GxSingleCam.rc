@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (Simplified, PRC) resources
+// Cinese (semplificato, Repubblica popolare cinese) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -60,17 +60,16 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Chinese (Simplified, PRC) resources
+#endif    // Cinese (semplificato, Repubblica popolare cinese) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// Inglese (Stati Uniti) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -121,15 +120,19 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "GxSingleCam"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Open Device",IDC_BTN_OPEN_DEVICE,346,17,76,14
-    PUSHBUTTON      "Close Device",IDC_BTN_CLOSE_DEVICE,451,17,76,14
-    PUSHBUTTON      "Acquisition Start",IDC_BTN_START_SNAP,346,41,76,14
-    PUSHBUTTON      "Acquisition Stop",IDC_BTN_STOP_SNAP,451,41,76,14
+    PUSHBUTTON      "Start Device",IDC_BTN_START_DEVICE,346,17,76,14
+    PUSHBUTTON      "Stop Device",IDC_BTN_STOP_DEVICE,451,17,76,14
+    PUSHBUTTON      "Connect Arduino",IDC_BTN_CONNECT_ARDU,346,41,76,14
+    PUSHBUTTON      "Disconnect Arduino",IDC_BTN_DISCONNECT_ARDU,451,41,76,14
     CONTROL         "Save as BMP",0,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,75,60,10
     CONTROL         "",IDC_SHOW_PICTURE_STATIC,"Static",SS_BLACKFRAME,7,7,329,332
     GROUPBOX        "Device Control",IDC_STATIC,338,7,197,53
     GROUPBOX        "Image Saving",IDC_STATIC,338,67,197,48
-    LTEXT           "(The acquired images will be saved in the foler named ""GxSingleCam"" which is in the same path with the application of GxSingleCam.exe.)",IDC_STATIC,355,85,172,24
+    LTEXT           "(The acquired images will be saved in the foler named ""ObjectTrackerImages"" which is in the same path with the application of ObjectTracker.exe.)",IDC_STATIC,355,85,172,24
+    GROUPBOX        "Movement Mode",IDC_STATIC,338,125,197,48
+    CONTROL         "Manual",IDC_CHK_MOVEMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,133,60,10
+    LTEXT           "(In manual mode the image can be moved through the analogs tick)",IDC_STATIC,354,146,172,24
+    LTEXT           "NOT RECOGNIZED",IDC_LBL_RECOGNITION,342,184,64,8
 END
 
 
@@ -162,7 +165,7 @@ BEGIN
     0
 END
 
-#endif    // English (United States) resources
+#endif    // Inglese (Stati Uniti) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

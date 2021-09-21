@@ -59,10 +59,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	afx_msg void OnBnClickedBtnOpenDevice();
-	afx_msg void OnBnClickedBtnCloseDevice();
-	afx_msg void OnBnClickedBtnStartSnap();
-	afx_msg void OnBnClickedBtnStopSnap();
+	afx_msg void OnBnClickedBtnStartDevice();
+	afx_msg void OnBnClickedBtnStopDevice();
+	afx_msg void OnBnClickedBtnConnectArduino();
+	afx_msg void OnBnClickedBtnDisconnectArduino();
 	afx_msg void OnBnClickedCheckSaveBmp();
 
 public:
@@ -83,7 +83,9 @@ private:
 	CWnd*                             m_pWnd;                     ///< The pointer of Window
 	CSampleCaptureEventHandler*       m_pSampleCaptureEventHandle;///< The pointer of capture callback function
 
-	bool                              m_bIsOpen;                  ///< The flag indicates whether the device has been opened.
-	bool                              m_bIsSnap;                  ///< The flag indicates whether the device has been started acquisition.
+	bool                              m_bIsStart;                  ///< The flag indicates whether the device has been opened.
+	bool                              m_bIsConnected;                  ///< The flag indicates whether the device has been started acquisition.
 	std::string                       m_strSavePath;              ///< Record the path for saving images
+public:
+	afx_msg void OnBnClicked1();
 };
