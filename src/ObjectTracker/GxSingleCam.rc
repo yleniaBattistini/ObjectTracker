@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Cinese (semplificato, Repubblica popolare cinese) resources
+// Chinese (Simplified, PRC) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -60,12 +60,12 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Cinese (semplificato, Repubblica popolare cinese) resources
+#endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Inglese (Stati Uniti) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -124,7 +124,6 @@ BEGIN
     PUSHBUTTON      "Stop Device",IDC_BTN_STOP_DEVICE,451,17,76,14
     PUSHBUTTON      "Connect Arduino",IDC_BTN_CONNECT_ARDU,346,41,76,14
     PUSHBUTTON      "Disconnect Arduino",IDC_BTN_DISCONNECT_ARDU,451,41,76,14
-    CONTROL         "Save as BMP",0,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,75,60,10
     CONTROL         "",IDC_SHOW_PICTURE_STATIC,"Static",SS_BLACKFRAME,7,7,329,332
     GROUPBOX        "Device Control",IDC_STATIC,338,7,197,53
     GROUPBOX        "Image Saving",IDC_STATIC,338,67,197,48
@@ -133,6 +132,7 @@ BEGIN
     CONTROL         "Manual",IDC_CHK_MOVEMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,133,60,10
     LTEXT           "(In manual mode the image can be moved through the analogs tick)",IDC_STATIC,354,146,172,24
     LTEXT           "NOT RECOGNIZED",IDC_LBL_RECOGNITION,342,184,64,8
+    CONTROL         "Save as BMP",IDC_CHK_SAVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,75,60,10
 END
 
 
@@ -165,7 +165,7 @@ BEGIN
     0
 END
 
-#endif    // Inglese (Stati Uniti) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

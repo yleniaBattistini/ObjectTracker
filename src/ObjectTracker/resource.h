@@ -4,6 +4,7 @@
 //
 #define IDC_PICTURE_SHOW_STATIC         0
 #define IDC_CHK_MOVEMENT                1
+#define IDC_CHK_SAVE                    2
 #define IDD_GXSINGLECAM_DIALOG          102
 #define IDR_MAINFRAME                   128
 #define IDC_SHOW_PICTURE_STATIC         1000

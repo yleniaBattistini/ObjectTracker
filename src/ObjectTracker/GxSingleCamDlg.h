@@ -18,6 +18,7 @@ private:
 
 protected:
 	virtual BOOL OnInitDialog();
+	virtual void DoDataExchange(CDataExchange* dataExchange);
 	DECLARE_MESSAGE_MAP()
 
 public:
@@ -31,9 +32,9 @@ public:
 	afx_msg void OnBnClickedBtnStopDevice();
 	afx_msg void OnBnClickedBtnConnectArduino();
 	afx_msg void OnBnClickedBtnDisconnectArduino();
-	afx_msg void OnBnClickedCheckSaveBmp();
 	afx_msg void OnClose();
 
 	void SavePicture(CImageDataPointer& objImageDataPointer);
 	CGXBitmap* bitmap;
+	afx_msg void OnBnClickedChkSave();
 };

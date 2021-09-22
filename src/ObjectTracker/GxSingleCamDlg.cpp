@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CGxSingleCamDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_CONNECT_ARDU, &CGxSingleCamDlg::OnBnClickedBtnConnectArduino)
 	ON_BN_CLICKED(IDC_BTN_DISCONNECT_ARDU, &CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino)
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_CHK_SAVE, &CGxSingleCamDlg::OnBnClickedChkSave)
 END_MESSAGE_MAP()
 
 // CGxSingleCamDlg message handlers
@@ -69,6 +70,14 @@ BOOL CGxSingleCamDlg::OnInitDialog()
 	}
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CGxSingleCamDlg::DoDataExchange(CDataExchange* dataExchange)
+{
+	CDialog::DoDataExchange(dataExchange);
+	int save;
+	DDX_Check(dataExchange, IDC_CHK_SAVE, save);
+	checkSaveBmp = save;
 }
 
 void CGxSingleCamDlg::OnBnClickedBtnStartDevice()
@@ -133,11 +142,6 @@ void CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino()
 	serialPort = NULL;
 }
 
-void CGxSingleCamDlg::OnBnClickedCheckSaveBmp()
-{
-	UpdateData(TRUE);
-}
-
 void CGxSingleCamDlg::OnClose()
 {
 	try
@@ -189,4 +193,10 @@ void CGxSingleCamDlg::SavePicture(CImageDataPointer& objImageDataPointer)
 		//image doesn't throw exception.
 		return;
 	}
+}
+
+
+void CGxSingleCamDlg::OnBnClickedChkSave()
+{
+	UpdateData(TRUE);
 }
