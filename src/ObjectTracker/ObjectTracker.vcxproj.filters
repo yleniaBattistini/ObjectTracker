@@ -8,6 +8,8 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ImageCapturedHandler.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
+    <ClCompile Include="Arduino.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GxSingleCam.h" />
@@ -18,6 +20,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ImageCapturedHandler.h" />
     <ClInclude Include="GXBitmap.h" />
+    <ClInclude Include="SerialPort.h" />
+    <ClInclude Include="Arduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GxSingleCam.rc" />

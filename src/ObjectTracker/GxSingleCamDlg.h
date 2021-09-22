@@ -3,14 +3,16 @@
 #include "GalaxyIncludes.h"
 #include "GXBitmap.h"
 #include "Camera.h"
+#include "SerialPort.h"
 
 class CGxSingleCamDlg : public CDialog
 {
 private:
 	void __UpdateUI();
 
-	Camera camera;
-	ICaptureEventHandler* handler;
+	Camera *camera;
+	SerialPort *serialPort;
+	ICaptureEventHandler *handler;
 	bool isConnected;
 	std::string savePath;
 

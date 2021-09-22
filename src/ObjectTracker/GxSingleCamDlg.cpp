@@ -10,13 +10,16 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
-CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent)
-	: CDialog(CGxSingleCamDlg::IDD, pParent)
-	, isConnected(false)
-	, savePath("")
-    , handler(new ImageCapturedHandler())
-	, bitmap(NULL)
-	, checkSaveBmp(false)
+#define SERIAL_PORT_NAME "COM1"
+
+CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent) : CDialog(CGxSingleCamDlg::IDD, pParent),
+	isConnected(false),
+	savePath(""),
+	handler(new ImageCapturedHandler()),
+	bitmap(NULL),
+	camera(new Camera()),
+	serialPort(NULL),
+	checkSaveBmp(false)
 {
 }
 
@@ -32,6 +35,14 @@ END_MESSAGE_MAP()
 BOOL CGxSingleCamDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+
+	char buffer[100];
+	serialPort = new SerialPort(SERIAL_PORT_NAME, CBR_9600);
+
+	__UpdateUI();
+
+	serialPort->WriteSerialPort(buffer, 100);
+	cout << "Message sent by arduino: [" << buffer << "]" << endl;
 
 	try
 	{
@@ -64,12 +75,12 @@ void CGxSingleCamDlg::OnBnClickedBtnStartDevice()
 {
 	try
 	{
-		camera.Connect();
+		camera->Connect();
 
 		CWnd* imageDisplay = GetDlgItem(IDC_SHOW_PICTURE_STATIC);
-		bitmap = new CGXBitmap(imageDisplay, camera.GetWidth(), camera.GetHeight());
+		bitmap = new CGXBitmap(imageDisplay, camera->GetWidth(), camera->GetHeight());
 
-		camera.StartAcquisition(handler, this);
+		camera->StartAcquisition(handler, this);
 
 		__UpdateUI();
 	}
@@ -81,10 +92,10 @@ void CGxSingleCamDlg::OnBnClickedBtnStartDevice()
 
 void CGxSingleCamDlg::__UpdateUI()
 {
-	GetDlgItem(IDC_BTN_START_DEVICE)->EnableWindow(!camera.IsConnected());
-	GetDlgItem(IDC_BTN_STOP_DEVICE)->EnableWindow(camera.IsConnected());
-	GetDlgItem(IDC_BTN_CONNECT_ARDU)->EnableWindow(camera.IsConnected() && !isConnected);
-	GetDlgItem(IDC_BTN_DISCONNECT_ARDU)->EnableWindow(camera.IsConnected() && isConnected);
+	GetDlgItem(IDC_BTN_START_DEVICE)->EnableWindow(!camera->IsConnected());
+	GetDlgItem(IDC_BTN_STOP_DEVICE)->EnableWindow(camera->IsConnected());
+	GetDlgItem(IDC_BTN_CONNECT_ARDU)->EnableWindow(camera->IsConnected() && !isConnected);
+	GetDlgItem(IDC_BTN_DISCONNECT_ARDU)->EnableWindow(camera->IsConnected() && isConnected);
 }
 
 void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
@@ -92,9 +103,9 @@ void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
 	SetFocus();
 	try
 	{
-		camera.StopAcquisition();
+		camera->StopAcquisition();
 		delete bitmap;
-		camera.Disconnect();
+		camera->Disconnect();
 
 		__UpdateUI();
 	}
@@ -107,12 +118,19 @@ void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
 
 void CGxSingleCamDlg::OnBnClickedBtnConnectArduino()
 {
-	
+	char buffer[100];
+	serialPort = new SerialPort(SERIAL_PORT_NAME, CBR_9600);
+
+	__UpdateUI();
+
+	serialPort->WriteSerialPort(buffer, 100);
+	cout << "Message sent by arduino: [" << buffer << "]" << endl;
 }
 
 void CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino()
 {
-	
+	delete serialPort;
+	serialPort = NULL;
 }
 
 void CGxSingleCamDlg::OnBnClickedCheckSaveBmp()
@@ -124,9 +142,11 @@ void CGxSingleCamDlg::OnClose()
 {
 	try
 	{
-		camera.StopAcquisition();
+		camera->StopAcquisition();
 		delete bitmap;
-		camera.Disconnect();
+		camera->Disconnect();
+
+		delete camera;
 		IGXFactory::GetInstance().Uninit();
 	}
 	catch (std::exception)
