@@ -4,13 +4,13 @@ participant "PC" as pc
 participant "Arduino" as arduino
 
 == Connection ==
-pc -> arduino : connect
+pc -> arduino : ping
 arduino -> pc : ack
 
 == Mode update ==
-pc -> arduino : mode manual
+pc -> arduino : mode_manual
 arduino -> pc : ack
-pc -> arduino : mode auto
+pc -> arduino : mode_auto
 arduino -> pc : ack
 
 == State updates ==
