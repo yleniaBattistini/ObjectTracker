@@ -1,11 +1,17 @@
 #pragma once
+#include "Console.h"
+
+using namespace std;
+
 class Arduino
 {
-public:
-	void Connect();
-	void Disconnect();
-	bool IsConnected();
+private:
+	Console* console;
 
-	void SetObjectRecognized(bool recognizedState);
+	void SendCommandWithAck(string command);
+public:
+	Arduino(Console* console);
+
+	void Ping();
 };
 

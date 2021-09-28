@@ -10,7 +10,7 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
-#define SERIAL_PORT_NAME "COM1"
+#define SERIAL_PORT_NAME "COM5"
 
 CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent) : CDialog(CGxSingleCamDlg::IDD, pParent),
 	isConnected(false),
@@ -18,7 +18,7 @@ CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent) : CDialog(CGxSingleCamDlg::IDD, 
 	handler(new ImageCapturedHandler()),
 	bitmap(NULL),
 	camera(new Camera()),
-	serialPort(NULL),
+	arduino(NULL),
 	checkSaveBmp(false)
 {
 }
@@ -36,14 +36,11 @@ END_MESSAGE_MAP()
 BOOL CGxSingleCamDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	SerialPort* serialPort = new SerialPort(SERIAL_PORT_NAME, CBR_9600);
+	Console* console = new Console(serialPort);
+	arduino = new Arduino(console);
 
-	char buffer[100];
-	serialPort = new SerialPort(SERIAL_PORT_NAME, CBR_9600);
-
-	__UpdateUI();
-
-	serialPort->WriteSerialPort(buffer, 100);
-	cout << "Message sent by arduino: [" << buffer << "]" << endl;
+	arduino->Ping();
 
 	try
 	{
@@ -127,19 +124,12 @@ void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
 
 void CGxSingleCamDlg::OnBnClickedBtnConnectArduino()
 {
-	char buffer[100];
-	serialPort = new SerialPort(SERIAL_PORT_NAME, CBR_9600);
-
-	__UpdateUI();
-
-	serialPort->WriteSerialPort(buffer, 100);
-	cout << "Message sent by arduino: [" << buffer << "]" << endl;
+	
 }
 
 void CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino()
 {
-	delete serialPort;
-	serialPort = NULL;
+	
 }
 
 void CGxSingleCamDlg::OnClose()

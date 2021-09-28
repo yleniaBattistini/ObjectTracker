@@ -236,6 +236,7 @@
   <ItemGroup>
     <ClCompile Include="Arduino.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="FileVersion.cpp" />
     <ClCompile Include="GXBitmap.cpp" />
     <ClCompile Include="GxSingleCam.cpp" />
@@ -252,6 +253,7 @@
   <ItemGroup>
     <ClInclude Include="Arduino.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="GXBitmap.h" />
     <ClInclude Include="GxSingleCam.h" />
     <ClInclude Include="GxSingleCamDlg.h" />

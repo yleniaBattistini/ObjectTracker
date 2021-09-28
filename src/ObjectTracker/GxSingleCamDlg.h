@@ -4,6 +4,7 @@
 #include "GXBitmap.h"
 #include "Camera.h"
 #include "SerialPort.h"
+#include "Arduino.h"
 
 class CGxSingleCamDlg : public CDialog
 {
@@ -11,7 +12,7 @@ private:
 	void __UpdateUI();
 
 	Camera *camera;
-	SerialPort *serialPort;
+	Arduino *arduino;
 	ICaptureEventHandler *handler;
 	bool isConnected;
 	std::string savePath;
