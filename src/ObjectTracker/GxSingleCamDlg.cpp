@@ -10,7 +10,7 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
-#define SERIAL_PORT_NAME "COM5"
+#define SERIAL_PORT_NAME "COM5" //"COM3"
 
 CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent) : CDialog(CGxSingleCamDlg::IDD, pParent),
 	isConnected(false),
