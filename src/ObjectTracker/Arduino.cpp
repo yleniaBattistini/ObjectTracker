@@ -1,22 +1,21 @@
 #include "stdafx.h"
 #include "Arduino.h"
 
-void Arduino::Connect()
+Arduino::Arduino(Console* console) : console(console)
 {
-
 }
 
-void Arduino::Disconnect()
+void Arduino::Ping()
 {
-
+	SendCommandWithAck("ping");
 }
 
-bool Arduino::IsConnected()
+void Arduino::SendCommandWithAck(string command)
 {
-	return false;
-}
-
-void Arduino::SetObjectRecognized(bool recognizedState)
-{
-
+	console->Write(command);
+	string response = console->Read();
+	if (response.compare("Ack") != 0)
+	{
+		throw runtime_error("Command required 'Ack', but received '" + response + "'");
+	}
 }
