@@ -9,13 +9,12 @@ using namespace std;
 class Console
 {
 private:
-	SerialPort* serialPort;
-	string readCharsSoFar;
+	SerialPort serialPort;
+	string stringSoFar;
 
 	tuple<string, bool> SplitOnNewLine();
 public:
-	Console(SerialPort* serialPort);
-	~Console();
+	Console(SerialPort serialPort);
 	
 	void Write(string message);
 	string Read();

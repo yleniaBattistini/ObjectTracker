@@ -1,12 +1,13 @@
 #pragma once
 
+#include "resource.h"
 #include "GalaxyIncludes.h"
 #include "GXBitmap.h"
 #include "Camera.h"
 #include "SerialPort.h"
 #include "Arduino.h"
 
-class CGxSingleCamDlg : public CDialog
+class MainDialog : public CDialog
 {
 private:
 	void __UpdateUI();
@@ -14,7 +15,6 @@ private:
 	Camera *camera;
 	Arduino *arduino;
 	ICaptureEventHandler *handler;
-	bool isConnected;
 	std::string savePath;
 
 protected:
@@ -23,7 +23,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	CGxSingleCamDlg(CWnd* pParent = NULL);
+	MainDialog(CWnd* pParent = NULL);
 
 	enum { IDD = IDD_GXSINGLECAM_DIALOG };
 
@@ -34,8 +34,8 @@ public:
 	afx_msg void OnBnClickedBtnConnectArduino();
 	afx_msg void OnBnClickedBtnDisconnectArduino();
 	afx_msg void OnClose();
+	afx_msg void OnBnClickedChkSave();
 
 	void SavePicture(CImageDataPointer& objImageDataPointer);
 	CGXBitmap* bitmap;
-	afx_msg void OnBnClickedChkSave();
 };

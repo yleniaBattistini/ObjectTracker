@@ -1,35 +1,89 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="FileVersion.cpp" />
-    <ClCompile Include="GXBitmap.cpp" />
-    <ClCompile Include="GxSingleCam.cpp" />
-    <ClCompile Include="GxSingleCamDlg.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ImageCapturedHandler.cpp" />
-    <ClCompile Include="SerialPort.cpp" />
-    <ClCompile Include="Arduino.cpp" />
-    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="SerialPort.cpp">
+      <Filter>Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialPortsHelper.cpp">
+      <Filter>Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="Arduino.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTrackerApp.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageCapturedHandler.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GXBitmap.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GxSingleCam.h" />
-    <ClInclude Include="GxSingleCamDlg.h" />
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="ImageCapturedHandler.h" />
-    <ClInclude Include="GXBitmap.h" />
-    <ClInclude Include="SerialPort.h" />
-    <ClInclude Include="Arduino.h" />
-    <ClInclude Include="Console.h" />
+    <ClInclude Include="SerialPort.h">
+      <Filter>Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialPortsHelper.h">
+      <Filter>Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="Arduino.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageCapturedHandler.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDialog.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTrackerApp.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GXBitmap.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="StopWatch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="GxSingleCam.rc" />
+    <Filter Include="Serial">
+      <UniqueIdentifier>{8d1e8d15-240a-4053-bb13-e577610a2425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{78865ae9-7c74-4e3a-a857-d118b6a71907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{1f9bc917-b01b-4842-8ce5-9d389df6786d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{a82d64a5-f4e9-4f3a-864a-08a89b50e309}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\GxSingleCam.rc2" />
-    <None Include="ClassesDescription.txt" />
+    <ResourceCompile Include="ObjectTrackerApp.rc">
+      <Filter>Gui</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,6 @@
 #include "stdafx.h"
-#include "GxSingleCam.h"
-#include "GxSingleCamDlg.h"
-#include "FileVersion.h"
+#include "Resource.h"
+#include "MainDialog.h"
 #include "ImageCapturedHandler.h"
 
 using namespace std;
@@ -12,8 +11,7 @@ using namespace std;
 
 #define SERIAL_PORT_NAME "COM5" //"COM3"
 
-CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent) : CDialog(CGxSingleCamDlg::IDD, pParent),
-	isConnected(false),
+MainDialog::MainDialog(CWnd* pParent) : CDialog(MainDialog::IDD, pParent),
 	savePath(""),
 	handler(new ImageCapturedHandler()),
 	bitmap(NULL),
@@ -23,31 +21,28 @@ CGxSingleCamDlg::CGxSingleCamDlg(CWnd* pParent) : CDialog(CGxSingleCamDlg::IDD, 
 {
 }
 
-BEGIN_MESSAGE_MAP(CGxSingleCamDlg, CDialog)
-	ON_BN_CLICKED(IDC_BTN_START_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnStartDevice)
-	ON_BN_CLICKED(IDC_BTN_STOP_DEVICE, &CGxSingleCamDlg::OnBnClickedBtnStopDevice)
-	ON_BN_CLICKED(IDC_BTN_CONNECT_ARDU, &CGxSingleCamDlg::OnBnClickedBtnConnectArduino)
-	ON_BN_CLICKED(IDC_BTN_DISCONNECT_ARDU, &CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino)
+BEGIN_MESSAGE_MAP(MainDialog, CDialog)
+	ON_BN_CLICKED(IDC_BTN_START_DEVICE, &MainDialog::OnBnClickedBtnStartDevice)
+	ON_BN_CLICKED(IDC_BTN_STOP_DEVICE, &MainDialog::OnBnClickedBtnStopDevice)
+	ON_BN_CLICKED(IDC_BTN_CONNECT_ARDU, &MainDialog::OnBnClickedBtnConnectArduino)
+	ON_BN_CLICKED(IDC_BTN_DISCONNECT_ARDU, &MainDialog::OnBnClickedBtnDisconnectArduino)
 	ON_WM_CLOSE()
-	ON_BN_CLICKED(IDC_CHK_SAVE, &CGxSingleCamDlg::OnBnClickedChkSave)
+	ON_BN_CLICKED(IDC_CHK_SAVE, &MainDialog::OnBnClickedChkSave)
 END_MESSAGE_MAP()
 
-// CGxSingleCamDlg message handlers
-BOOL CGxSingleCamDlg::OnInitDialog()
+BOOL MainDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	SerialPort* serialPort = new SerialPort(SERIAL_PORT_NAME, CBR_9600);
-	Console* console = new Console(serialPort);
+	/*SerialPort serialPort(SERIAL_PORT_NAME, CBR_9600);
+	Console console(serialPort);
 	arduino = new Arduino(console);
 
-	arduino->Ping();
+	arduino->Ping();*/
 
 	try
 	{
-		// Before using any GxIAPICPP methods, the GxIAPICPP must be initialized. 
 		IGXFactory::GetInstance().Init();
 
-		//Get the current path of app
 		char strFileName[MAX_PATH] = {0};
 		string strSavePath = "";
 		size_t nPos = 0;
@@ -66,10 +61,10 @@ BOOL CGxSingleCamDlg::OnInitDialog()
 		return FALSE;
 	}
 
-	return TRUE;  // return TRUE  unless you set the focus to a control
+	return TRUE;
 }
 
-void CGxSingleCamDlg::DoDataExchange(CDataExchange* dataExchange)
+void MainDialog::DoDataExchange(CDataExchange* dataExchange)
 {
 	CDialog::DoDataExchange(dataExchange);
 	int save;
@@ -77,7 +72,7 @@ void CGxSingleCamDlg::DoDataExchange(CDataExchange* dataExchange)
 	checkSaveBmp = save;
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnStartDevice()
+void MainDialog::OnBnClickedBtnStartDevice()
 {
 	try
 	{
@@ -96,15 +91,15 @@ void CGxSingleCamDlg::OnBnClickedBtnStartDevice()
 	}
 }
 
-void CGxSingleCamDlg::__UpdateUI()
+void MainDialog::__UpdateUI()
 {
 	GetDlgItem(IDC_BTN_START_DEVICE)->EnableWindow(!camera->IsConnected());
 	GetDlgItem(IDC_BTN_STOP_DEVICE)->EnableWindow(camera->IsConnected());
-	GetDlgItem(IDC_BTN_CONNECT_ARDU)->EnableWindow(camera->IsConnected() && !isConnected);
-	GetDlgItem(IDC_BTN_DISCONNECT_ARDU)->EnableWindow(camera->IsConnected() && isConnected);
+	GetDlgItem(IDC_BTN_CONNECT_ARDU)->EnableWindow(camera->IsConnected());
+	GetDlgItem(IDC_BTN_DISCONNECT_ARDU)->EnableWindow(camera->IsConnected());
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
+void MainDialog::OnBnClickedBtnStopDevice()
 {
 	SetFocus();
 	try
@@ -122,25 +117,29 @@ void CGxSingleCamDlg::OnBnClickedBtnStopDevice()
 	}
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnConnectArduino()
+void MainDialog::OnBnClickedBtnConnectArduino()
 {
 	
 }
 
-void CGxSingleCamDlg::OnBnClickedBtnDisconnectArduino()
+void MainDialog::OnBnClickedBtnDisconnectArduino()
 {
 	
 }
 
-void CGxSingleCamDlg::OnClose()
+void MainDialog::OnClose()
 {
 	try
 	{
-		camera->StopAcquisition();
-		delete bitmap;
-		camera->Disconnect();
+		if (camera->IsCapturing())
+		{
+			camera->StopAcquisition();
+		}
+		if (camera->IsConnected())
+		{
+			camera->Disconnect();
+		}
 
-		delete camera;
 		IGXFactory::GetInstance().Uninit();
 	}
 	catch (std::exception)
@@ -150,7 +149,7 @@ void CGxSingleCamDlg::OnClose()
 	CDialog::OnClose();
 }
 
-void CGxSingleCamDlg::SavePicture(CImageDataPointer& objImageDataPointer)
+void MainDialog::SavePicture(CImageDataPointer& objImageDataPointer)
 {
 	try
 	{
@@ -185,8 +184,7 @@ void CGxSingleCamDlg::SavePicture(CImageDataPointer& objImageDataPointer)
 	}
 }
 
-
-void CGxSingleCamDlg::OnBnClickedChkSave()
+void MainDialog::OnBnClickedChkSave()
 {
 	UpdateData(TRUE);
 }

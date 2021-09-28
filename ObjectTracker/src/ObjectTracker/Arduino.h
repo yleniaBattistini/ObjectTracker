@@ -6,11 +6,11 @@ using namespace std;
 class Arduino
 {
 private:
-	Console* console;
+	Console console;
 
 	void SendCommandWithAck(string command);
 public:
-	Arduino(Console* console);
+	Arduino(Console console);
 
 	void Ping();
 };

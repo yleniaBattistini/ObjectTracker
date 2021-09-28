@@ -16,22 +16,19 @@ void Camera::Connect()
 	bool isStreamOpen = false;
 	try
 	{
-		//Enumerate all camera devices
 		GxIAPICPP::gxdeviceinfo_vector vectorDeviceInfo;
 		IGXFactory::GetInstance().UpdateDeviceList(1000, vectorDeviceInfo);
 
-		if (vectorDeviceInfo.size() <= 0)
+		if (vectorDeviceInfo.empty())
 		{
 			throw std::runtime_error("No device found");
 		}
 
-		//Open device
 		device = IGXFactory::GetInstance().OpenDeviceBySN(vectorDeviceInfo[0].GetSN(), GX_ACCESS_EXCLUSIVE);
 		isDeviceOpen = true;
 		featureControl = device->GetRemoteFeatureControl();
 
-		//Check the device has stream or not.If more than zero, will be opend the stream.
-		int nStreamCount = device->GetStreamCount();
+		const int nStreamCount = device->GetStreamCount();
 
 		if (nStreamCount > 0)
 		{

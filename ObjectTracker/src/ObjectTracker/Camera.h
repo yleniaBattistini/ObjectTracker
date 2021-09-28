@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GxSingleCam.h"
 #include "GalaxyIncludes.h"
 
 class Camera

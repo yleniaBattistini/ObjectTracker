@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "ImageCapturedHandler.h"
+#include "MainDialog.h"
 
 void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPointer, void* pUserParam)
 {
 	try
 	{
-		CGxSingleCamDlg* pSingleCamDlg = (CGxSingleCamDlg*)pUserParam;
+		MainDialog* pSingleCamDlg = (MainDialog*)pUserParam;
 
 		//Display image
 		pSingleCamDlg->bitmap->Show(objImageDataPointer);
