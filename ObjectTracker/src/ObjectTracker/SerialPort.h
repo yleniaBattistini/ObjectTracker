@@ -13,7 +13,7 @@ private:
     COMSTAT status;
     DWORD errors;
 public:
-    SerialPort(const char* portName, DWORD baudRate);
+    SerialPort(const char* portName);
     ~SerialPort();
 
     int ReadSerialPort(const char* buffer, unsigned int buf_size);
