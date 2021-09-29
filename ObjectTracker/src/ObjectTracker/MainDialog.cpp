@@ -2,7 +2,6 @@
 #include "Resource.h"
 #include "MainDialog.h"
 #include "ImageCapturedHandler.h"
-
 using namespace std;
 
 #ifdef _DEBUG
