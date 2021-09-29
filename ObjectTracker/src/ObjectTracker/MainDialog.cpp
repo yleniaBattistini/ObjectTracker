@@ -33,11 +33,6 @@ END_MESSAGE_MAP()
 BOOL MainDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	/*SerialPort serialPort(SERIAL_PORT_NAME, CBR_9600);
-	Console console(serialPort);
-	arduino = new Arduino(console);
-
-	arduino->Ping();*/
 
 	try
 	{

@@ -1,66 +1,63 @@
 const int LEDB_PIN = 7;
-const int LEDG_PIN = 5;
-const int LEDR_PIN = 3;
-const int xAxis = A1;
-const int yAxis = A3;
-const int pushButton = 1;
-String serialReceived;
-bool manual_mode;
-int xReading;
-int yReading;
+const int LEDY_PIN = 5;
+const int LEDG_PIN = 3;
+const int X_AXIS = A1;
+const int Y_AXIS = A3;
+const int PUSH_BUTTON = 1;
 
 void setup() {
-  manual_mode = false;
-  xReading = 512;
-  yReading = 512;
   pinMode(LEDB_PIN, OUTPUT);
   pinMode(LEDG_PIN, OUTPUT);
-  pinMode(LEDR_PIN, OUTPUT);
+  pinMode(LEDY_PIN, OUTPUT);
+  pinMode(X_AXIS, INPUT);
+  pinMode(Y_AXIS, INPUT);
   digitalWrite(LEDB_PIN, LOW);
   digitalWrite(LEDG_PIN, LOW);
-  digitalWrite(LEDR_PIN, LOW);
+  digitalWrite(LEDY_PIN, LOW);
   Serial.begin(9600);
-  Serial.print("Welcome to Object Trackers.");
-  //Il joystick parte da 512,512
+  // Serial.print("Welcome to Object Trackers.");
+}
+
+void sendResponse(String response) {
+  Serial.print(response);
+  Serial.print("\n");
+}
+
+void sendAck() {
+  sendResponse("Ack");
+}
+
+double normalize(int readValue) {
+  return (readValue / 1023.0) * 2 - 1;
 }
 
 void loop() {
   if (Serial.available()) {
-    serialReceived = Serial.readStringUntil('\n');
+    String serialReceived = Serial.readStringUntil('\n');
     if (serialReceived.equals("ping")) {
-      Serial.print("Ack\n");
       digitalWrite(LEDB_PIN, HIGH);
+      sendAck();
     } else if (serialReceived.equals("detected")) {
-      Serial.print("Ack\n");
-      digitalWrite(LEDR_PIN, LOW);
       digitalWrite(LEDG_PIN, HIGH);
+      sendAck();
     } else if (serialReceived.equals("not_detected")) {
-      Serial.print("Ack\n");
       digitalWrite(LEDG_PIN, LOW);
-      digitalWrite(LEDR_PIN, HIGH);
+      sendAck();
     } else if (serialReceived.equals("mode_manual")) {
-      Serial.print("Ack\n");
-      manual_mode = true;
-      digitalWrite(LEDB_PIN, LOW);
-      digitalWrite(LEDB_PIN, HIGH);
-    } else if (serialReceived.equals("mdoe_auto")) {
-      Serial.print("Ack\n");
-      manual_mode = false;
+      digitalWrite(LEDY_PIN, HIGH);
+      sendAck();
+    } else if (serialReceived.equals("mode_auto")) {
+      digitalWrite(LEDY_PIN, LOW);
+      sendAck();
     } else if (serialReceived.equals("disconnect")) {
-      Serial.print("Ack\n");
       digitalWrite(LEDB_PIN, LOW);
       digitalWrite(LEDG_PIN, LOW);
-      digitalWrite(LEDR_PIN, LOW);
-    } else if (serialReceived.equals("xAxis")) {
-      if (manual_mode) {
-        xReading = analogRead(xAxis);
-        Serial.print(xReading); //auto
-      }
-    } else if (serialReceived.equals("yAxis")) {
-      if (manual_mode) {
-        yReading = analogRead(yAxis);
-        Serial.print(yReading); //auto
-      }
+      digitalWrite(LEDY_PIN, LOW);
+      sendAck();
+    } else if (serialReceived.equals("offset")) {
+      double x = normalize(analogRead(X_AXIS));
+      double y = normalize(analogRead(Y_AXIS));
+      sendResponse(String(x) + " " + String(y));
     }
   }
 }

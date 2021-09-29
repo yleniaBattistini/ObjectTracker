@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Console.h"
 
-Console::Console(SerialPort serialPort) : serialPort(serialPort), stringSoFar("")
+Console::Console(const char* portName) : serialPort(SerialPort(portName)), stringSoFar("")
 {
 }
 
@@ -18,9 +18,8 @@ tuple<string, bool> Console::SplitOnNewLine()
 	{
 		string beforeNewLine = stringSoFar.substr(0, newLinePosition);
 		string afterNewLine = stringSoFar.substr(newLinePosition + 1, stringSoFar.size() - 1 - newLinePosition);
-		string result = stringSoFar + beforeNewLine;
 		stringSoFar = afterNewLine;
-		return make_tuple(result, true);
+		return make_tuple(beforeNewLine, true);
 	}
 	else
 	{

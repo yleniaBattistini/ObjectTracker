@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SerialPort.h"
 
-SerialPort::SerialPort(const char* portName, DWORD baudRate)
+SerialPort::SerialPort(const char* portName)
 {
     this->connected = false;
 
@@ -33,7 +33,7 @@ SerialPort::SerialPort(const char* portName, DWORD baudRate)
         }
         else
         {
-            dcbSerialParameters.BaudRate = baudRate;
+            dcbSerialParameters.BaudRate = CBR_9600;
             dcbSerialParameters.ByteSize = 8;
             dcbSerialParameters.StopBits = ONESTOPBIT;
             dcbSerialParameters.Parity = NOPARITY;

@@ -14,7 +14,7 @@ private:
 
 	tuple<string, bool> SplitOnNewLine();
 public:
-	Console(SerialPort serialPort);
+	Console(const char* portName);
 	
 	void Write(string message);
 	string Read();
