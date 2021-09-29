@@ -39,16 +39,12 @@ void loop() {
       sendAck();
     } else if (serialReceived.equals("detected")) {
       digitalWrite(LEDG_PIN, HIGH);
-      sendAck();
     } else if (serialReceived.equals("not_detected")) {
       digitalWrite(LEDG_PIN, LOW);
-      sendAck();
     } else if (serialReceived.equals("mode_manual")) {
       digitalWrite(LEDY_PIN, HIGH);
-      sendAck();
     } else if (serialReceived.equals("mode_auto")) {
       digitalWrite(LEDY_PIN, LOW);
-      sendAck();
     } else if (serialReceived.equals("disconnect")) {
       digitalWrite(LEDB_PIN, LOW);
       digitalWrite(LEDG_PIN, LOW);
