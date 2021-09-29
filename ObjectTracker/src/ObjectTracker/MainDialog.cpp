@@ -2,13 +2,12 @@
 #include "Resource.h"
 #include "MainDialog.h"
 #include "ImageCapturedHandler.h"
+#include "SerialPortsHelper.h"
 using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-#define SERIAL_PORT_NAME "COM5" //"COM3"
 
 MainDialog::MainDialog(CWnd* pParent) : CDialog(MainDialog::IDD, pParent),
 	savePath(""),
@@ -27,12 +26,21 @@ BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_BN_CLICKED(IDC_BTN_DISCONNECT_ARDU, &MainDialog::OnBnClickedBtnDisconnectArduino)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_CHK_SAVE, &MainDialog::OnBnClickedChkSave)
+	ON_CBN_SELCHANGE(IDC_ARDUINOPORTS, &MainDialog::OnCbnSelchangeCombo1)
 END_MESSAGE_MAP()
 
 BOOL MainDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
+	CComboBox* arduinoPorts = (CComboBox*) GetDlgItem(IDC_ARDUINOPORTS);
+	arduinoPorts->ResetContent();
+	vector<string> ports = SerialPortsHelper::ListAvailablePorts();
+	for (int i = 0; i < ports.size(); i++) {
+		arduinoPorts->SetItemData(arduinoPorts->AddString(ports[i].c_str()), i);
+	}
+	if (ports.size() > 0) {
+		arduinoPorts->SetCurSel(0);
+	}
 	try
 	{
 		IGXFactory::GetInstance().Init();
@@ -181,4 +189,14 @@ void MainDialog::SavePicture(CImageDataPointer& objImageDataPointer)
 void MainDialog::OnBnClickedChkSave()
 {
 	UpdateData(TRUE);
+}
+
+
+void MainDialog::OnCbnSelchangeCombo1()
+{
+	CComboBox* arduinoPorts = (CComboBox*)GetDlgItem(IDC_ARDUINOPORTS); 
+	int selected = arduinoPorts->GetCurSel();
+	CString port;
+	arduinoPorts->GetLBText(selected, port);
+	serialPortName = port;
 }

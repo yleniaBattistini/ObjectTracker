@@ -16,6 +16,7 @@ private:
 	Arduino *arduino;
 	ICaptureEventHandler *handler;
 	std::string savePath;
+	string serialPortName;// "COM5" //"COM3"
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -38,4 +39,5 @@ public:
 
 	void SavePicture(CImageDataPointer& objImageDataPointer);
 	CGXBitmap* bitmap;
+	afx_msg void OnCbnSelchangeCombo1();
 };

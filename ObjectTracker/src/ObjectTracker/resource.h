@@ -13,7 +13,7 @@
 #define IDC_BTN_CONNECT_ARDU            1015
 #define IDC_BTN_START_DEVICE            1017
 #define IDC_LBL_RECOGNITION             1024
-#define IDC_COMBO1                      1025
+#define IDC_ARDUINOPORTS                1025
 
 // Next default values for new objects
 // 
