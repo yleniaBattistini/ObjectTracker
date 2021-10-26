@@ -86,7 +86,8 @@ void MainDialog::OnBnClickedBtnStartDevice()
 		camera->Connect();
 
 		CWnd* imageDisplay = GetDlgItem(IDC_SHOW_PICTURE_STATIC);
-		bitmap = new CGXBitmap(imageDisplay, camera->GetWidth(), camera->GetHeight());
+		CWnd* imageOpencvDisplay = GetDlgItem(IDC_SHOW_OPENCV_PICTURE);
+		bitmap = new CGXBitmap(imageDisplay);
 
 		camera->StartAcquisition(handler, this);
 
@@ -156,7 +157,7 @@ void MainDialog::OnClose()
 	CDialog::OnClose();
 }
 
-void MainDialog::SavePicture(CImageDataPointer& objImageDataPointer)
+void MainDialog::SavePicture(cv::Mat& image)
 {
 	try
 	{
@@ -179,8 +180,7 @@ void MainDialog::SavePicture(CImageDataPointer& objImageDataPointer)
 			                                              sysTime.wSecond,
 			                                              sysTime.wMilliseconds);
 
-		//Save image as BMP
-		bitmap->SaveBmp(objImageDataPointer,strFileName.GetBuffer(0));
+		imwrite(strFileName.GetBuffer(0), image);
 	}
 	catch (std::exception)
 	{

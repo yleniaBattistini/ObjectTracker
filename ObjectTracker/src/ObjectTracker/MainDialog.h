@@ -6,9 +6,7 @@
 #include "Camera.h"
 #include "SerialPort.h"
 #include "Arduino.h"
-#include<opencv2\objdetect.hpp>
-#include<opencv2\imgproc.hpp>
-#include<opencv2\highgui.hpp>
+#include<opencv2\opencv.hpp>
 
 class MainDialog : public CDialog
 {
@@ -40,7 +38,7 @@ public:
 	afx_msg void OnClose();
 	afx_msg void OnBnClickedChkSave();
 
-	void SavePicture(CImageDataPointer& objImageDataPointer);
+	void SavePicture(cv::Mat& image);
 	CGXBitmap* bitmap;
 	afx_msg void OnCbnSelchangeCombo1();
 };

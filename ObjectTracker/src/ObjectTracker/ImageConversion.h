@@ -8,6 +8,6 @@ using namespace cv;
 class ImageConversion
 {
 public:
-	static Mat ToOpenCvImage(BYTE* image, int w, int h);
-	static BYTE* ToGalaxyImage(Mat& image);
+	static void ToOpenCvImage(BYTE* image, int w, int h, Mat& output);
+	static void ToGalaxyImage(Mat& image, BYTE* output);
 };
