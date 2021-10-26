@@ -45,37 +45,6 @@ BOOL MainDialog::OnInitDialog()
 	if (ports.size() > 0) {
 		arduinoPorts->SetCurSel(0);
 	}*/
-	CascadeClassifier faceDetection;
-	if (faceDetection.load("C:\opencv\sources\data\haarcascades\haarcascade_frontalface_default.xml")) {
-		cout << "\n File is not loaded properly";
-		exit(0); // stdlib.h
-	}
-	char path[100];
-	cout << "\n Enter the path to image for face detection : ";
-	cin.getline(path, 100);
-
-	cv::Mat img = imread(path, cv::IMREAD_UNCHANGED);
-
-	if (img.empty()) {
-		cout << " \n Image is not loaded properly";
-	}
-	else
-	{
-		cout << "\n Image is found";
-		cout << "\n Processing..";
-
-		vector<cv::Rect> faces;
-		faceDetection.detectMultiScale(img, faces); //detecting here
-
-		for (int i = 0; i < faces.size(); i++) {
-			cv::Point pt1(faces[i].x, faces[i].y);
-			cv::Point pt2((faces[i].x + faces[i].height), (faces[i].y + faces[i].width));
-			rectangle(img, pt1, pt2, cv::Scalar(0, 0, 255), 2, 8, 0);
-		}
-
-		cv::imwrite("C:\\gs\\output.jpg", img);
-		cout << "\n Face detected ok";
-	}
 
 	try
 	{

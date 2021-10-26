@@ -29,6 +29,9 @@
     <ClCompile Include="GXBitmap.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
+    <ClCompile Include="ImageConversion.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -64,6 +67,9 @@
       <Filter>Gui</Filter>
     </ClInclude>
     <ClInclude Include="StopWatch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageConversion.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

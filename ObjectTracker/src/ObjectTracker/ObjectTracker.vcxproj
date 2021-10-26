@@ -191,7 +191,7 @@
     <Link>
       <AdditionalDependencies>GxIAPICPP.lib;opencv_img_hash453d.lib;opencv_world453d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../bin/x64/ObjectTracker.exe</OutputFile>
-      <AdditionalLibraryDirectories>%GX_LIB%/x86;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%GX_LIB%/x64;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -224,7 +224,7 @@
     <Link>
       <AdditionalDependencies>GxIAPICPP.lib;opencv_world453.lib;opencv_img_hash453.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../bin/x64/ObjectTracker.exe</OutputFile>
-      <AdditionalLibraryDirectories>%GX_LIB%/x86;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%GX_LIB%/x64;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -238,6 +238,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="GXBitmap.cpp" />
+    <ClCompile Include="ImageConversion.cpp" />
     <ClCompile Include="ObjectTrackerApp.cpp" />
     <ClCompile Include="MainDialog.cpp" />
     <ClCompile Include="ImageCapturedHandler.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="GXBitmap.h" />
+    <ClInclude Include="ImageConversion.h" />
     <ClInclude Include="ObjectTrackerApp.h" />
     <ClInclude Include="MainDialog.h" />
     <ClInclude Include="ImageCapturedHandler.h" />
