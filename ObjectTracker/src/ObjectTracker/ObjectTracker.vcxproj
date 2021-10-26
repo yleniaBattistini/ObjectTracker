@@ -174,7 +174,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>%OPENCV_LIB%/include;../../inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%OPENCV_LIB%/include;../src/Common;../../inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -191,7 +191,7 @@
     <Link>
       <AdditionalDependencies>GxIAPICPP.lib;opencv_img_hash453d.lib;opencv_world453d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../bin/x64/ObjectTracker.exe</OutputFile>
-      <AdditionalLibraryDirectories>%GX_LIB%/x86;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%GX_LIB%/x64;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -224,7 +224,7 @@
     <Link>
       <AdditionalDependencies>GxIAPICPP.lib;opencv_world453.lib;opencv_img_hash453.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../bin/x64/ObjectTracker.exe</OutputFile>
-      <AdditionalLibraryDirectories>%GX_LIB%/x86;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%GX_LIB%/x64;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

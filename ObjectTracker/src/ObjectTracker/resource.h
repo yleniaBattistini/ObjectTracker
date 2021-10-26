@@ -8,6 +8,7 @@
 #define IDD_GXSINGLECAM_DIALOG          102
 #define IDR_MAINFRAME                   128
 #define IDC_SHOW_PICTURE_STATIC         1000
+#define IDC_SHOW_OPENCV_PICTURE         1001
 #define IDC_BTN_STOP_DEVICE             1013
 #define IDC_BTN_DISCONNECT_ARDU         1014
 #define IDC_BTN_CONNECT_ARDU            1015
