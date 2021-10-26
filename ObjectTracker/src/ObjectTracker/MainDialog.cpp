@@ -7,6 +7,7 @@
 #include<stdlib.h>
 
 using namespace std;
+using namespace cv;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -44,7 +45,7 @@ BOOL MainDialog::OnInitDialog()
 	if (ports.size() > 0) {
 		arduinoPorts->SetCurSel(0);
 	}*/
-	cv::CascadeClassifier faceDetection;
+	CascadeClassifier faceDetection;
 	if (faceDetection.load("C:\opencv\sources\data\haarcascades\haarcascade_frontalface_default.xml")) {
 		cout << "\n File is not loaded properly";
 		exit(0); // stdlib.h

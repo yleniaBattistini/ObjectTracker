@@ -174,7 +174,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>%OPENCV_LIB%/install/include;../../inc;../../src/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%OPENCV_LIB%/include;../../inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -191,7 +191,7 @@
     <Link>
       <AdditionalDependencies>GxIAPICPP.lib;opencv_img_hash453d.lib;opencv_world453d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../bin/x64/ObjectTracker.exe</OutputFile>
-      <AdditionalLibraryDirectories>../../lib/x86;%OPENCV_LIB%/install/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%GX_LIB%/x86;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -207,7 +207,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../../src/Common;../../inc;%OPENCV_LIB%/install/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../inc;%OPENCV_LIB%/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -224,7 +224,7 @@
     <Link>
       <AdditionalDependencies>GxIAPICPP.lib;opencv_world453.lib;opencv_img_hash453.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../bin/x64/ObjectTracker.exe</OutputFile>
-      <AdditionalLibraryDirectories>../../lib/x86;%OPENCV_LIB%/install/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%GX_LIB%/x86;%OPENCV_LIB%/x64/vc16/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
