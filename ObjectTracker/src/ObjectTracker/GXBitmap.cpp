@@ -2,6 +2,7 @@
 #include "GXBitmap.h"
 #include <iostream>
 #include<string> 
+#include "ImageConversion.h"
 using namespace std;
 
 CGXBitmap::CGXBitmap(CWnd* display, int64_t width, int64_t height) :
@@ -137,7 +138,7 @@ void CGXBitmap::__DrawImg(BYTE* pBuffer)
 
 	::SetStretchBltMode(hdc, COLORONCOLOR);
 	::StretchDIBits(hdc,
-		0,						
+		0,
 		0,
 		nWndWidth,
 		nWndHeight,
@@ -172,6 +173,9 @@ void CGXBitmap::Show(CImageDataPointer& objCImageDataPointer)
 
 	emValidBits = GetBestValueBit(objCImageDataPointer->GetPixelFormat());
 	pBuffer = (BYTE*)objCImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
+
+	ImageConversion::ToOpenCvImage(pBuffer, imageWidth, imageHeight);
+
 	__DrawImg(pBuffer);
 }
 

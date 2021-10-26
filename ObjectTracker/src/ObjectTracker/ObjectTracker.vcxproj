@@ -238,6 +238,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="GXBitmap.cpp" />
+    <ClCompile Include="ImageConversion.cpp" />
     <ClCompile Include="ObjectTrackerApp.cpp" />
     <ClCompile Include="MainDialog.cpp" />
     <ClCompile Include="ImageCapturedHandler.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="GXBitmap.h" />
+    <ClInclude Include="ImageConversion.h" />
     <ClInclude Include="ObjectTrackerApp.h" />
     <ClInclude Include="MainDialog.h" />
     <ClInclude Include="ImageCapturedHandler.h" />
