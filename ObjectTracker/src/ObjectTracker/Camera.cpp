@@ -41,6 +41,8 @@ void Camera::Connect()
 		}
 
 		featureControl->GetEnumFeature("AcquisitionMode")->SetValue("Continuous");
+		featureControl->GetIntFeature("Width")->SetValue(1920);
+		featureControl->GetIntFeature("Height")->SetValue(1080);
 		connected = true;
 	}
 	catch (std::exception& e)
