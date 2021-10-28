@@ -19,6 +19,7 @@ public:
 
 	void StartAcquisition(ICaptureEventHandler* imageCapturedHandler, void* userData);
 	void StopAcquisition();
+	void Trigger();
 
 	bool IsConnected();
 	bool IsCapturing();

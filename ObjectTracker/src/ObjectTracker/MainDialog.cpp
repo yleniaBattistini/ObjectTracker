@@ -204,6 +204,11 @@ void MainDialog::ShowProcessedImage(BYTE* image, int width, int height)
 	processedImageViewer->Show(image, width, height);
 }
 
+void MainDialog::OnImageProcessingCompleted()
+{
+	camera->Trigger();
+}
+
 void MainDialog::OnBnClickedChkSave()
 {
 	UpdateData(TRUE);

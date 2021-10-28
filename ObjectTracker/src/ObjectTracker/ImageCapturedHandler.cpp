@@ -28,6 +28,8 @@ void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPoin
 		}
 
 		delete[] newImage;
+
+		mainDialog->OnImageProcessingCompleted();
 	}
 	catch (std::exception)
 	{

@@ -38,6 +38,7 @@ public:
 	void SavePicture(cv::Mat& image);
 	void ShowAcquiredImage(BYTE* image, int width, int height);
 	void ShowProcessedImage(BYTE* image, int width, int height);
+	void OnImageProcessingCompleted();
 
 	afx_msg void OnBnClickedBtnStartDevice();
 	afx_msg void OnBnClickedBtnStopDevice();

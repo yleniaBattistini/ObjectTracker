@@ -43,6 +43,8 @@ void Camera::Connect()
 		featureControl->GetEnumFeature("AcquisitionMode")->SetValue("Continuous");
 		featureControl->GetIntFeature("Width")->SetValue(1920);
 		featureControl->GetIntFeature("Height")->SetValue(1080);
+		featureControl->GetEnumFeature("TriggerMode")->SetValue("On");
+
 		connected = true;
 	}
 	catch (std::exception& e)
@@ -89,16 +91,13 @@ void Camera::StartAcquisition(ICaptureEventHandler* handler, void* userData)
 		throw std::runtime_error("Device is already capturing");
 	}
 
-	//Register the CaptureCallback function
 	stream->RegisterCaptureCallback(handler, userData);
-
-	//Start stream capturing
 	stream->StartGrab();
 
-	//Send AcquisitionStart command 
 	featureControl->GetCommandFeature("AcquisitionStart")->Execute();
-
 	capturing = true;
+
+	Trigger();
 }
 
 void Camera::StopAcquisition()
@@ -114,6 +113,11 @@ void Camera::StopAcquisition()
 	stream->UnregisterCaptureCallback();
 
 	capturing = false;
+}
+
+void Camera::Trigger()
+{
+	featureControl->GetCommandFeature("TriggerSoftware")->Execute();
 }
 
 bool Camera::IsConnected()
