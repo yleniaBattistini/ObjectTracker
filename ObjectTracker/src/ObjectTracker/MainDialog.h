@@ -2,11 +2,13 @@
 
 #include "resource.h"
 #include "GalaxyIncludes.h"
-#include "GXBitmap.h"
+#include "ImageViewer.h"
 #include "Camera.h"
 #include "SerialPort.h"
 #include "Arduino.h"
-#include<opencv2\opencv.hpp>
+#include <opencv2\opencv.hpp>
+
+using namespace std;
 
 class MainDialog : public CDialog
 {
@@ -16,8 +18,10 @@ private:
 	Camera *camera;
 	Arduino *arduino;
 	ICaptureEventHandler *handler;
-	std::string savePath;
+	string savePath;
 	string serialPortName;// "COM5" //"COM3"
+	ImageViewer* acquiredImageViewer;
+	ImageViewer* processedImageViewer;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -31,14 +35,15 @@ public:
 
 	bool checkSaveBmp;
 
+	void SavePicture(cv::Mat& image);
+	void ShowAcquiredImage(BYTE* image, int width, int height);
+	void ShowProcessedImage(BYTE* image, int width, int height);
+
 	afx_msg void OnBnClickedBtnStartDevice();
 	afx_msg void OnBnClickedBtnStopDevice();
 	afx_msg void OnBnClickedBtnConnectArduino();
 	afx_msg void OnBnClickedBtnDisconnectArduino();
 	afx_msg void OnClose();
 	afx_msg void OnBnClickedChkSave();
-
-	void SavePicture(cv::Mat& image);
-	CGXBitmap* bitmap;
 	afx_msg void OnCbnSelchangeCombo1();
 };

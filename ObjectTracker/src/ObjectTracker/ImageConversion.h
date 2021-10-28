@@ -9,5 +9,5 @@ class ImageConversion
 {
 public:
 	static void ToOpenCvImage(BYTE* image, int w, int h, Mat& output);
-	static void ToGalaxyImage(Mat& image, BYTE* output);
+	static void ToGalaxyImage(Mat& image, int w, int h, BYTE* output);
 };

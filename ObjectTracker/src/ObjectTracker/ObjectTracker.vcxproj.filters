@@ -26,7 +26,7 @@
     <ClCompile Include="MainDialog.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
-    <ClCompile Include="GXBitmap.cpp">
+    <ClCompile Include="ImageViewer.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
     <ClCompile Include="ImageConversion.cpp">
@@ -63,7 +63,7 @@
     <ClInclude Include="ObjectTrackerApp.h">
       <Filter>Gui</Filter>
     </ClInclude>
-    <ClInclude Include="GXBitmap.h">
+    <ClInclude Include="ImageViewer.h">
       <Filter>Gui</Filter>
     </ClInclude>
     <ClInclude Include="StopWatch.h">

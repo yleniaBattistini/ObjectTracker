@@ -16,7 +16,8 @@ using namespace cv;
 MainDialog::MainDialog(CWnd* pParent) : CDialog(MainDialog::IDD, pParent),
 	savePath(""),
 	handler(new ImageCapturedHandler()),
-	bitmap(NULL),
+	acquiredImageViewer(NULL),
+	processedImageViewer(NULL),
 	camera(new Camera()),
 	arduino(NULL),
 	checkSaveBmp(false)
@@ -87,7 +88,8 @@ void MainDialog::OnBnClickedBtnStartDevice()
 
 		CWnd* imageDisplay = GetDlgItem(IDC_SHOW_PICTURE_STATIC);
 		CWnd* imageOpencvDisplay = GetDlgItem(IDC_SHOW_OPENCV_PICTURE);
-		bitmap = new CGXBitmap(imageDisplay);
+		acquiredImageViewer = new ImageViewer(imageDisplay);
+		processedImageViewer = new ImageViewer(imageOpencvDisplay);
 
 		camera->StartAcquisition(handler, this);
 
@@ -113,7 +115,8 @@ void MainDialog::OnBnClickedBtnStopDevice()
 	try
 	{
 		camera->StopAcquisition();
-		delete bitmap;
+		delete acquiredImageViewer;
+		delete processedImageViewer;
 		camera->Disconnect();
 
 		__UpdateUI();
@@ -189,6 +192,16 @@ void MainDialog::SavePicture(cv::Mat& image)
 		//image doesn't throw exception.
 		return;
 	}
+}
+
+void MainDialog::ShowAcquiredImage(BYTE* image, int width, int height)
+{
+	acquiredImageViewer->Show(image, width, height);
+}
+
+void MainDialog::ShowProcessedImage(BYTE* image, int width, int height)
+{
+	processedImageViewer->Show(image, width, height);
 }
 
 void MainDialog::OnBnClickedChkSave()

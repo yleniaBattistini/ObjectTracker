@@ -2,14 +2,14 @@
 
 #include "GalaxyIncludes.h"
 
-class CGXBitmap
+class ImageViewer
 {
 public:
 	/// construction
-	CGXBitmap(CWnd* display);
+	ImageViewer(CWnd* display);
 
 	/// destruction
-	~CGXBitmap(void);
+	~ImageViewer(void);
 	
 	 /// Display image
 	 void Show(BYTE* pBuffer, int imageWidth, int imageHeight);
@@ -29,7 +29,7 @@ private:
 	CWnd* imageDisplay;
 	HDC hdc;
 private:
-	CGXBitmap& operator=(const CGXBitmap&);
-	CGXBitmap(const CGXBitmap&);
+	ImageViewer& operator=(const ImageViewer&);
+	ImageViewer(const ImageViewer&);
 };
 

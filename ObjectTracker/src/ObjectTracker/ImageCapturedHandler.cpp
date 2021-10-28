@@ -2,33 +2,32 @@
 #include "ImageCapturedHandler.h"
 #include "MainDialog.h"
 
-int frame = 0;
 void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPointer, void* pUserParam)
 {
-
 	try
 	{
 		frame++;
-		MainDialog* pSingleCamDlg = (MainDialog*)pUserParam;
+		MainDialog* mainDialog = (MainDialog*)pUserParam;
 		GX_VALID_BIT_LIST emValidBits = GetBestValueBit(objImageDataPointer->GetPixelFormat());
 		BYTE* pBuffer = (BYTE*)objImageDataPointer->ConvertToRGB24(emValidBits, GX_RAW2RGB_NEIGHBOUR, true);
+		int width = objImageDataPointer->GetWidth();
+		int height = objImageDataPointer->GetHeight();
+
+		BYTE* newImage = new BYTE[width * height * 3];
 
 		Mat imageConverted;
-		BYTE* newImage;
-		int imageWidth = objImageDataPointer->GetWidth();
-		int imageHeight = objImageDataPointer->GetHeight();
+		ImageConversion::ToOpenCvImage(pBuffer, width, height, imageConverted);
+		ImageConversion::ToGalaxyImage(imageConverted, width, height, newImage);
 
-		ImageConversion::ToOpenCvImage(pBuffer, imageWidth, imageHeight, imageConverted);
-		ImageConversion::ToGalaxyImage(imageConverted, newImage);
+		mainDialog->ShowAcquiredImage(pBuffer, width, height);
+		mainDialog->ShowProcessedImage(newImage, width, height);
 
-		//Display image
-		pSingleCamDlg->bitmap->Show(pBuffer, imageWidth, imageHeight);
-
-		//Check whether is need to save image or not.
-		if (pSingleCamDlg->checkSaveBmp == TRUE && frame % 15 == 0)
+		if (mainDialog->checkSaveBmp == TRUE && frame % 15 == 0)
 		{
-			pSingleCamDlg->SavePicture(imageConverted);
+			mainDialog->SavePicture(imageConverted);
 		}
+
+		delete[] newImage;
 	}
 	catch (std::exception)
 	{

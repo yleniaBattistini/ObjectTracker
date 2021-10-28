@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "GXBitmap.h"
+#include "ImageViewer.h"
 #include <iostream>
-#include<string> 
+#include <string> 
 #include "ImageConversion.h"
 using namespace std;
 
-CGXBitmap::CGXBitmap(CWnd* display) :
+ImageViewer::ImageViewer(CWnd* display) :
 	imageDisplay(display),
 	hdc(NULL)
 {
@@ -23,13 +23,13 @@ CGXBitmap::CGXBitmap(CWnd* display) :
 	hdc = ::GetDC(imageDisplay->m_hWnd);
 }
 
-CGXBitmap::~CGXBitmap(void)
+ImageViewer::~ImageViewer(void)
 {
 	::ReleaseDC(imageDisplay->m_hWnd, hdc);
 }
 
 
-void CGXBitmap::__ColorPrepareForShowImg(BITMAPINFO& bitmapInfo, int imageWidth, int imageHeight)
+void ImageViewer::__ColorPrepareForShowImg(BITMAPINFO& bitmapInfo, int imageWidth, int imageHeight)
 {
 	bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bitmapInfo.bmiHeader.biWidth = (LONG)imageWidth;
@@ -45,7 +45,7 @@ void CGXBitmap::__ColorPrepareForShowImg(BITMAPINFO& bitmapInfo, int imageWidth,
 	bitmapInfo.bmiHeader.biClrImportant = 0;
 }
 
-void CGXBitmap::__DrawImg(BYTE* pBuffer, BITMAPINFO& bitmapInfo)
+void ImageViewer::__DrawImg(BYTE* pBuffer, BITMAPINFO& bitmapInfo)
 {
 	int nWndWidth = 0;
 	int nWndHeight = 0;
@@ -73,12 +73,12 @@ void CGXBitmap::__DrawImg(BYTE* pBuffer, BITMAPINFO& bitmapInfo)
 		);
 }
 
-int64_t CGXBitmap::__GetStride(int64_t nWidth)
+int64_t ImageViewer::__GetStride(int64_t nWidth)
 {
 	return nWidth * 3;
 }
 
-void CGXBitmap::Show(BYTE* pBuffer, int imageWidth, int imageHeight)
+void ImageViewer::Show(BYTE* pBuffer, int imageWidth, int imageHeight)
 {
 	BITMAPINFO bitmapInfo;
 
