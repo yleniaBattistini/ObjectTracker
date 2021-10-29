@@ -237,6 +237,8 @@
     <ClCompile Include="Arduino.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="DrawElement.cpp" />
+    <ClCompile Include="FaceDetection.cpp" />
     <ClCompile Include="ImageViewer.cpp" />
     <ClCompile Include="ImageConversion.cpp" />
     <ClCompile Include="ObjectTrackerApp.cpp" />
@@ -253,6 +255,8 @@
     <ClInclude Include="Arduino.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DrawElement.h" />
+    <ClInclude Include="FaceDetection.h" />
     <ClInclude Include="ImageViewer.h" />
     <ClInclude Include="ImageConversion.h" />
     <ClInclude Include="ObjectTrackerApp.h" />
@@ -267,6 +271,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ObjectTrackerApp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="haarcascade_frontalface_alt.xml" />
+    <Xml Include="haarcascade_frontalface_default.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

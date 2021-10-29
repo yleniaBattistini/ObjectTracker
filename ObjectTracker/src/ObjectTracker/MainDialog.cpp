@@ -115,8 +115,8 @@ void MainDialog::OnBnClickedBtnStopDevice()
 	try
 	{
 		camera->StopAcquisition();
-		delete acquiredImageViewer;
-		delete processedImageViewer;
+		//delete acquiredImageViewer;
+		//delete processedImageViewer;
 		camera->Disconnect();
 
 		__UpdateUI();

@@ -32,6 +32,12 @@
     <ClCompile Include="ImageConversion.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="DrawElement.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetection.cpp">
+      <Filter>Opencv</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -72,6 +78,12 @@
     <ClInclude Include="ImageConversion.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="DrawElement.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceDetection.h">
+      <Filter>Opencv</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Serial">
@@ -86,10 +98,17 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{a82d64a5-f4e9-4f3a-864a-08a89b50e309}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Opencv">
+      <UniqueIdentifier>{11ab04db-e482-4362-82dd-809abb07e5e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ObjectTrackerApp.rc">
       <Filter>Gui</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="haarcascade_frontalface_default.xml" />
+    <Xml Include="haarcascade_frontalface_alt.xml" />
   </ItemGroup>
 </Project>

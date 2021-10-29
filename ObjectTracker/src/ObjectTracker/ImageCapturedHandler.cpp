@@ -17,6 +17,8 @@ void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPoin
 
 		Mat imageConverted;
 		ImageConversion::ToOpenCvImage(pBuffer, width, height, imageConverted);
+
+		faceDetection.Detection(imageConverted);
 		ImageConversion::ToGalaxyImage(imageConverted, width, height, newImage);
 
 		mainDialog->ShowAcquiredImage(pBuffer, width, height);
