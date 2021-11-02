@@ -16,8 +16,8 @@ using namespace std;
 class DrawElement
 {
 public:
-	static void DrawRectangle(vector<Rect>& faces, Mat& output);
+	static void DrawRectangle(Mat& output, vector<Rect>& faces);
 
-	static void DrawCircle(vector<Rect>& faces, double scale, Mat& output);
+	static void DrawCircle(Mat& output, vector<Rect>& faces);
 };
 

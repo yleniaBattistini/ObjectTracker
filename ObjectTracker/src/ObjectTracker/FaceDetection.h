@@ -13,13 +13,13 @@ using namespace cv;
 class FaceDetection
 {
 private:
-	void DetectFace(Mat& img);
+	void DetectFace(Mat& img, vector<Rect>& faces);
 
 	CascadeClassifier cascade;
 	double scale;
 public:
 	FaceDetection();
-	void Detection(Mat& image);
+	void Detection(Mat& image, vector<Rect>& faces);
 
 };
 

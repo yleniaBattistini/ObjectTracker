@@ -13,12 +13,14 @@ void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPoin
 		int width = objImageDataPointer->GetWidth();
 		int height = objImageDataPointer->GetHeight();
 
-		BYTE* newImage = new BYTE[width * height * 3];
 
 		Mat imageConverted;
 		ImageConversion::ToOpenCvImage(pBuffer, width, height, imageConverted);
 
-		faceDetection.Detection(imageConverted);
+		faceDetection.Detection(imageConverted, faces);
+		DrawElement::DrawCircle(imageConverted, faces);
+		
+		BYTE* newImage = new BYTE[width * height * 3];
 		ImageConversion::ToGalaxyImage(imageConverted, width, height, newImage);
 
 		mainDialog->ShowAcquiredImage(pBuffer, width, height);
