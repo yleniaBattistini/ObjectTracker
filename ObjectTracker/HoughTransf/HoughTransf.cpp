@@ -66,7 +66,7 @@ void padImage(Mat image) {
  int main() {
 
      Mat imgCircles, detectImgCircles;
-     imgCircles = imread("C:\\Users\\ylenia\\Desktop\\UNIVERSITA'\\MAGISTRALE\\2Anno\\2Semestre\\IMMAGINI3D\\HFimages\\circle2.png");
+     imgCircles = imread("..\\..\\img\\circle2.png");
      imgCircles.copyTo(detectImgCircles);
 
      // Circle Detection Hough Transform
