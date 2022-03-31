@@ -22,6 +22,9 @@ private:
 	string serialPortName;// "COM5" //"COM3"
 	ImageViewer* acquiredImageViewer;
 	ImageViewer* processedImageViewer;
+	vector<string> ports;
+	bool manually;
+	char keyword_trigger;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -39,6 +42,7 @@ public:
 	void ShowAcquiredImage(BYTE* image, int width, int height);
 	void ShowProcessedImage(BYTE* image, int width, int height);
 	void OnImageProcessingCompleted();
+	void ObjectRegognized(vector<Rect>& faces);
 
 	afx_msg void OnBnClickedBtnStartDevice();
 	afx_msg void OnBnClickedBtnStopDevice();
@@ -47,4 +51,6 @@ public:
 	afx_msg void OnClose();
 	afx_msg void OnBnClickedChkSave();
 	afx_msg void OnCbnSelchangeCombo1();
+	afx_msg void OnBnClickedChkMovement();
+	afx_msg void OnStnClickedLblRecognition();
 };

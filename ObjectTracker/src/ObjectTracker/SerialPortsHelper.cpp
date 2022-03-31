@@ -12,10 +12,12 @@ vector<string> SerialPortsHelper::ListAvailablePorts()
 	{
 		char path[PATH_MAX];
 		string name = "COM" + to_string(i);
-		if (QueryDosDevice(name.c_str(), path, PATH_MAX) != 0)
+		DWORD test = QueryDosDevice(name.c_str(), path, PATH_MAX);
+		if (test != 0)
 		{
 			ports.push_back(name);
 		}
+
 	}
 	return ports;
 }

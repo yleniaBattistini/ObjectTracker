@@ -14,13 +14,15 @@ using namespace cv;
 #endif
 
 MainDialog::MainDialog(CWnd* pParent) : CDialog(MainDialog::IDD, pParent),
-	savePath(""),
-	handler(new ImageCapturedHandler()),
-	acquiredImageViewer(NULL),
-	processedImageViewer(NULL),
-	camera(new Camera()),
-	arduino(NULL),
-	checkSaveBmp(false)
+savePath(""),
+handler(new ImageCapturedHandler()),
+acquiredImageViewer(NULL),
+processedImageViewer(NULL),
+camera(new Camera()),
+arduino(NULL),
+checkSaveBmp(false),
+manually(false),
+keyword_trigger((char)waitKey(10))
 {
 }
 
@@ -32,20 +34,22 @@ BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_CHK_SAVE, &MainDialog::OnBnClickedChkSave)
 	ON_CBN_SELCHANGE(IDC_ARDUINOPORTS, &MainDialog::OnCbnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_CHK_MOVEMENT, &MainDialog::OnBnClickedChkMovement)
+	ON_STN_CLICKED(IDC_LBL_RECOGNITION, &MainDialog::OnStnClickedLblRecognition)
 END_MESSAGE_MAP()
 
 BOOL MainDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	/*CComboBox* arduinoPorts = (CComboBox*) GetDlgItem(IDC_ARDUINOPORTS);
+	CComboBox* arduinoPorts = (CComboBox*) GetDlgItem(IDC_ARDUINOPORTS);
 	arduinoPorts->ResetContent();
-	vector<string> ports = SerialPortsHelper::ListAvailablePorts();
+	ports = SerialPortsHelper::ListAvailablePorts();
 	for (int i = 0; i < ports.size(); i++) {
 		arduinoPorts->SetItemData(arduinoPorts->AddString(ports[i].c_str()), i);
 	}
 	if (ports.size() > 0) {
 		arduinoPorts->SetCurSel(0);
-	}*/
+	}
 
 	try
 	{
@@ -115,8 +119,8 @@ void MainDialog::OnBnClickedBtnStopDevice()
 	try
 	{
 		camera->StopAcquisition();
-		//delete acquiredImageViewer;
-		//delete processedImageViewer;
+		delete acquiredImageViewer;
+		delete processedImageViewer;
 		camera->Disconnect();
 
 		__UpdateUI();
@@ -158,6 +162,7 @@ void MainDialog::OnClose()
 	}
 
 	CDialog::OnClose();
+	exit(0);
 }
 
 void MainDialog::SavePicture(cv::Mat& image)
@@ -206,7 +211,10 @@ void MainDialog::ShowProcessedImage(BYTE* image, int width, int height)
 
 void MainDialog::OnImageProcessingCompleted()
 {
-	camera->Trigger();
+	if (manually == true) {
+		if (keyword_trigger == 't')
+			camera -> Trigger();
+	}else camera->Trigger();
 }
 
 void MainDialog::OnBnClickedChkSave()
@@ -217,9 +225,26 @@ void MainDialog::OnBnClickedChkSave()
 
 void MainDialog::OnCbnSelchangeCombo1()
 {
-	CComboBox* arduinoPorts = (CComboBox*)GetDlgItem(IDC_ARDUINOPORTS); 
+	CComboBox* arduinoPorts = GetDlgItem(IDC_LBL_RECOGNITION);
 	int selected = arduinoPorts->GetCurSel();
 	CString port;
 	arduinoPorts->GetLBText(selected, port);
 	serialPortName = port;
+}
+
+
+void MainDialog::OnBnClickedChkMovement()
+{
+	manually = true;
+}
+
+void MainDialog::ObjectRegognized(vector<Rect>& faces) {
+	if (faces.size() > 0) {
+		LBLText* arduinoPorts = (CComboBox*)GetDlgItem(IDC_ARDUINOPORTS);
+	}else 
+}
+
+void MainDialog::OnStnClickedLblRecognition()
+{
+	// TODO: Add your control notification handler code here
 }

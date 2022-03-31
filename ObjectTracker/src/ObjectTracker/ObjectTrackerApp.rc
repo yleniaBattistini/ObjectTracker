@@ -81,22 +81,23 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "Object Tracker"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Start Device",IDC_BTN_START_DEVICE,347,22,76,14
+    PUSHBUTTON      "Start Device",IDC_BTN_START_DEVICE,320,23,76,14
     PUSHBUTTON      "Stop Device",IDC_BTN_STOP_DEVICE,451,22,76,14
-    PUSHBUTTON      "Connect Arduino",IDC_BTN_CONNECT_ARDU,347,46,76,14
+    PUSHBUTTON      "Connect Arduino",IDC_BTN_CONNECT_ARDU,321,46,76,14
     PUSHBUTTON      "Disconnect Arduino",IDC_BTN_DISCONNECT_ARDU,451,46,76,14
     GROUPBOX        "Device Control",IDC_STATIC,310,10,224,80
     GROUPBOX        "Image Saving",IDC_STATIC,310,90,224,54
-    LTEXT           "(The acquired images will be saved in the foler named ""ObjectTrackerImages"" which is in the same path with the application of ObjectTracker.exe.)",IDC_STATIC,310,111,224,33
+    LTEXT           "(The acquired images will be saved in the foler named ""ObjectTrackerImages"" which is in the same path with the application of ObjectTracker.exe.)",IDC_STATIC,336,111,198,33
     GROUPBOX        "Movement Mode",IDC_STATIC,310,144,224,64
-    CONTROL         "Manual",IDC_CHK_MOVEMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,310,155,60,10
-    LTEXT           "(In manual mode the image can be moved through the analogs tick)",IDC_STATIC,354,172,172,24
-    LTEXT           "NOT RECOGNIZED",IDC_LBL_RECOGNITION,342,210,64,8
-    CONTROL         "Save as BMP",IDC_CHK_SAVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,310,100,60,10
-    COMBOBOX        IDC_ARDUINOPORTS,415,69,111,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Arduino Port",IDC_STATIC,347,69,41,8
+    CONTROL         "Manual",IDC_CHK_MOVEMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,320,155,60,10
+    LTEXT           "(In manual mode the image can be moved through the analogs tick)",IDC_STATIC,337,172,197,24
+    LTEXT           "NOT RECOGNIZED",IDC_LBL_RECOGNITION,320,220,64,8
+    CONTROL         "Save as BMP",IDC_CHK_SAVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,319,100,60,10
+    COMBOBOX        IDC_ARDUINOPORTS,417,69,111,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Arduino Port",IDC_STATIC,367,70,41,8
     CONTROL         "",IDC_SHOW_PICTURE_STATIC,"Static",SS_BLACKFRAME,10,10,290,134
     CONTROL         "",IDC_SHOW_OPENCV_PICTURE,"Static",SS_BLACKFRAME,10,159,290,134
+    GROUPBOX        "Object Recognition",IDC_STATIC,310,208,224,64
 END
 
 

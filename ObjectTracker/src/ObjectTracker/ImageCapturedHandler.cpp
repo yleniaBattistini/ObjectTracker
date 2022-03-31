@@ -18,6 +18,7 @@ void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPoin
 		ImageConversion::ToOpenCvImage(pBuffer, width, height, imageConverted);
 
 		faceDetection.Detection(imageConverted, faces);
+		MainDialog::ObjectRegognized(faces);
 		DrawElement::DrawCircle(imageConverted, faces);
 		
 		BYTE* newImage = new BYTE[width * height * 3];
@@ -32,7 +33,7 @@ void ImageCapturedHandler::DoOnImageCaptured(CImageDataPointer& objImageDataPoin
 		}
 
 		delete[] newImage;
-
+		
 		mainDialog->OnImageProcessingCompleted();
 	}
 	catch (std::exception)
