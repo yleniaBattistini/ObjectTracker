@@ -1,5 +1,4 @@
-#ifndef SERIALPORTSHELPER_H
-#define SERIALPORTSHELPER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -11,5 +10,3 @@ class SerialPortsHelper
 public:
     static vector<string> ListAvailablePorts();
 };
-
-#endif // SERIALPORTSHELPER_H

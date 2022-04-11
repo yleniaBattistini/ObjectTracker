@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QLabel>
 #include <QMainWindow>
@@ -39,9 +38,7 @@ private:
     AspectRatioLabel *processedImageViewer;
 
     void UpdateUiState();
-    AspectRatioLabel *SetupAsDisplay(QWidget *widget);
 
-    void DisplayImage(Mat &image, AspectRatioLabel *viewer);
 private slots:
     void OnNewFrame();
 
@@ -49,5 +46,5 @@ private slots:
     void OnStopCameraClicked();
     void OnConnectArduinoClicked();
     void OnDisconnectArduinoClicked();
+    void OnCalibrationClicked();
 };
-#endif // MAINWINDOW_H

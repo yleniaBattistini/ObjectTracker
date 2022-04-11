@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "calibrationdialog.h"
 #include "ui_mainwindow.h"
 #include <opencv2/core/core.hpp>
 #include <serial/serialportshelper.h>
@@ -6,9 +7,10 @@
 #include <model/webcam.h>
 #include <string>
 #include <gui/aspectratiolabel.h>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <QDialog>
 #include <QPixmap>
 #include <QSizePolicy>
+#include "displayutils.h"
 
 using namespace std;
 
@@ -32,9 +34,10 @@ MainWindow::MainWindow(ImageProcessor *processor, QWidget *parent) : QMainWindow
     connect(ui->btnStopCamera, SIGNAL(clicked()), this, SLOT(OnStopCameraClicked()));
     connect(ui->btnConnectArduino, SIGNAL(clicked()), this, SLOT(OnConnectArduinoClicked()));
     connect(ui->btnDisconnectArduino, SIGNAL(clicked()), this, SLOT(OnDisconnectArduinoClicked()));
+    connect(ui->btnCalibration, SIGNAL(clicked()), this, SLOT(OnCalibrationClicked()));
 
-    rawImageViewer = SetupAsDisplay(ui->rawImageBox);
-    processedImageViewer = SetupAsDisplay(ui->processedImageBox);
+    rawImageViewer = setupAsDisplay(ui->rawImageBox);
+    processedImageViewer = setupAsDisplay(ui->processedImageBox);
 }
 
 MainWindow::~MainWindow()
@@ -57,36 +60,21 @@ void MainWindow::UpdateUiState()
     ui->arduinoBox->setEnabled(camera != NULL);
     ui->btnStartCamera->setVisible(camera == NULL);
     ui->btnStopCamera->setVisible(camera != NULL);
+    ui->btnCalibration->setVisible(camera != NULL);
     ui->btnConnectArduino->setVisible(controller == NULL);
     ui->btnDisconnectArduino->setVisible(controller != NULL);
     ui->cmbSerialPort->setEnabled(controller == NULL);
-}
-
-AspectRatioLabel *MainWindow::SetupAsDisplay(QWidget *widget)
-{
-    AspectRatioLabel *viewer = new AspectRatioLabel();
-    widget->layout()->addWidget(viewer);
-    return viewer;
-}
-
-void MainWindow::DisplayImage(Mat &image, AspectRatioLabel *viewer)
-{
-    Mat converted;
-    cvtColor(image, converted, COLOR_BGR2RGB);
-
-    QImage qImage = QImage((uchar*) converted.data, converted.cols, converted.rows, converted.step, QImage::Format_RGB888);
-    viewer->setPixmapWithAspectRatio(QPixmap::fromImage(qImage));
 }
 
 void MainWindow::OnNewFrame()
 {
     Mat frame;
     camera->AcquireNextFrame(frame);
-    DisplayImage(frame, rawImageViewer);
+    rawImageViewer->setOpencvImage(frame);
 
     Mat processed;
     processor->ProcessImage(frame, processed);
-    DisplayImage(processed, processedImageViewer);
+    processedImageViewer->setOpencvImage(processed);
 }
 
 void MainWindow::OnStartCameraClicked()
@@ -118,5 +106,12 @@ void MainWindow::OnDisconnectArduinoClicked()
     delete controller;
     controller = NULL;
     UpdateUiState();
+}
+
+void MainWindow::OnCalibrationClicked()
+{
+    CalibrationDialog calibrationDialog(camera);
+    calibrationDialog.setWindowTitle("Calibration");
+    calibrationDialog.exec();
 }
 

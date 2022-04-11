@@ -1,5 +1,4 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#pragma once
 
 #include "serialport.h"
 #include <tuple>
@@ -21,6 +20,3 @@ public:
     void Write(string message);
     string Read();
 };
-
-
-#endif // CONSOLE_H

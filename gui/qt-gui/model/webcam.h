@@ -1,5 +1,4 @@
-#ifndef WEBCAM_H
-#define WEBCAM_H
+#pragma once
 
 #include "camera.h"
 
@@ -18,5 +17,3 @@ public:
 
     void AcquireNextFrame(Mat& frame);
 };
-
-#endif // WEBCAM_H

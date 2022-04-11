@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include <opencv2/core/core.hpp>
 
@@ -15,5 +14,3 @@ public:
 
     virtual void AcquireNextFrame(Mat& frame) = 0;
 };
-
-#endif // CAMERA_H
