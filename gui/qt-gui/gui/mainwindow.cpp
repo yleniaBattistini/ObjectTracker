@@ -11,6 +11,7 @@
 #include <QPixmap>
 #include <QSizePolicy>
 #include "displayutils.h"
+#include <opencv2/calib3d.hpp>
 
 using namespace std;
 
@@ -66,20 +67,30 @@ void MainWindow::UpdateUiState()
     ui->cmbSerialPort->setEnabled(controller == NULL);
 }
 
+void MainWindow::CalibrateCamera()
+{
+    CalibrationDialog calibrationDialog(camera);
+    calibrationDialog.setWindowTitle("Calibration");
+    calibrationDialog.exec();
+
+    calibrationDialog.readCalibrationResult(cameraMatrix, distortionCoefficients);
+}
+
 void MainWindow::OnNewFrame()
 {
     Mat frame;
     camera->AcquireNextFrame(frame);
     rawImageViewer->setOpencvImage(frame);
 
-    Mat processed;
-    processor->ProcessImage(frame, processed);
-    processedImageViewer->setOpencvImage(processed);
+    Mat undistorted;
+    undistort(frame, undistorted, cameraMatrix, distortionCoefficients);
+    processedImageViewer->setOpencvImage(undistorted);
 }
 
 void MainWindow::OnStartCameraClicked()
 {
     camera = new WebCam(0);
+    CalibrateCamera();
     timer.start(20);
     UpdateUiState();
 }
@@ -110,8 +121,6 @@ void MainWindow::OnDisconnectArduinoClicked()
 
 void MainWindow::OnCalibrationClicked()
 {
-    CalibrationDialog calibrationDialog(camera);
-    calibrationDialog.setWindowTitle("Calibration");
-    calibrationDialog.exec();
+    CalibrateCamera();
 }
 

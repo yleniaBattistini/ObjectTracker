@@ -8,6 +8,11 @@
 
 #include "model/camera.h"
 
+#include <calibration/calibrationprocess.h>
+
+using namespace cv;
+using namespace std;
+
 namespace Ui {
 class CalibrationDialog;
 }
@@ -20,14 +25,20 @@ public:
     explicit CalibrationDialog(Camera *camera, QWidget *parent = nullptr);
     ~CalibrationDialog();
 
+    void readCalibrationResult(Mat &cameraMatrix, Mat &distortionCoefficients);
+
 private:
     Ui::CalibrationDialog *ui;
     QTimer timer;
     Camera *camera;
     Mat currentFrame;
+    FrameData currentFrameData;
+    bool patternFoundOnCurrentFrame;
+    CalibrationProcess calibrationProcess;
     QStandardItemModel *calibrationFramesModel;
-
     AspectRatioLabel *display;
+    Mat cameraMatrix;
+    Mat distortionCoefficients;
 
 private slots:
     void OnNewFrame();

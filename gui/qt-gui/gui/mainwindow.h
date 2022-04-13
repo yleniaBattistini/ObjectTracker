@@ -33,11 +33,14 @@ private:
     Controller *controller;
     ImageProcessor *processor;
     QTimer timer;
+    Mat cameraMatrix;
+    Mat distortionCoefficients;
 
     AspectRatioLabel *rawImageViewer;
     AspectRatioLabel *processedImageViewer;
 
     void UpdateUiState();
+    void CalibrateCamera();
 
 private slots:
     void OnNewFrame();
@@ -46,5 +49,6 @@ private slots:
     void OnStopCameraClicked();
     void OnConnectArduinoClicked();
     void OnDisconnectArduinoClicked();
+
     void OnCalibrationClicked();
 };

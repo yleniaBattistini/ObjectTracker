@@ -1,19 +1,41 @@
 #include "calibrationprocess.h"
 
 #include <opencv2/calib3d.hpp>
+#include <opencv2/imgproc.hpp>
 
 CalibrationProcess::CalibrationProcess()
 {
 }
 
-bool CalibrationProcess::detectChessboardCorners(const Mat &image, vector<Point2f> &corners)
+bool CalibrationProcess::detectPattern(const Mat &image, FrameData &frameData)
 {
-    return findChessboardCorners(image, CHESSBOARD_SIZE, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_NORMALIZE_IMAGE);
+    int flags = CALIB_CB_ADAPTIVE_THRESH
+            | CALIB_CB_NORMALIZE_IMAGE
+            | CALIB_CB_FAST_CHECK;
+    bool found = findChessboardCorners(image, CHESSBOARD_SIZE, frameData, flags);
+    if (found)
+    {
+        Mat viewGray;
+        cvtColor(image, viewGray, COLOR_BGR2GRAY);
+        cornerSubPix(
+            viewGray,
+            frameData,
+            Size(11, 11),
+            Size(-1, -1),
+            TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1)
+        );
+    }
+    return found;
 }
 
-void CalibrationProcess::addFrame(const CalibrationFrame &frame)
+void CalibrationProcess::drawPattern(Mat &image, const FrameData &frameData)
 {
-    frames.push_back(frame);
+    drawChessboardCorners(image, CHESSBOARD_SIZE, frameData, true);
+}
+
+void CalibrationProcess::addFrame(const FrameData &frameData)
+{
+    frames.push_back(frameData);
 }
 
 void CalibrationProcess::removeFrame(int index)
@@ -30,7 +52,7 @@ int CalibrationProcess::frameCount()
     return frames.size();
 }
 
-CalibrationFrame CalibrationProcess::frameAt(int index)
+FrameData CalibrationProcess::frameAt(int index)
 {
     return frames.at(index);
 }
@@ -58,11 +80,11 @@ bool CalibrationProcess::runCalibration(Size imageSize, double squareSize, Mat &
 void CalibrationProcess::get3dCornerPositions(double squareSize, vector<Point3f> &corners)
 {
     corners.clear();
-    for(int i = 0; i < CHESSBOARD_SIZE.height; i++)
+    for (int i = 0; i < CHESSBOARD_SIZE.height; i++)
     {
-        for(int j = 0; j < CHESSBOARD_SIZE.width; j++)
+        for (int j = 0; j < CHESSBOARD_SIZE.width; j++)
         {
-            corners.push_back(Point3f(j*squareSize, i*squareSize, 0));
+            corners.push_back(Point3f(j * squareSize, i * squareSize, 0));
         }
     }
 }

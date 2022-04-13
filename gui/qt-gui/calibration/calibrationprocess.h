@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-typedef vector<Point2f> CalibrationFrame;
+typedef vector<Point2f> FrameData;
 
 class CalibrationProcess
 {
@@ -16,16 +16,17 @@ public:
 
     const Size CHESSBOARD_SIZE = Size(9, 6);
 
-    bool detectChessboardCorners(const Mat &image, vector<Point2f> &corners);
+    bool detectPattern(const Mat &image, FrameData &frameData);
+    void drawPattern(Mat &image, const FrameData &frameData);
 
-    void addFrame(const CalibrationFrame &frame);
+    void addFrame(const FrameData &frameData);
     void removeFrame(int index);
     int frameCount();
-    CalibrationFrame frameAt(int index);
+    FrameData frameAt(int index);
     bool runCalibration(Size imageSize, double squareSize, Mat &cameraMatrix, Mat &distortionCoefficients);
 
 private:
-    vector<CalibrationFrame> frames;
+    vector<FrameData> frames;
 
     void get3dCornerPositions(double squareSize, vector<Point3f> &corners);
 };

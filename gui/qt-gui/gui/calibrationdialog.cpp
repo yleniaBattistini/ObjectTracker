@@ -1,7 +1,11 @@
 #include "calibrationdialog.h"
 #include "ui_calibrationdialog.h"
 #include "displayutils.h"
+#include "pixmaputils.h"
 #include <opencv2/core.hpp>
+#include <opencv2/calib3d.hpp>
+#include <opencv2/imgproc.hpp>
+#include <iostream>
 
 CalibrationDialog::CalibrationDialog(Camera *camera, QWidget *parent) :
     QDialog(parent),
@@ -27,15 +31,35 @@ CalibrationDialog::~CalibrationDialog()
     delete display;
 }
 
+void CalibrationDialog::readCalibrationResult(Mat &cameraMatrix, Mat &distortionCoefficients)
+{
+    cameraMatrix = this->cameraMatrix;
+    distortionCoefficients = this->distortionCoefficients;
+}
+
 void CalibrationDialog::OnNewFrame()
 {
     camera->AcquireNextFrame(currentFrame);
+    currentFrameData.clear();
+    patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentFrameData);
+    if (patternFoundOnCurrentFrame)
+    {
+        calibrationProcess.drawPattern(currentFrame, currentFrameData);
+    }
     display->setOpencvImage(currentFrame);
 }
 
 void CalibrationDialog::OnAddFrameClicked()
 {
-    calibrationFramesModel->appendRow(new QStandardItem("Ciao"));
+    if (!patternFoundOnCurrentFrame)
+    {
+        return;
+    }
+    calibrationProcess.addFrame(currentFrameData);
+    QPixmap pixmap;
+    pixmapFromOpencvImage(currentFrame, pixmap);
+    QIcon icon(pixmap);
+    calibrationFramesModel->appendRow(new QStandardItem(icon, "Frame"));
 }
 
 void CalibrationDialog::OnRemoveFrameClicked()
@@ -45,14 +69,13 @@ void CalibrationDialog::OnRemoveFrameClicked()
         return;
     }
 
-    int selected = ui->lstCalibrationFrames->selectionModel()->currentIndex().row();
-
-
-
-    calibrationFramesModel->removeRow(selected);
+    int selectedIndex = ui->lstCalibrationFrames->selectionModel()->currentIndex().row();
+    calibrationProcess.removeFrame(selectedIndex);
+    calibrationFramesModel->removeRow(selectedIndex);
 }
 
 void CalibrationDialog::OnRunCalibrationClicked()
 {
-
+    calibrationProcess.runCalibration(currentFrame.size(), ui->spnSquareSize->value(), cameraMatrix, distortionCoefficients);
+    close();
 }

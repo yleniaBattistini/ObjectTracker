@@ -14,6 +14,7 @@ SOURCES += \
     gui/calibrationdialog.cpp           \
     gui/displayutils.cpp \
     gui/mainwindow.cpp                  \
+    gui/pixmaputils.cpp \
     model/camera.cpp                    \
     model/controller.cpp                \
     model/webcam.cpp                    \
@@ -30,6 +31,7 @@ HEADERS += \
     gui/calibrationdialog.h             \
     gui/displayutils.h \
     gui/mainwindow.h                    \
+    gui/pixmaputils.h \
     model/camera.h                      \
     model/controller.h                  \
     model/webcam.h                      \
