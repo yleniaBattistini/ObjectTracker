@@ -64,8 +64,6 @@ bool CalibrationProcess::runCalibration(Size imageSize, double squareSize, Mat &
 
     vector<Point3f> cornerPositions;
     get3dCornerPositions(squareSize, cornerPositions);
-//    double gridWidth = squareSize * (CHESSBOARD_SIZE.width - 1);
-//    cornerPositions[CHESSBOARD_SIZE.width - 1].x = cornerPositions[0].x + gridWidth;
 
     vector<vector<Point3f>> objectPoints;
     objectPoints.resize(frames.size(), cornerPositions);

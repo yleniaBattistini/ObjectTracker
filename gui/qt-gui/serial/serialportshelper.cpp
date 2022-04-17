@@ -5,7 +5,7 @@
 #define PORT_MAX 128
 #define PATH_MAX 500
 
-vector<string> SerialPortsHelper::ListAvailablePorts()
+vector<string> SerialPortsHelper::listAvailablePorts()
 {
     vector<string> ports;
     for (int i = 0; i < PORT_MAX; i++)

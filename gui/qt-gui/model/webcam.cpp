@@ -15,7 +15,7 @@ WebCam::~WebCam()
     videoCapture.release();
 }
 
-void WebCam::AcquireNextFrame(Mat &image)
+void WebCam::acquireNextFrame(Mat &image)
 {
     Mat flippedInput;
     videoCapture >> flippedInput;

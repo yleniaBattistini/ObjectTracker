@@ -39,16 +39,16 @@ private:
     AspectRatioLabel *rawImageViewer;
     AspectRatioLabel *processedImageViewer;
 
-    void UpdateUiState();
-    void CalibrateCamera();
+    void updateUiState();
+    void calibrateCamera();
 
 private slots:
-    void OnNewFrame();
+    void onNewFrame();
 
-    void OnStartCameraClicked();
-    void OnStopCameraClicked();
-    void OnConnectArduinoClicked();
-    void OnDisconnectArduinoClicked();
+    void onStartCameraClicked();
+    void onStopCameraClicked();
+    void onConnectArduinoClicked();
+    void onDisconnectArduinoClicked();
 
-    void OnCalibrationClicked();
+    void onCalibrationClicked();
 };

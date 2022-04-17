@@ -2,7 +2,7 @@
 
 #include <opencv2/imgproc.hpp>
 
-void TestProcessor::ProcessImage(Mat &input, Mat &output)
+void TestProcessor::processImage(Mat &input, Mat &output)
 {
     Mat intermediate;
     flip(input, intermediate, 0);

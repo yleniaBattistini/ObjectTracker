@@ -20,8 +20,8 @@ public:
     SerialPort(string portName);
     ~SerialPort();
 
-    int ReadSerialPort(const char* buffer, unsigned int buf_size);
-    bool WriteSerialPort(const char* buffer, unsigned int buf_size);
-    bool IsConnected();
-    void CloseSerial();
+    int readSerialPort(const char* buffer, unsigned int buf_size);
+    bool writeSerialPort(const char* buffer, unsigned int buf_size);
+    bool isConnected();
+    void closeSerial();
 };

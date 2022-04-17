@@ -23,19 +23,19 @@ MainWindow::MainWindow(ImageProcessor *processor, QWidget *parent) : QMainWindow
 {
     ui->setupUi(this);
 
-    for (string& port : SerialPortsHelper::ListAvailablePorts())
+    for (string& port : SerialPortsHelper::listAvailablePorts())
     {
         ui->cmbSerialPort->addItem(QString::fromStdString(port));
     }
 
-    UpdateUiState();
+    updateUiState();
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(OnNewFrame()));
-    connect(ui->btnStartCamera, SIGNAL(clicked()), this, SLOT(OnStartCameraClicked()));
-    connect(ui->btnStopCamera, SIGNAL(clicked()), this, SLOT(OnStopCameraClicked()));
-    connect(ui->btnConnectArduino, SIGNAL(clicked()), this, SLOT(OnConnectArduinoClicked()));
-    connect(ui->btnDisconnectArduino, SIGNAL(clicked()), this, SLOT(OnDisconnectArduinoClicked()));
-    connect(ui->btnCalibration, SIGNAL(clicked()), this, SLOT(OnCalibrationClicked()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(onNewFrame()));
+    connect(ui->btnStartCamera, SIGNAL(clicked()), this, SLOT(onStartCameraClicked()));
+    connect(ui->btnStopCamera, SIGNAL(clicked()), this, SLOT(onStopCameraClicked()));
+    connect(ui->btnConnectArduino, SIGNAL(clicked()), this, SLOT(onConnectArduinoClicked()));
+    connect(ui->btnDisconnectArduino, SIGNAL(clicked()), this, SLOT(onDisconnectArduinoClicked()));
+    connect(ui->btnCalibration, SIGNAL(clicked()), this, SLOT(onCalibrationClicked()));
 
     rawImageViewer = setupAsDisplay(ui->rawImageBox);
     processedImageViewer = setupAsDisplay(ui->processedImageBox);
@@ -56,7 +56,7 @@ MainWindow::~MainWindow()
     }
 }
 
-void MainWindow::UpdateUiState()
+void MainWindow::updateUiState()
 {
     ui->arduinoBox->setEnabled(camera != NULL);
     ui->btnStartCamera->setVisible(camera == NULL);
@@ -67,7 +67,7 @@ void MainWindow::UpdateUiState()
     ui->cmbSerialPort->setEnabled(controller == NULL);
 }
 
-void MainWindow::CalibrateCamera()
+void MainWindow::calibrateCamera()
 {
     CalibrationDialog calibrationDialog(camera);
     calibrationDialog.setWindowTitle("Calibration");
@@ -76,10 +76,10 @@ void MainWindow::CalibrateCamera()
     calibrationDialog.readCalibrationResult(cameraMatrix, distortionCoefficients);
 }
 
-void MainWindow::OnNewFrame()
+void MainWindow::onNewFrame()
 {
     Mat frame;
-    camera->AcquireNextFrame(frame);
+    camera->acquireNextFrame(frame);
     rawImageViewer->setOpencvImage(frame);
 
     Mat undistorted;
@@ -87,40 +87,40 @@ void MainWindow::OnNewFrame()
     processedImageViewer->setOpencvImage(undistorted);
 }
 
-void MainWindow::OnStartCameraClicked()
+void MainWindow::onStartCameraClicked()
 {
     camera = new WebCam(0);
-    CalibrateCamera();
+    calibrateCamera();
     timer.start(20);
-    UpdateUiState();
+    updateUiState();
 }
 
-void MainWindow::OnStopCameraClicked()
+void MainWindow::onStopCameraClicked()
 {
     timer.stop();
     delete camera;
     camera = NULL;
-    UpdateUiState();
+    updateUiState();
 }
 
-void MainWindow::OnConnectArduinoClicked()
+void MainWindow::onConnectArduinoClicked()
 {
     string portName = ui->cmbSerialPort->currentText().toStdString();
     controller = new Controller(portName);
-    controller->Connect();
-    UpdateUiState();
+    controller->connect();
+    updateUiState();
 }
 
-void MainWindow::OnDisconnectArduinoClicked()
+void MainWindow::onDisconnectArduinoClicked()
 {
-    controller->Disconnect();
+    controller->disconnect();
     delete controller;
     controller = NULL;
-    UpdateUiState();
+    updateUiState();
 }
 
-void MainWindow::OnCalibrationClicked()
+void MainWindow::onCalibrationClicked()
 {
-    CalibrateCamera();
+    calibrateCamera();
 }
 

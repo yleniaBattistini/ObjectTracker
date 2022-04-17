@@ -8,5 +8,5 @@ using namespace std;
 class SerialPortsHelper
 {
 public:
-    static vector<string> ListAvailablePorts();
+    static vector<string> listAvailablePorts();
 };

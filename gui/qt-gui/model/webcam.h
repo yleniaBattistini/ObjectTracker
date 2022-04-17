@@ -15,5 +15,5 @@ public:
     WebCam(int camIndex);
     ~WebCam();
 
-    void AcquireNextFrame(Mat& frame);
+    void acquireNextFrame(Mat& frame);
 };

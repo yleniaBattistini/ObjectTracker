@@ -41,8 +41,8 @@ private:
     Mat distortionCoefficients;
 
 private slots:
-    void OnNewFrame();
-    void OnAddFrameClicked();
-    void OnRemoveFrameClicked();
-    void OnRunCalibrationClicked();
+    void onNewFrame();
+    void onAddFrameClicked();
+    void onRemoveFrameClicked();
+    void onRunCalibrationClicked();
 };
