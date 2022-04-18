@@ -12,11 +12,13 @@
 
 using namespace std;
 
-MainWindow::MainWindow(ImageProcessor *processor, QWidget *parent) : QMainWindow(parent),
+MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, HoughTransform *houghTransform, QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow),
     camera(NULL),
     controller(NULL),
-    processor(processor)
+    processor(processor),
+    faceDetector(faceDetector),
+    houghTransform(houghTransform)
 {
     ui->setupUi(this);
 
@@ -84,9 +86,18 @@ void MainWindow::OnNewFrame()
     camera->AcquireNextFrame(frame);
     DisplayImage(frame, rawImageViewer);
 
-    Mat processed;
+    /*Mat processed;
     processor->ProcessImage(frame, processed);
-    DisplayImage(processed, processedImageViewer);
+    DisplayImage(processed, processedImageViewer);*/
+
+//    Mat imageDetected;
+//    faceDetector->Detection(frame, imageDetected);
+//    DisplayImage(imageDetected, processedImageViewer);
+
+    Mat imageHough;
+    houghTransform->houghTransform(frame, imageHough);
+    DisplayImage(imageHough, processedImageViewer);
+
 }
 
 void MainWindow::OnStartCameraClicked()

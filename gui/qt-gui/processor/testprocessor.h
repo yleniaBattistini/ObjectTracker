@@ -1,5 +1,4 @@
-#ifndef TESTPROCESSOR_H
-#define TESTPROCESSOR_H
+#pragma once
 
 #include "imageprocessor.h"
 
@@ -10,5 +9,3 @@ class TestProcessor : public ImageProcessor
 public:
     void ProcessImage(Mat &input, Mat &output);
 };
-
-#endif // TESTPROCESSOR_H

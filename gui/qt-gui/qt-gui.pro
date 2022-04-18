@@ -14,8 +14,12 @@ SOURCES += \
     model/camera.cpp                    \
     model/controller.cpp                \
     model/webcam.cpp                    \
+    processor/facedetection.cpp \
+    processor/houghtransform.cpp \
     processor/imageprocessor.cpp        \
     processor/testprocessor.cpp         \
+    processor/utils/drawelement.cpp \
+    processor/utils/geometrictransformation.cpp \
     serial/console.cpp                  \
     serial/serialport.cpp               \
     serial/serialportshelper.cpp        \
@@ -27,8 +31,12 @@ HEADERS += \
     model/camera.h                      \
     model/controller.h                  \
     model/webcam.h                      \
+    processor/facedetection.h \
+    processor/houghtransform.h \
     processor/imageprocessor.h          \
     processor/testprocessor.h           \
+    processor/utils/drawelement.h \
+    processor/utils/geometrictransformation.h \
     serial/console.h                    \
     serial/serialport.h                 \
     serial/serialportshelper.h
@@ -50,9 +58,14 @@ LIBS += -L$$(OPENCV_DIR)/x64/vc16/lib         \
         -lopencv_calib3d$${OPENCV_VERSION}    \
         -lopencv_video$${OPENCV_VERSION}      \
         -lopencv_videoio$${OPENCV_VERSION}    \
-        -lopencv_photo$${OPENCV_VERSION}
+        -lopencv_photo$${OPENCV_VERSION}      \
+        -lopencv_objdetect$${OPENCV_VERSION}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    haarcascade_frontalface_alt.xml \
+    haarcascade_frontalface_default.xml

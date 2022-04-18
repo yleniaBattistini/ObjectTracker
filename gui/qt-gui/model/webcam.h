@@ -1,6 +1,4 @@
-#ifndef WEBCAM_H
-#define WEBCAM_H
-
+#pragma once
 #include "camera.h"
 
 #include <opencv2/videoio.hpp>
@@ -18,5 +16,3 @@ public:
 
     void AcquireNextFrame(Mat& frame);
 };
-
-#endif // WEBCAM_H

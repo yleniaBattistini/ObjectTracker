@@ -1,6 +1,4 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
-
+#pragma once
 #include "../serial/console.h"
 
 #define MODE_AUTO 0
@@ -27,5 +25,3 @@ public:
     void SetDetected(bool detectedState);
     tuple<double, double> GetOffset();
 };
-
-#endif // CONTROLLER_H

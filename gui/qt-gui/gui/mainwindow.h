@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QLabel>
 #include <QMainWindow>
@@ -8,7 +7,8 @@
 #include <model/controller.h>
 
 #include <processor/imageprocessor.h>
-
+#include <processor/facedetection.h>
+#include <processor/houghtransform.h>
 #include <gui/aspectratiolabel.h>
 
 #include <opencv2/videoio.hpp>
@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(ImageProcessor *processor, QWidget *parent = nullptr);
+    MainWindow(ImageProcessor *processor, FaceDetection *faceDetector,HoughTransform *houghTransform, QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -33,7 +33,10 @@ private:
     Camera *camera;
     Controller *controller;
     ImageProcessor *processor;
+    FaceDetection *faceDetector;
+    HoughTransform *houghTransform;
     QTimer timer;
+
 
     AspectRatioLabel *rawImageViewer;
     AspectRatioLabel *processedImageViewer;
@@ -50,4 +53,3 @@ private slots:
     void OnConnectArduinoClicked();
     void OnDisconnectArduinoClicked();
 };
-#endif // MAINWINDOW_H
