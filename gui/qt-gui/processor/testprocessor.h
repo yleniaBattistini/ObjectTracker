@@ -7,5 +7,5 @@ using namespace cv;
 class TestProcessor : public ImageProcessor
 {
 public:
-    void ProcessImage(Mat &input, Mat &output);
+    void processImage(Mat &input, Mat &output);
 };

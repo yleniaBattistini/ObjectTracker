@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../serial/console.h"
 
 #define MODE_AUTO 0
@@ -12,16 +13,16 @@ private:
     Console console;
     bool connected = false;
 
-    string SendRequest(string request);
-    void SendCommand(string command);
-    void SendCommandWithAck(string command);
+    string sendRequest(string request);
+    void sendCommand(string command);
+    void sendCommandWithAck(string command);
 public:
     Controller(string portName);
 
-    void Connect();
-    void Disconnect();
-    bool IsConnected();
-    void SetMode(int mode);
-    void SetDetected(bool detectedState);
-    tuple<double, double> GetOffset();
+    void connect();
+    void disconnect();
+    bool isConnected();
+    void setMode(int mode);
+    void setDetected(bool detectedState);
+    tuple<double, double> getOffset();
 };

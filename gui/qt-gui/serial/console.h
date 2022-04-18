@@ -1,5 +1,4 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#pragma once
 
 #include "serialport.h"
 #include <tuple>
@@ -14,13 +13,10 @@ private:
     SerialPort serialPort;
     string stringSoFar;
 
-    tuple<string, bool> SplitOnNewLine();
+    tuple<string, bool> splitOnNewLine();
 public:
     Console(string portName);
 
-    void Write(string message);
-    string Read();
+    void write(string message);
+    string read();
 };
-
-
-#endif // CONSOLE_H

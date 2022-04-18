@@ -1,4 +1,5 @@
 #pragma once
+
 #include "camera.h"
 
 #include <opencv2/videoio.hpp>
@@ -14,5 +15,5 @@ public:
     WebCam(int camIndex);
     ~WebCam();
 
-    void AcquireNextFrame(Mat& frame);
+    void acquireNextFrame(Mat& frame);
 };

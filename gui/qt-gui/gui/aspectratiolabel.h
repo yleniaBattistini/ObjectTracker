@@ -1,7 +1,9 @@
-#ifndef ASPECTRATIOLABEL_H
-#define ASPECTRATIOLABEL_H
+#pragma once
 
 #include <QLabel>
+#include <opencv2/core.hpp>
+
+using namespace cv;
 
 class AspectRatioLabel : public QLabel
 {
@@ -10,6 +12,7 @@ public:
     ~AspectRatioLabel();
 
 public slots:
+    void setOpencvImage(const Mat &image);
     void setPixmapWithAspectRatio(const QPixmap& pm);
 
 private:
@@ -19,5 +22,3 @@ private:
     void updatePixmap();
     double computeAspectRatio(int w, int h);
 };
-
-#endif // ASPECTRATIOLABEL_H

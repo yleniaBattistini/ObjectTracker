@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "calibrationdialog.h"
 #include "ui_mainwindow.h"
 #include <opencv2/core/core.hpp>
 #include <serial/serialportshelper.h>
@@ -6,9 +7,11 @@
 #include <model/webcam.h>
 #include <string>
 #include <gui/aspectratiolabel.h>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <QDialog>
 #include <QPixmap>
 #include <QSizePolicy>
+#include "displayutils.h"
+#include <opencv2/calib3d.hpp>
 
 using namespace std;
 
@@ -22,21 +25,22 @@ MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, H
 {
     ui->setupUi(this);
 
-    for (string& port : SerialPortsHelper::ListAvailablePorts())
+    for (string& port : SerialPortsHelper::listAvailablePorts())
     {
         ui->cmbSerialPort->addItem(QString::fromStdString(port));
     }
 
-    UpdateUiState();
+    updateUiState();
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(OnNewFrame()));
-    connect(ui->btnStartCamera, SIGNAL(clicked()), this, SLOT(OnStartCameraClicked()));
-    connect(ui->btnStopCamera, SIGNAL(clicked()), this, SLOT(OnStopCameraClicked()));
-    connect(ui->btnConnectArduino, SIGNAL(clicked()), this, SLOT(OnConnectArduinoClicked()));
-    connect(ui->btnDisconnectArduino, SIGNAL(clicked()), this, SLOT(OnDisconnectArduinoClicked()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(onNewFrame()));
+    connect(ui->btnStartCamera, SIGNAL(clicked()), this, SLOT(onStartCameraClicked()));
+    connect(ui->btnStopCamera, SIGNAL(clicked()), this, SLOT(onStopCameraClicked()));
+    connect(ui->btnConnectArduino, SIGNAL(clicked()), this, SLOT(onConnectArduinoClicked()));
+    connect(ui->btnDisconnectArduino, SIGNAL(clicked()), this, SLOT(onDisconnectArduinoClicked()));
+    connect(ui->btnCalibration, SIGNAL(clicked()), this, SLOT(onCalibrationClicked()));
 
-    rawImageViewer = SetupAsDisplay(ui->rawImageBox);
-    processedImageViewer = SetupAsDisplay(ui->processedImageBox);
+    rawImageViewer = setupAsDisplay(ui->rawImageBox);
+    processedImageViewer = setupAsDisplay(ui->processedImageBox);
 }
 
 MainWindow::~MainWindow()
@@ -54,80 +58,79 @@ MainWindow::~MainWindow()
     }
 }
 
-void MainWindow::UpdateUiState()
+void MainWindow::updateUiState()
 {
     ui->arduinoBox->setEnabled(camera != NULL);
     ui->btnStartCamera->setVisible(camera == NULL);
     ui->btnStopCamera->setVisible(camera != NULL);
+    ui->btnCalibration->setVisible(camera != NULL);
     ui->btnConnectArduino->setVisible(controller == NULL);
     ui->btnDisconnectArduino->setVisible(controller != NULL);
     ui->cmbSerialPort->setEnabled(controller == NULL);
 }
 
-AspectRatioLabel *MainWindow::SetupAsDisplay(QWidget *widget)
+void MainWindow::calibrateCamera()
 {
-    AspectRatioLabel *viewer = new AspectRatioLabel();
-    widget->layout()->addWidget(viewer);
-    return viewer;
+    CalibrationDialog calibrationDialog(camera);
+    calibrationDialog.setWindowTitle("Calibration");
+    calibrationDialog.exec();
+
+    calibrationDialog.readCalibrationResult(cameraMatrix, distortionCoefficients);
 }
 
-void MainWindow::DisplayImage(Mat &image, AspectRatioLabel *viewer)
-{
-    Mat converted;
-    cvtColor(image, converted, COLOR_BGR2RGB);
-
-    QImage qImage = QImage((uchar*) converted.data, converted.cols, converted.rows, converted.step, QImage::Format_RGB888);
-    viewer->setPixmapWithAspectRatio(QPixmap::fromImage(qImage));
-}
-
-void MainWindow::OnNewFrame()
+void MainWindow::onNewFrame()
 {
     Mat frame;
-    camera->AcquireNextFrame(frame);
-    DisplayImage(frame, rawImageViewer);
+    camera->acquireNextFrame(frame);
+    rawImageViewer->setOpencvImage(frame);
 
-    /*Mat processed;
-    processor->ProcessImage(frame, processed);
-    DisplayImage(processed, processedImageViewer);*/
+    Mat undistorted;
+    undistort(frame, undistorted, cameraMatrix, distortionCoefficients);
+    processedImageViewer->setOpencvImage(undistorted);
 
 //    Mat imageDetected;
 //    faceDetector->Detection(frame, imageDetected);
-//    DisplayImage(imageDetected, processedImageViewer);
+//    processedImageViewer->setOpencvImage(imageDetected);
 
     Mat imageHough;
     houghTransform->houghTransform(frame, imageHough);
-    DisplayImage(imageHough, processedImageViewer);
-
+    processedImageViewer->setOpencvImage(imageHough);
 }
 
-void MainWindow::OnStartCameraClicked()
+void MainWindow::onStartCameraClicked()
 {
     camera = new WebCam(0);
+    calibrateCamera();
     timer.start(20);
-    UpdateUiState();
+    updateUiState();
 }
 
-void MainWindow::OnStopCameraClicked()
+void MainWindow::onStopCameraClicked()
 {
     timer.stop();
     delete camera;
     camera = NULL;
-    UpdateUiState();
+    updateUiState();
 }
 
-void MainWindow::OnConnectArduinoClicked()
+void MainWindow::onConnectArduinoClicked()
 {
     string portName = ui->cmbSerialPort->currentText().toStdString();
     controller = new Controller(portName);
-    controller->Connect();
-    UpdateUiState();
+    controller->connect();
+    updateUiState();
 }
 
-void MainWindow::OnDisconnectArduinoClicked()
+void MainWindow::onDisconnectArduinoClicked()
 {
-    controller->Disconnect();
+    controller->disconnect();
     delete controller;
     controller = NULL;
-    UpdateUiState();
+    updateUiState();
+}
+
+void MainWindow::onCalibrationClicked()
+{
+    calibrateCamera();
 }
 

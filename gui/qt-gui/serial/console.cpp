@@ -4,13 +4,13 @@ Console::Console(string portName) : serialPort(SerialPort(portName)), stringSoFa
 {
 }
 
-void Console::Write(string message)
+void Console::write(string message)
 {
     string messageWithNewLine = message + '\n';
-    serialPort.WriteSerialPort(messageWithNewLine.c_str(), message.size());
+    serialPort.writeSerialPort(messageWithNewLine.c_str(), message.size());
 }
 
-tuple<string, bool> Console::SplitOnNewLine()
+tuple<string, bool> Console::splitOnNewLine()
 {
     const int newLinePosition = stringSoFar.find_first_of('\n');
     if (newLinePosition != string::npos)
@@ -26,11 +26,11 @@ tuple<string, bool> Console::SplitOnNewLine()
     }
 }
 
-string Console::Read()
+string Console::read()
 {
     string s;
     bool isComplete;
-    std::tie(s, isComplete) = SplitOnNewLine();
+    std::tie(s, isComplete) = splitOnNewLine();
     if (isComplete)
     {
         return s;
@@ -38,11 +38,11 @@ string Console::Read()
     while (true)
     {
         char buffer[MAX_BUFFER_SIZE];
-        const int readChars = serialPort.ReadSerialPort(buffer, MAX_BUFFER_SIZE - 1);
+        const int readChars = serialPort.readSerialPort(buffer, MAX_BUFFER_SIZE - 1);
         buffer[readChars] = '\0';
         string readString = buffer;
         stringSoFar += readString;
-        std::tie(s, isComplete) = SplitOnNewLine();
+        std::tie(s, isComplete) = splitOnNewLine();
         if (isComplete)
         {
             return s;

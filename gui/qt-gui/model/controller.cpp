@@ -5,42 +5,42 @@ Controller::Controller(string portName) : console(Console(portName))
 {
 }
 
-void Controller::Connect()
+void Controller::connect()
 {
     if (connected)
     {
         throw std::runtime_error("Controller is already connected");
     }
 
-    SendCommandWithAck("ping");
+    sendCommandWithAck("ping");
     connected = true;
 }
 
-void Controller::Disconnect()
+void Controller::disconnect()
 {
     if (!connected)
     {
         throw std::runtime_error("Controller is not connected");
     }
 
-    SendCommandWithAck("disconnect");
+    sendCommandWithAck("disconnect");
     connected = false;
 }
 
-bool Controller::IsConnected()
+bool Controller::isConnected()
 {
     return connected;
 }
 
-void Controller::SetMode(int mode)
+void Controller::setMode(int mode)
 {
     switch (mode)
     {
     case MODE_AUTO:
-        SendCommand("mode_auto");
+        sendCommand("mode_auto");
         break;
     case MODE_MANUAL:
-        SendCommand("mode_manual");
+        sendCommand("mode_manual");
         break;
     default:
         throw runtime_error("Unknown mode");
@@ -48,21 +48,21 @@ void Controller::SetMode(int mode)
     }
 }
 
-void Controller::SetDetected(bool detectedState)
+void Controller::setDetected(bool detectedState)
 {
     if (detectedState)
     {
-        SendCommand("detected");
+        sendCommand("detected");
     }
     else
     {
-        SendCommand("not_detected");
+        sendCommand("not_detected");
     }
 }
 
-tuple<double, double> Controller::GetOffset()
+tuple<double, double> Controller::getOffset()
 {
-    string response = SendRequest("offset");
+    string response = sendRequest("offset");
     const int spacePos = response.find(' ');
     if (spacePos == string::npos)
     {
@@ -73,22 +73,22 @@ tuple<double, double> Controller::GetOffset()
     return make_tuple(stod(xString), stod(yString));
 }
 
-void Controller::SendCommandWithAck(string command)
+void Controller::sendCommandWithAck(string command)
 {
-    string response = SendRequest(command);
+    string response = sendRequest(command);
     if (response.compare("Ack") != 0)
     {
         throw runtime_error("Command required 'Ack', but received '" + response + "'");
     }
 }
 
-string Controller::SendRequest(string request)
+string Controller::sendRequest(string request)
 {
-    SendCommand(request);
-    return console.Read();
+    sendCommand(request);
+    return console.read();
 }
 
-void Controller::SendCommand(string command)
+void Controller::sendCommand(string command)
 {
-    console.Write(command);
+    console.write(command);
 }

@@ -1,4 +1,5 @@
 #include "aspectratiolabel.h"
+#include "pixmaputils.h"
 
 AspectRatioLabel::AspectRatioLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(parent, f),
     originalPixmap(QPixmap())
@@ -7,6 +8,13 @@ AspectRatioLabel::AspectRatioLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(
 
 AspectRatioLabel::~AspectRatioLabel()
 {
+}
+
+void AspectRatioLabel::setOpencvImage(const Mat& image)
+{
+    QPixmap pixmap;
+    pixmapFromOpencvImage(image, pixmap);
+    setPixmapWithAspectRatio(pixmap);
 }
 
 void AspectRatioLabel::setPixmapWithAspectRatio(const QPixmap& pm)

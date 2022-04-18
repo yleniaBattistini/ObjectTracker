@@ -1,5 +1,4 @@
-#ifndef SERIALPORTSHELPER_H
-#define SERIALPORTSHELPER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -9,7 +8,5 @@ using namespace std;
 class SerialPortsHelper
 {
 public:
-    static vector<string> ListAvailablePorts();
+    static vector<string> listAvailablePorts();
 };
-
-#endif // SERIALPORTSHELPER_H

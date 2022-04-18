@@ -36,20 +36,23 @@ private:
     FaceDetection *faceDetector;
     HoughTransform *houghTransform;
     QTimer timer;
+    Mat cameraMatrix;
+    Mat distortionCoefficients;
 
 
     AspectRatioLabel *rawImageViewer;
     AspectRatioLabel *processedImageViewer;
 
-    void UpdateUiState();
-    AspectRatioLabel *SetupAsDisplay(QWidget *widget);
+    void updateUiState();
+    void calibrateCamera();
 
-    void DisplayImage(Mat &image, AspectRatioLabel *viewer);
 private slots:
-    void OnNewFrame();
+    void onNewFrame();
 
-    void OnStartCameraClicked();
-    void OnStopCameraClicked();
-    void OnConnectArduinoClicked();
-    void OnDisconnectArduinoClicked();
+    void onStartCameraClicked();
+    void onStopCameraClicked();
+    void onConnectArduinoClicked();
+    void onDisconnectArduinoClicked();
+
+    void onCalibrationClicked();
 };
