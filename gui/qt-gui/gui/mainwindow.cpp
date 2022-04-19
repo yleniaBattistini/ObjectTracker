@@ -92,9 +92,9 @@ void MainWindow::onNewFrame()
 //    faceDetector->Detection(frame, imageDetected);
 //    processedImageViewer->setOpencvImage(imageDetected);
 
-    Mat imageHough;
-    houghTransform->houghTransform(frame, imageHough);
-    processedImageViewer->setOpencvImage(imageHough);
+//    Mat imageHough;
+//    houghTransform->houghTransform(frame, imageHough);
+//    processedImageViewer->setOpencvImage(imageHough);
 }
 
 void MainWindow::onStartCameraClicked()
