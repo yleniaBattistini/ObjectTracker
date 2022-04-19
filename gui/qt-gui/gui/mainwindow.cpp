@@ -11,7 +11,6 @@
 #include <QPixmap>
 #include <QSizePolicy>
 #include "displayutils.h"
-#include <opencv2/calib3d.hpp>
 
 using namespace std;
 
@@ -74,8 +73,6 @@ void MainWindow::calibrateCamera()
     CalibrationDialog calibrationDialog(camera);
     calibrationDialog.setWindowTitle("Calibration");
     calibrationDialog.exec();
-
-    calibrationDialog.readCalibrationResult(cameraMatrix, distortionCoefficients);
 }
 
 void MainWindow::onNewFrame()
@@ -85,7 +82,7 @@ void MainWindow::onNewFrame()
     rawImageViewer->setOpencvImage(frame);
 
     Mat undistorted;
-    undistort(frame, undistorted, cameraMatrix, distortionCoefficients);
+    processor->processImage(frame, undistorted);
     processedImageViewer->setOpencvImage(undistorted);
 
 //    Mat imageDetected;

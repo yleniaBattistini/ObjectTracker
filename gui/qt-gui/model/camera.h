@@ -7,15 +7,17 @@ using namespace cv;
 class Camera
 {
 private:
-    bool active = false;
+    bool calibrated = false;
     Mat cameraMatrix;
     Mat distortionCoefficients;
+
+protected:
+    virtual void readNextFrame(Mat& frame) = 0;
 
 public:
     virtual ~Camera() = 0;
 
-    virtual void acquireNextFrame(Mat& frame) = 0;
-
+    void acquireNextFrame(Mat& frame, bool ignoreCalibration = false);
     void calibrate(Mat &cameraMatrix, Mat &distortionCoefficients);
 
 };

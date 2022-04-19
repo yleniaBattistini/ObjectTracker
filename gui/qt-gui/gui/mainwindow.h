@@ -36,8 +36,6 @@ private:
     FaceDetection *faceDetector;
     HoughTransform *houghTransform;
     QTimer timer;
-    Mat cameraMatrix;
-    Mat distortionCoefficients;
 
 
     AspectRatioLabel *rawImageViewer;

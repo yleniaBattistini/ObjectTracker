@@ -3,7 +3,7 @@
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
 
-CalibrationProcess::CalibrationProcess()
+CalibrationProcess::CalibrationProcess(Camera *camera) : camera(camera)
 {
 }
 
@@ -57,10 +57,10 @@ FrameData CalibrationProcess::frameAt(int index)
     return frames.at(index);
 }
 
-bool CalibrationProcess::runCalibration(Size imageSize, double squareSize, Mat &cameraMatrix, Mat &distortionCoefficients)
+bool CalibrationProcess::runCalibration(Size imageSize, double squareSize)
 {
-    cameraMatrix = Mat::eye(3, 3, CV_64F);
-    distortionCoefficients = Mat::zeros(8, 1, CV_64F);
+    Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
+    Mat distortionCoefficients = Mat::zeros(8, 1, CV_64F);
 
     vector<Point3f> cornerPositions;
     get3dCornerPositions(squareSize, cornerPositions);
@@ -72,7 +72,12 @@ bool CalibrationProcess::runCalibration(Size imageSize, double squareSize, Mat &
     int flags = CALIB_USE_LU | CALIB_ZERO_TANGENT_DIST;
     calibrateCamera(objectPoints, frames, imageSize, cameraMatrix, distortionCoefficients, rvecs, tvecs, flags);
 
-    return checkRange(cameraMatrix) && checkRange(distortionCoefficients);
+    bool valid = checkRange(cameraMatrix) && checkRange(distortionCoefficients);
+    if (valid)
+    {
+        camera->calibrate(cameraMatrix, distortionCoefficients);
+    }
+    return valid;
 }
 
 void CalibrationProcess::get3dCornerPositions(double squareSize, vector<Point3f> &corners)
