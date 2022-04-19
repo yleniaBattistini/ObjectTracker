@@ -33,8 +33,6 @@ private:
     Controller *controller;
     ImageProcessor *processor;
     QTimer timer;
-    Mat cameraMatrix;
-    Mat distortionCoefficients;
 
     AspectRatioLabel *rawImageViewer;
     AspectRatioLabel *processedImageViewer;

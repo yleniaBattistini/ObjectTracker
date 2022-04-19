@@ -25,8 +25,6 @@ public:
     explicit CalibrationDialog(Camera *camera, QWidget *parent = nullptr);
     ~CalibrationDialog();
 
-    void readCalibrationResult(Mat &cameraMatrix, Mat &distortionCoefficients);
-
 private:
     Ui::CalibrationDialog *ui;
     QTimer timer;
@@ -37,8 +35,6 @@ private:
     CalibrationProcess calibrationProcess;
     QStandardItemModel *calibrationFramesModel;
     AspectRatioLabel *display;
-    Mat cameraMatrix;
-    Mat distortionCoefficients;
 
 private slots:
     void onNewFrame();

@@ -12,7 +12,7 @@ typedef vector<Point2f> FrameData;
 class CalibrationProcess
 {
 public:
-    CalibrationProcess();
+    CalibrationProcess(Camera *camera);
 
     const Size CHESSBOARD_SIZE = Size(9, 6);
 
@@ -23,9 +23,10 @@ public:
     void removeFrame(int index);
     int frameCount();
     FrameData frameAt(int index);
-    bool runCalibration(Size imageSize, double squareSize, Mat &cameraMatrix, Mat &distortionCoefficients);
+    bool runCalibration(Size imageSize, double squareSize);
 
 private:
+    Camera *camera;
     vector<FrameData> frames;
 
     void get3dCornerPositions(double squareSize, vector<Point3f> &corners);

@@ -10,7 +10,8 @@
 CalibrationDialog::CalibrationDialog(Camera *camera, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CalibrationDialog),
-    camera(camera)
+    camera(camera),
+    calibrationProcess(CalibrationProcess(camera))
 {
     ui->setupUi(this);
     timer.start(20);
@@ -29,12 +30,6 @@ CalibrationDialog::~CalibrationDialog()
 {
     delete ui;
     delete display;
-}
-
-void CalibrationDialog::readCalibrationResult(Mat &cameraMatrix, Mat &distortionCoefficients)
-{
-    cameraMatrix = this->cameraMatrix;
-    distortionCoefficients = this->distortionCoefficients;
 }
 
 void CalibrationDialog::onNewFrame()
@@ -76,6 +71,6 @@ void CalibrationDialog::onRemoveFrameClicked()
 
 void CalibrationDialog::onRunCalibrationClicked()
 {
-    calibrationProcess.runCalibration(currentFrame.size(), ui->spnSquareSize->value(), cameraMatrix, distortionCoefficients);
+    calibrationProcess.runCalibration(currentFrame.size(), ui->spnSquareSize->value());
     close();
 }
