@@ -6,9 +6,9 @@ Camera::~Camera()
 {
 }
 
-void Camera::acquireNextFrame(Mat &frame)
+void Camera::acquireNextFrame(Mat &frame, bool ignoreCalibration)
 {
-    if (calibrated)
+    if (calibrated && !ignoreCalibration)
     {
         Mat rawFrame;
         readNextFrame(rawFrame);

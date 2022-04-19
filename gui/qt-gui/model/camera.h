@@ -17,6 +17,6 @@ protected:
 public:
     virtual ~Camera() = 0;
 
-    void acquireNextFrame(Mat& frame);
+    void acquireNextFrame(Mat& frame, bool ignoreCalibration = false);
     void calibrate(Mat &cameraMatrix, Mat &distortionCoefficients);
 };

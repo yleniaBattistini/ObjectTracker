@@ -34,7 +34,7 @@ CalibrationDialog::~CalibrationDialog()
 
 void CalibrationDialog::onNewFrame()
 {
-    camera->acquireNextFrame(currentFrame);
+    camera->acquireNextFrame(currentFrame, true);
     currentFrameData.clear();
     patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentFrameData);
     if (patternFoundOnCurrentFrame)
