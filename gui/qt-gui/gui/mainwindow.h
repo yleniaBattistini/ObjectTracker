@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(ImageProcessor *processor, FaceDetection *faceDetector,HoughTransform *houghTransform, QWidget *parent = nullptr);
+    MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, HoughTransform *houghTransform, QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -33,8 +33,8 @@ private:
     Camera *camera;
     Controller *controller;
     ImageProcessor *processor;
-    FaceDetection *faceDetector;
-    HoughTransform *houghTransform;
+    //FaceDetection *faceDetector;
+    //HoughTransform *houghTransform;
     QTimer timer;
 
 

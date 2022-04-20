@@ -30,11 +30,13 @@ private:
     QTimer timer;
     Camera *camera;
     Mat currentFrame;
-    FrameData currentFrameData;
+    vector<Point2f> currentCorners;
     bool patternFoundOnCurrentFrame;
     CalibrationProcess calibrationProcess;
     QStandardItemModel *calibrationFramesModel;
     AspectRatioLabel *display;
+
+    void updateReprojectionErrorLabels();
 
 private slots:
     void onNewFrame();

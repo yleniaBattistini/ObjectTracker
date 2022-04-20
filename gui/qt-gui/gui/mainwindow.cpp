@@ -18,9 +18,9 @@ MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, H
     ui(new Ui::MainWindow),
     camera(NULL),
     controller(NULL),
-    processor(processor),
-    faceDetector(faceDetector),
-    houghTransform(houghTransform)
+    processor(processor)
+//    faceDetector(faceDetector),
+//    houghTransform(houghTransform)
 {
     ui->setupUi(this);
 

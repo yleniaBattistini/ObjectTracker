@@ -6,12 +6,15 @@
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
 #include <iostream>
+#include <format>
+
+#define INITIAL_SQUARE_SIZE 50.0
 
 CalibrationDialog::CalibrationDialog(Camera *camera, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CalibrationDialog),
     camera(camera),
-    calibrationProcess(CalibrationProcess(camera))
+    calibrationProcess(CalibrationProcess(INITIAL_SQUARE_SIZE))
 {
     ui->setupUi(this);
     timer.start(20);
@@ -32,14 +35,25 @@ CalibrationDialog::~CalibrationDialog()
     delete display;
 }
 
+void CalibrationDialog::updateReprojectionErrorLabels()
+{
+    int rows = calibrationFramesModel->rowCount();
+    for (int i = 0; i < rows; i++)
+    {
+        QString reprojectionErrorText = QString("Reprojection Error: %1").arg(calibrationProcess.getReprojectionError(i));
+        QStandardItem *item = calibrationFramesModel->item(i);
+        item->setText(reprojectionErrorText);
+    }
+}
+
 void CalibrationDialog::onNewFrame()
 {
     camera->acquireNextFrame(currentFrame, true);
-    currentFrameData.clear();
-    patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentFrameData);
+    currentCorners.clear();
+    patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentCorners);
     if (patternFoundOnCurrentFrame)
     {
-        calibrationProcess.drawPattern(currentFrame, currentFrameData);
+        calibrationProcess.drawPattern(currentFrame, currentCorners);
     }
     display->setOpencvImage(currentFrame);
 }
@@ -50,11 +64,12 @@ void CalibrationDialog::onAddFrameClicked()
     {
         return;
     }
-    calibrationProcess.addFrame(currentFrameData);
+    calibrationProcess.addView(currentFrame, currentCorners);
     QPixmap pixmap;
     pixmapFromOpencvImage(currentFrame, pixmap);
     QIcon icon(pixmap);
-    calibrationFramesModel->appendRow(new QStandardItem(icon, "Frame"));
+    calibrationFramesModel->appendRow(new QStandardItem(icon, ""));
+    updateReprojectionErrorLabels();
 }
 
 void CalibrationDialog::onRemoveFrameClicked()
@@ -65,12 +80,13 @@ void CalibrationDialog::onRemoveFrameClicked()
     }
 
     int selectedIndex = ui->lstCalibrationFrames->selectionModel()->currentIndex().row();
-    calibrationProcess.removeFrame(selectedIndex);
+    calibrationProcess.removeView(selectedIndex);
     calibrationFramesModel->removeRow(selectedIndex);
+    updateReprojectionErrorLabels();
 }
 
 void CalibrationDialog::onRunCalibrationClicked()
 {
-    calibrationProcess.runCalibration(currentFrame.size(), ui->spnSquareSize->value());
+    calibrationProcess.applyCalibration(camera);
     close();
 }
