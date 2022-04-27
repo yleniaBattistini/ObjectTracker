@@ -26,21 +26,36 @@ public:
     ~CalibrationDialog();
 
 private:
+    const QString VIEWS_FOLDER_NAME = "views";
+    const QString DATA_FILE_NAME = "data.xml";
+    const QString IMAGE_FILES_EXTENSION = "png";
+
     Ui::CalibrationDialog *ui;
     QTimer timer;
     Camera *camera;
+    vector<Mat> views;
     Mat currentFrame;
     vector<Point2f> currentCorners;
     bool patternFoundOnCurrentFrame;
     CalibrationProcess calibrationProcess;
-    QStandardItemModel *calibrationFramesModel;
+    QStandardItemModel *calibrationViewsModel;
     AspectRatioLabel *display;
 
-    void updateReprojectionErrorLabels();
+    void recomputeCalibration();
+    void setCurrentFolderPath(QString path);
+
+    void addView(Mat &view, vector<Point2f> &corners);
+    void removeView(int index);
+
+    void saveInFolder(QString folderName);
 
 private slots:
     void onNewFrame();
-    void onAddFrameClicked();
-    void onRemoveFrameClicked();
+    void onSaveClicked();
+    void onSaveAsClicked();
+    void onOpenClicked();
+    void onAddViewClicked();
+    void onRemoveViewClicked();
     void onRunCalibrationClicked();
+    void onSquareSizeChanged(double newValue);
 };

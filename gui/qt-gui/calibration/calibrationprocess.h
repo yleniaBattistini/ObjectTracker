@@ -21,18 +21,21 @@ public:
 
     void addView(const Mat &view, const vector<Point2f> &corners);
     void removeView(int index);
+    void clearViews();
+
+    void recomputeCalibration();
     void applyCalibration(Camera *camera);
 
     double getReprojectionError(int viewIndex);
+    double getSquareSize();
 
 private:
-    vector<Mat> views;
+    double squareSize;
+    Size imageSize;
     vector<Point3f> cornerPositions;
     vector<vector<Point2f>> cornersPerView;
     vector<double> reprojectionErrors;
     Mat cameraMatrix;
     Mat distortionCoefficients;
 
-    void get3dCornerPositions(double squareSize, vector<Point3f> &corners);
-    void recomputeCalibration();
 };

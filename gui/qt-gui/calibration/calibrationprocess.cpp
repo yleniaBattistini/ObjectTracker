@@ -36,6 +36,7 @@ void CalibrationProcess::drawPattern(Mat &image, const vector<Point2f> &corners)
 
 void CalibrationProcess::setSquareSize(double size)
 {
+    squareSize = size;
     cornerPositions.clear();
     for (int i = 0; i < CHESSBOARD_SIZE.height; i++)
     {
@@ -48,20 +49,27 @@ void CalibrationProcess::setSquareSize(double size)
 
 void CalibrationProcess::addView(const Mat &view, const vector<Point2f> &corners)
 {
-    views.push_back(view);
+    Size viewSize = view.size();
+    if (!cornersPerView.empty() && viewSize != imageSize)
+    {
+        throw runtime_error("Cannot use different image sizes");
+    }
+    imageSize = viewSize;
     cornersPerView.push_back(corners);
-    recomputeCalibration();
 }
 
 void CalibrationProcess::removeView(int index)
 {
-    if (index < 0 || index >= views.size())
+    if (index < 0 || index >= cornersPerView.size())
     {
         return;
     }
-    views.erase(views.begin() + index);
     cornersPerView.erase(cornersPerView.begin() + index);
-    recomputeCalibration();
+}
+
+void CalibrationProcess::clearViews()
+{
+    cornersPerView.clear();
 }
 
 void CalibrationProcess::applyCalibration(Camera *camera)
@@ -74,9 +82,41 @@ double CalibrationProcess::getReprojectionError(int viewIndex)
     return reprojectionErrors[viewIndex];
 }
 
+double CalibrationProcess::getSquareSize()
+{
+    return squareSize;
+}
+
+//void CalibrationProcess::save(string folderName)
+//{
+//    if (views.empty())
+//    {
+//        throw runtime_error("Not enough views");
+//    }
+//    string calibrationFile = folderName + "/data.xml";
+//    FileStorage fs(calibrationFile, FileStorage::WRITE);
+//    fs << "SquareSize" << squareSize;
+//    fs << "NumberOfViews" << views.size();
+
+//    string viewsFolder = folderName + "/views";
+//    for (int i = 0; i < views.size(); i++)
+//    {
+//        string viewFile = viewsFolder + "/" + to_string(i) + ".png";
+//        imwrite(viewFile, views[i]);
+//    }
+//}
+
+//void CalibrationProcess::open(string folderName)
+//{
+//    views.clear();
+//    cornersPerView.clear();
+//    reprojectionErrors.clear();
+
+//}
+
 void CalibrationProcess::recomputeCalibration()
 {
-    if (views.empty())
+    if (cornersPerView.empty())
     {
         return;
     }
@@ -93,7 +133,7 @@ void CalibrationProcess::recomputeCalibration()
     calibrateCamera(
         objectPoints,
         cornersPerView,
-        views[0].size(),
+        imageSize,
         cameraMatrix,
         distortionCoefficients,
         rvecs,
