@@ -42,12 +42,14 @@ private:
     AspectRatioLabel *display;
 
     void recomputeCalibration();
+    QString selectNewFolder();
     void setCurrentFolderPath(QString path);
 
     void addView(Mat &view, vector<Point2f> &corners);
     void removeView(int index);
 
     void saveInFolder(QString folderName);
+    void openFolder(QString folderName);
 
 private slots:
     void onNewFrame();

@@ -56,6 +56,17 @@ void CalibrationDialog::recomputeCalibration()
     }
 }
 
+QString CalibrationDialog::selectNewFolder()
+{
+    QString oldPath = ui->lblFolderPath->text();
+    QString selectedPath = QFileDialog::getExistingDirectory(this, "Select a folder", oldPath);
+    if (!selectedPath.isNull())
+    {
+        setCurrentFolderPath(selectedPath);
+    }
+    return selectedPath;
+}
+
 void CalibrationDialog::setCurrentFolderPath(QString path)
 {
     ui->lblFolderPath->setText(path);
@@ -104,49 +115,9 @@ void CalibrationDialog::saveInFolder(QString folderName)
     }
 }
 
-void CalibrationDialog::onNewFrame()
+void CalibrationDialog::openFolder(QString folderName)
 {
-    camera->acquireNextFrame(currentFrame, true);
-    currentCorners.clear();
-    patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentCorners);
-    if (patternFoundOnCurrentFrame)
-    {
-        Mat frameWithPattern = currentFrame.clone();
-        calibrationProcess.drawPattern(frameWithPattern, currentCorners);
-        display->setOpencvImage(frameWithPattern);
-    }
-    else
-    {
-        display->setOpencvImage(currentFrame);
-    }
-}
-
-void CalibrationDialog::onSaveClicked()
-{
-    saveInFolder(ui->lblFolderPath->text());
-}
-
-void CalibrationDialog::onSaveAsClicked()
-{
-    QString oldPath = ui->lblFolderPath->text();
-    QString selectedPath = QFileDialog::getExistingDirectory(this, "Select a folder", oldPath);
-    if (selectedPath.isNull())
-    {
-        return;
-    }
-    saveInFolder(selectedPath);
-    setCurrentFolderPath(selectedPath);
-}
-
-void CalibrationDialog::onOpenClicked()
-{
-    QString oldPath = ui->lblFolderPath->text();
-    QString selectedPath = QFileDialog::getExistingDirectory(this, "Select a folder", oldPath);
-    if (selectedPath.isNull())
-    {
-        return;
-    }
-    QDir dir = QDir(selectedPath);
+    QDir dir = QDir(folderName);
     QString calibrationFile = dir.filePath(DATA_FILE_NAME);
     FileStorage fs(calibrationFile.toStdString(), FileStorage::READ);
 
@@ -172,11 +143,49 @@ void CalibrationDialog::onOpenClicked()
         calibrationProcess.detectPattern(view, corners);
         addView(view, corners);
     }
-
-    calibrationProcess.recomputeCalibration();
     recomputeCalibration();
+}
 
-    setCurrentFolderPath(selectedPath);
+void CalibrationDialog::onNewFrame()
+{
+    camera->acquireNextFrame(currentFrame, true);
+    currentCorners.clear();
+    patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentCorners);
+    if (patternFoundOnCurrentFrame)
+    {
+        Mat frameWithPattern = currentFrame.clone();
+        calibrationProcess.drawPattern(frameWithPattern, currentCorners);
+        display->setOpencvImage(frameWithPattern);
+    }
+    else
+    {
+        display->setOpencvImage(currentFrame);
+    }
+}
+
+void CalibrationDialog::onSaveClicked()
+{
+    saveInFolder(ui->lblFolderPath->text());
+}
+
+void CalibrationDialog::onSaveAsClicked()
+{
+    QString selectedPath = selectNewFolder();
+    if (selectedPath.isNull())
+    {
+        return;
+    }
+    saveInFolder(selectedPath);
+}
+
+void CalibrationDialog::onOpenClicked()
+{
+    QString selectedPath = selectNewFolder();
+    if (selectedPath.isNull())
+    {
+        return;
+    }
+    openFolder(selectedPath);
 }
 
 void CalibrationDialog::onAddViewClicked()
