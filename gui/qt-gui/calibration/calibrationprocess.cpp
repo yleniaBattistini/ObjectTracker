@@ -57,7 +57,7 @@ FrameData CalibrationProcess::frameAt(int index)
     return frames.at(index);
 }
 
-bool CalibrationProcess::runCalibration(Size imageSize, double squareSize)
+bool CalibrationProcess::runCalibration(Size imageSize, double squareSize, ComputePose *computePose)
 {
     Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
     Mat distortionCoefficients = Mat::zeros(8, 1, CV_64F);
@@ -76,6 +76,8 @@ bool CalibrationProcess::runCalibration(Size imageSize, double squareSize)
     if (valid)
     {
         camera->calibrate(cameraMatrix, distortionCoefficients);
+        Mat undistortedFrame = camera->getUndistortedFrame();
+        computePose->setComponent(cameraMatrix, distortionCoefficients, rvecs, tvecs, cornerPositions, squareSize, undistortedFrame);
     }
     return valid;
 }

@@ -22,6 +22,7 @@ SOURCES += \
     processor/houghtransform.cpp \
     processor/imageprocessor.cpp        \
     processor/testprocessor.cpp         \
+    processor/utils/computepose.cpp \
     processor/utils/drawelement.cpp \
     processor/utils/geometrictransformation.cpp \
     serial/console.cpp                  \
@@ -43,6 +44,7 @@ HEADERS += \
     processor/houghtransform.h \
     processor/imageprocessor.h          \
     processor/testprocessor.h           \
+    processor/utils/computepose.h \
     processor/utils/drawelement.h \
     processor/utils/geometrictransformation.h \
     serial/console.h                    \

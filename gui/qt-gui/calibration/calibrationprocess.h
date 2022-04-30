@@ -3,6 +3,7 @@
 #include "model/camera.h"
 #include <opencv2/core.hpp>
 #include <vector>
+#include "processor/utils/computepose.h"
 
 using namespace cv;
 using namespace std;
@@ -23,7 +24,7 @@ public:
     void removeFrame(int index);
     int frameCount();
     FrameData frameAt(int index);
-    bool runCalibration(Size imageSize, double squareSize);
+    bool runCalibration(Size imageSize, double squareSize, ComputePose *computePose);
 
 private:
     Camera *camera;

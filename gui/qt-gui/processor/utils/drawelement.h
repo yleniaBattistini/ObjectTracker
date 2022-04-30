@@ -10,6 +10,7 @@
 #include<opencv2/objdetect.hpp>
 #include<opencv2/imgproc.hpp>
 #include<opencv2/highgui.hpp>
+#include "computepose.h"
 
 using namespace cv;
 using namespace std;
@@ -17,9 +18,13 @@ using namespace std;
 class DrawElement
 {
 public:
-    static void DrawRectangle(Mat& output, vector<Rect>& faces);
+    static void drawRectangle(ComputePose *cp, Mat& output, vector<Rect>& faces);
 
-    static void DrawCircle(Mat& output, vector<Rect>& faces);
+    static void drawCircle(Mat& output, vector<Rect>& faces);
+
+    static void drawAxis(Mat& img, vector<Mat> rvecs, vector<Mat> tvecs, Mat& cameraMatrix);
+
+    static void circleToRectangle(ComputePose *cp, vector<Vec3f> circles, Mat& output);
 };
 
 #endif // DRAWELEMENT_H

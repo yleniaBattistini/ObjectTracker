@@ -14,13 +14,14 @@
 
 using namespace std;
 
-MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, HoughTransform *houghTransform, QWidget *parent) : QMainWindow(parent),
+MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, HoughTransform *houghTransform, ComputePose *computePose, QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow),
     camera(NULL),
     controller(NULL),
     processor(processor),
     faceDetector(faceDetector),
-    houghTransform(houghTransform)
+    houghTransform(houghTransform),
+    computePose(computePose)
 {
     ui->setupUi(this);
 
@@ -70,7 +71,7 @@ void MainWindow::updateUiState()
 
 void MainWindow::calibrateCamera()
 {
-    CalibrationDialog calibrationDialog(camera);
+    CalibrationDialog calibrationDialog(camera, computePose);
     calibrationDialog.setWindowTitle("Calibration");
     calibrationDialog.exec();
 }
@@ -81,23 +82,23 @@ void MainWindow::onNewFrame()
     camera->acquireNextFrame(frame);
     rawImageViewer->setOpencvImage(frame);
 
-    Mat undistorted;
-    processor->processImage(frame, undistorted);
-    processedImageViewer->setOpencvImage(undistorted);
+//    Mat undistorted;
+//    processor->processImage(frame, undistorted);
+//    processedImageViewer->setOpencvImage(undistorted);
 
-//    Mat imageDetected;
-//    faceDetector->Detection(frame, imageDetected);
-//    processedImageViewer->setOpencvImage(imageDetected);
+    Mat imageDetected;
+    faceDetector->detection(frame, imageDetected, computePose);
+    processedImageViewer->setOpencvImage(imageDetected);
 
-//    Mat imageHough;
-//    houghTransform->houghTransform(frame, imageHough);
-//    processedImageViewer->setOpencvImage(imageHough);
+//     Mat imageHough;
+//     houghTransform->houghTransform(frame, imageHough, computePose);
+//     processedImageViewer->setOpencvImage(imageHough);
 }
 
 void MainWindow::onStartCameraClicked()
 {
     camera = new WebCam(0);
-    calibrateCamera();
+    //calibrateCamera();
     timer.start(20);
     updateUiState();
 }

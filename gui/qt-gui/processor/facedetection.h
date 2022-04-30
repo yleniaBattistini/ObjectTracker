@@ -14,13 +14,14 @@ using namespace cv;
 class FaceDetection
 {
 private:
-    void DetectFace(Mat& img, vector<Rect>& faces, Mat& output);
+    void detectFace(Mat& img, vector<Rect>& faces, Mat& output);
 
     CascadeClassifier cascade = cv::CascadeClassifier();
     double scale;
+    ComputePose *cp;
 public:
     FaceDetection();
-    void Detection(Mat& image, Mat& output);
+    void detection(Mat& image, Mat& output, ComputePose *computePose);
 
 };
 

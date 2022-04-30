@@ -13,6 +13,7 @@
 
 #include <opencv2/videoio.hpp>
 #include "model/camera.h"
+#include "processor/utils/computepose.h"
 
 using namespace cv;
 
@@ -25,7 +26,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(ImageProcessor *processor, FaceDetection *faceDetector,HoughTransform *houghTransform, QWidget *parent = nullptr);
+    MainWindow(ImageProcessor *processor, FaceDetection *faceDetector,HoughTransform *houghTransform, ComputePose *computePose, QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -35,6 +36,7 @@ private:
     ImageProcessor *processor;
     FaceDetection *faceDetector;
     HoughTransform *houghTransform;
+    ComputePose *computePose;
     QTimer timer;
 
 

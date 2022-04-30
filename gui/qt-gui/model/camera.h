@@ -10,6 +10,7 @@ private:
     bool calibrated = false;
     Mat cameraMatrix;
     Mat distortionCoefficients;
+    Mat undistortedFrame;
 
 protected:
     virtual void readNextFrame(Mat& frame) = 0;
@@ -19,5 +20,10 @@ public:
 
     void acquireNextFrame(Mat& frame, bool ignoreCalibration = false);
     void calibrate(Mat &cameraMatrix, Mat &distortionCoefficients);
+
+    Mat getUndistortedFrame()
+    {
+        return this->undistortedFrame;
+    }
 
 };

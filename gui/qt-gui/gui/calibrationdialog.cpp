@@ -7,11 +7,12 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
-CalibrationDialog::CalibrationDialog(Camera *camera, QWidget *parent) :
+CalibrationDialog::CalibrationDialog(Camera *camera, ComputePose *computePose, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CalibrationDialog),
     camera(camera),
-    calibrationProcess(CalibrationProcess(camera))
+    calibrationProcess(CalibrationProcess(camera)),
+    computePose(computePose)
 {
     ui->setupUi(this);
     timer.start(20);
@@ -71,6 +72,6 @@ void CalibrationDialog::onRemoveFrameClicked()
 
 void CalibrationDialog::onRunCalibrationClicked()
 {
-    calibrationProcess.runCalibration(currentFrame.size(), ui->spnSquareSize->value());
+    calibrationProcess.runCalibration(currentFrame.size(), ui->spnSquareSize->value(), computePose);
     close();
 }

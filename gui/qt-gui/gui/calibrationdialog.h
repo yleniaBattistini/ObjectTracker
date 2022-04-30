@@ -9,6 +9,7 @@
 #include "model/camera.h"
 
 #include <calibration/calibrationprocess.h>
+#include "processor/utils/computepose.h"
 
 using namespace cv;
 using namespace std;
@@ -22,7 +23,7 @@ class CalibrationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit CalibrationDialog(Camera *camera, QWidget *parent = nullptr);
+    explicit CalibrationDialog(Camera *camera, ComputePose *computePose, QWidget *parent = nullptr);
     ~CalibrationDialog();
 
 private:
@@ -35,6 +36,7 @@ private:
     CalibrationProcess calibrationProcess;
     QStandardItemModel *calibrationFramesModel;
     AspectRatioLabel *display;
+    ComputePose *computePose;
 
 private slots:
     void onNewFrame();
