@@ -47,6 +47,11 @@ void CalibrationProcess::setSquareSize(double size)
     }
 }
 
+double CalibrationProcess::getSquareSize()
+{
+    return squareSize;
+}
+
 void CalibrationProcess::addView(const Mat &view, const vector<Point2f> &corners)
 {
     Size viewSize = view.size();
@@ -72,9 +77,10 @@ void CalibrationProcess::clearViews()
     cornersPerView.clear();
 }
 
-void CalibrationProcess::applyCalibration(Camera *camera)
+void CalibrationProcess::getCalibrationResult(Mat &cameraMatrix, Mat &distortionCoefficients)
 {
-    camera->calibrate(cameraMatrix, distortionCoefficients);
+    cameraMatrix = this->cameraMatrix;
+    distortionCoefficients = this->distortionCoefficients;
 }
 
 double CalibrationProcess::getReprojectionError(int viewIndex)

@@ -19,7 +19,7 @@ MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, H
     camera(NULL),
     controller(NULL),
     processor(processor),
-    //faceDetector(faceDetector),
+    faceDetector(faceDetector),
     //houghTransform(houghTransform),
     computePose(computePose)
 {
@@ -86,10 +86,9 @@ void MainWindow::onNewFrame()
 //    processor->processImage(frame, undistorted);
 //    processedImageViewer->setOpencvImage(undistorted);
 
-   /* Mat imageDetected;
+    Mat imageDetected;
     faceDetector->detection(frame, imageDetected, computePose);
     processedImageViewer->setOpencvImage(imageDetected);
-    */
 
 //     Mat imageHough;
 //     houghTransform->houghTransform(frame, imageHough, computePose);
@@ -99,7 +98,7 @@ void MainWindow::onNewFrame()
 void MainWindow::onStartCameraClicked()
 {
     camera = new WebCam(0);
-    //calibrateCamera();
+    calibrateCamera();
     timer.start(20);
     updateUiState();
 }

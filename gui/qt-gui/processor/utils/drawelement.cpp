@@ -1,17 +1,26 @@
 #include "drawelement.h"
 
+// ------> X
+// |
+// |
+// v Y
+
 using namespace cv;
 void DrawElement::drawRectangle(ComputePose *cp, Mat& output, vector<Rect>& faces)
 {
     for (int i = 0; i < faces.size(); i++)
     {
-        Point pt1(faces[i].x, faces[i].y);
-        Point pt2((faces[i].x + faces[i].height), (faces[i].y + faces[i].width));
-        Point pt3(faces[i].x,(faces[i].y + faces[i].width));
-        Point pt4((faces[i].x + faces[i].height), faces[i].y);
-        cv::rectangle(output, pt1, pt2, Scalar(0, 0, 255), 2, 8, 0);
-        vector<Point2f> corners{(Point2f)pt1, (Point2f)pt2, (Point2f)pt3, (Point2f)pt4};
-        cp->computePose(corners, faces[i].width, faces[i].height);
+        double x = faces[i].x;
+        double y = faces[i].y;
+        double w = faces[i].width;
+        double h = faces[i].height;
+        Point2f pt1(x, y + h);
+        Point2f pt2(x, y);
+        Point2f pt3(x + w, y + h);
+        Point2f pt4(x + w, y);
+        cv::rectangle(output, pt2, pt3, Scalar(0, 0, 255), 2, 8, 0);
+        vector<Point2f> corners{pt1, pt2, pt3, pt4};
+        cp->computePose(output, corners);
     }
 }
 
@@ -52,13 +61,13 @@ void DrawElement::circleToRectangle(ComputePose *cp, vector<Vec3f> circles, Mat&
         Vec3i c = circles[i];
         int radius = c[2];
 
-        Point pt1 = Point(c[0]-radius, c[1]-radius);
-        Point pt2 = Point(c[0]+radius, c[1]+radius);
-        Point pt3 = Point(c[0]+radius, c[1]-radius);
-        Point pt4 = Point(c[0]-radius, c[1]+radius);
+        Point pt1 = Point(c[0]-radius, c[1]+radius);
+        Point pt2 = Point(c[0]-radius, c[1]-radius);
+        Point pt3 = Point(c[0]+radius, c[1]+radius);
+        Point pt4 = Point(c[0]+radius, c[1]-radius);
         vector<Point2f> corners{pt1, pt2, pt3, pt4};
         cv::rectangle(output, pt1, pt2, Scalar(0, 255, 0));
-        cp->computePose(corners, radius, radius);
+        cp->computePose(output, corners);
         // circle outline
         //circle(detectImgCircles, center, radius, Scalar(0, 255, 0), 4, LINE_AA);
     }

@@ -7,15 +7,15 @@ ComputePose::ComputePose()
 
 }
 
-void ComputePose::computePose(vector<Point2f> imagePointsVec, int imageWidth, int imageHeight)
+void ComputePose::setComponent(Mat K, Mat &distCoeff)
 {
-    vector<Point3f> objectPoints2f;
-    this->width = imageWidth;
-    this->height = imageHeight;
+    this->cameraMatrix = K;
+    this->distortionCoefficients = distCoeff;
+    this->objectPoints = {Point3f(0.0, 0.0, 0.0), Point3f(0.0, 1.0, 0.0), Point3f(1.0, 0.0, 0.0), Point3f(1.0, 1.0, 0.0)};
+}
 
-    //imagepoints vettore di punti
-    this->imagePoints.swap(imagePointsVec);
-
+void ComputePose::computePose(Mat &frame, vector<Point2f> imagePointsVec)
+{
     //estimate pattern pose
     Mat rotVec, R, t;
     //ricava la posa di un oggetto a partire da punti 3d e punti 2d. Risolve la matrice proiettiva
@@ -31,8 +31,9 @@ void ComputePose::computePose(vector<Point2f> imagePointsVec, int imageWidth, in
     hconcat(R, t, Ext);
     reprojectionMat = cameraMatrix * Ext; // matrice 4*3, matrice di riproiezione
 
+    Mat Himg2scene, Hscene2img;
     hconcat(reprojectionMat(Range(0,3), Range(0,2)), reprojectionMat.col(3), Hscene2img);
-    this->Himg2scene = this->Himg2scene.inv();
+    Himg2scene = Hscene2img.inv();
 
     Matx31d vx = reprojectionMat.col(0);
     Matx31d vy = reprojectionMat.col(1);
@@ -57,17 +58,17 @@ void ComputePose::computePose(vector<Point2f> imagePointsVec, int imageWidth, in
 
     vector<Point3f> scene_axis_point;
     vector<Point2f> projected_axis_point;
-    scene_axis_point.push_back(Point3f(3 * squareSize, 0, 0));
-    scene_axis_point.push_back(Point3f(0, 3 * squareSize, 0));
-    scene_axis_point.push_back(Point3f(0, 0, 3 * squareSize));
+    scene_axis_point.push_back(Point3f(0.5, 0, 0));
+    scene_axis_point.push_back(Point3f(0, 0.5, 0));
+    scene_axis_point.push_back(Point3f(0, 0, 0.5));
 
     projectPoints(scene_axis_point, rotVec, t, cameraMatrix, Mat::zeros(1, 5, CV_64FC1), projected_axis_point);
 
-    arrowedLine(this->undistortedFrame, Point2f(o(0), o(1)), projected_axis_point[0], Scalar(255, 0, 0), 2);
-    arrowedLine(this->undistortedFrame, Point2f(o(0), o(1)), projected_axis_point[1], Scalar(0, 255, 0), 2);
-    arrowedLine(this->undistortedFrame, Point2f(o(0), o(1)), projected_axis_point[2], Scalar(0, 0, 255), 2);
+    arrowedLine(frame, Point2f(o(0), o(1)), projected_axis_point[0], Scalar(255, 0, 0), 2);
+    arrowedLine(frame, Point2f(o(0), o(1)), projected_axis_point[1], Scalar(0, 255, 0), 2);
+    arrowedLine(frame, Point2f(o(0), o(1)), projected_axis_point[2], Scalar(0, 0, 255), 2);
 
-    putText(this->undistortedFrame, "X", projected_axis_point[0], 1, 2, Scalar(255, 0, 0));
-    putText(this->undistortedFrame, "Y", projected_axis_point[1], 1, 2, Scalar(0, 255, 0));
-    putText(this->undistortedFrame, "Z", projected_axis_point[2], 1, 2, Scalar(0, 0, 255));
+    putText(frame, "X", projected_axis_point[0], 1, 2, Scalar(255, 0, 0));
+    putText(frame, "Y", projected_axis_point[1], 1, 2, Scalar(0, 255, 0));
+    putText(frame, "Z", projected_axis_point[2], 1, 2, Scalar(0, 0, 255));
 }

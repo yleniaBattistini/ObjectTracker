@@ -19,32 +19,16 @@ public:
     void drawPattern(Mat &image, const vector<Point2f> &corners);
 
     void setSquareSize(double size);
+    double getSquareSize();
 
     void addView(const Mat &view, const vector<Point2f> &corners);
     void removeView(int index);
     void clearViews();
 
     void recomputeCalibration();
-    void applyCalibration(Camera *camera);
 
     double getReprojectionError(int viewIndex);
-    double getSquareSize()
-    {
-        return squareSize;
-    }
-    Mat getCameraMatrix(){
-        return cameraMatrix;
-    }
-    Mat getDistortionCoefficients(){
-        return distortionCoefficients;
-    }
-    vector<Mat> getRvecs(){
-        return rvecs;
-    }
-    vector<Mat> getTvecs(){
-        return tvecs;
-    }
-
+    void getCalibrationResult(Mat &cameraMatrix, Mat &distortionCoefficients);
 private:
     double squareSize;
     Size imageSize;
