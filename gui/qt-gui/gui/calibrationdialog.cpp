@@ -216,6 +216,7 @@ void CalibrationDialog::onRemoveViewClicked()
 void CalibrationDialog::onRunCalibrationClicked()
 {
     calibrationProcess.applyCalibration(camera);
+    computePose->setComponent(calibrationProcess.getCameraMatrix(), calibrationProcess.getDistortionCoefficients(), calibrationProcess.getRvecs(), calibrationProcess.getTvecs(), calibrationProcess.getSquareSize(),_ );
     close();
 }
 

@@ -82,11 +82,6 @@ double CalibrationProcess::getReprojectionError(int viewIndex)
     return reprojectionErrors[viewIndex];
 }
 
-double CalibrationProcess::getSquareSize()
-{
-    return squareSize;
-}
-
 void CalibrationProcess::recomputeCalibration()
 {
     if (cornersPerView.empty())
@@ -100,7 +95,6 @@ void CalibrationProcess::recomputeCalibration()
     vector<vector<Point3f>> objectPoints;
     objectPoints.resize(cornersPerView.size(), cornerPositions);
 
-    vector<Mat> rvecs, tvecs;
     Mat stdIntrinsics;
     Mat stdExtrinsics;
     calibrateCamera(

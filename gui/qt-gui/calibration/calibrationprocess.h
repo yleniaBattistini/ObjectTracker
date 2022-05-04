@@ -28,7 +28,22 @@ public:
     void applyCalibration(Camera *camera);
 
     double getReprojectionError(int viewIndex);
-    double getSquareSize();
+    double getSquareSize()
+    {
+        return squareSize;
+    }
+    Mat getCameraMatrix(){
+        return cameraMatrix;
+    }
+    Mat getDistortionCoefficients(){
+        return distortionCoefficients;
+    }
+    vector<Mat> getRvecs(){
+        return rvecs;
+    }
+    vector<Mat> getTvecs(){
+        return tvecs;
+    }
 
 private:
     double squareSize;
@@ -38,5 +53,5 @@ private:
     vector<double> reprojectionErrors;
     Mat cameraMatrix;
     Mat distortionCoefficients;
-
+    vector<Mat> rvecs, tvecs;
 };

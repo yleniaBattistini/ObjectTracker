@@ -23,13 +23,13 @@ private:
 
 public:
     ComputePose();
-    void setComponent(Mat& K, Mat& distCoeff, vector<Mat> rvec, vector<Mat> tvec, vector<Point3f> cornerPos, double squareSize, Mat& frame)
+    void setComponent(Mat& K, Mat& distCoeff, vector<Mat> rvec, vector<Mat> tvec, double squareSize, Mat& frame)
     {
         this->cameraMatrix = K;
         this->distortionCoefficients = distCoeff;
         this->rvecs = rvec;
         this->tvecs = tvec;
-        this->objectPoints = cornerPos; //TODO vettore punti 3d 010 ecc.
+        this->objectPoints = {Point3f(1.0, 0.0, 0.0), Point3f(0.0, 1.0, 0.0), Point3f(0.0, 0.0, 1.0), Point3f(1.0, 1.0, 1.0)}; //TODO vettore punti 3d 010 ecc.
         this->squareSize = squareSize;
         this->undistortedFrame = frame;
     }
