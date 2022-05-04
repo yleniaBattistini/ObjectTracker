@@ -20,7 +20,7 @@ MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, H
     controller(NULL),
     processor(processor),
     faceDetector(faceDetector),
-    //houghTransform(houghTransform),
+    houghTransform(houghTransform),
     computePose(computePose)
 {
     ui->setupUi(this);
@@ -86,13 +86,13 @@ void MainWindow::onNewFrame()
 //    processor->processImage(frame, undistorted);
 //    processedImageViewer->setOpencvImage(undistorted);
 
-    Mat imageDetected;
-    faceDetector->detection(frame, imageDetected, computePose);
-    processedImageViewer->setOpencvImage(imageDetected);
+//    Mat imageDetected;
+//    faceDetector->detection(frame, imageDetected, computePose);
+//    processedImageViewer->setOpencvImage(imageDetected);
 
-//     Mat imageHough;
-//     houghTransform->houghTransform(frame, imageHough, computePose);
-//     processedImageViewer->setOpencvImage(imageHough);
+     Mat imageHough;
+     houghTransform->houghTransform(frame, imageHough, computePose);
+     processedImageViewer->setOpencvImage(imageHough);
 }
 
 void MainWindow::onStartCameraClicked()

@@ -36,7 +36,7 @@ private:
     Controller *controller;
     ImageProcessor *processor;
     FaceDetection *faceDetector;
-    //HoughTransform *houghTransform;
+    HoughTransform *houghTransform;
     ComputePose *computePose;
     QTimer timer;
 

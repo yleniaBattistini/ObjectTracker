@@ -22,8 +22,6 @@ public:
 
     static void drawCircle(Mat& output, vector<Rect>& faces);
 
-    static void drawAxis(Mat& img, vector<Mat> rvecs, vector<Mat> tvecs, Mat& cameraMatrix);
-
     static void circleToRectangle(ComputePose *cp, vector<Vec3f> circles, Mat& output);
 };
 

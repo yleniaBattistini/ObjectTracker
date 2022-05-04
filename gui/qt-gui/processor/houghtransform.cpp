@@ -20,9 +20,12 @@ void HoughTransform::houghTransform(Mat& input, Mat& output, ComputePose *cp)
         medianBlur(gray, gray, 5);
 
         vector<Vec3f> circles;
-        HoughCircles(gray, circles, HOUGH_GRADIENT, 1, //or 1.5, without 100 & 30
-            gray.rows / 5, // change this value to detect circles with different distances to each other
-            100, 3, 50, 100 // change the last two parameters
+        HoughCircles(
+            gray,
+            circles,
+            HOUGH_GRADIENT,
+            1.15, //or 1.5, without 100 & 30
+            gray.rows / 5 // change this value to detect circles with different distances to each other
         );
 
         if (circles.size() != 0) {
