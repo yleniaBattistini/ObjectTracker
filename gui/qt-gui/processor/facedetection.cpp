@@ -22,25 +22,17 @@ FaceDetection::FaceDetection(): scale(1)
     }
 }
 
-void FaceDetection::detection(Mat& image, Mat& output, ComputePose *computePose)
+void FaceDetection::detection(Mat& image, vector<Rect> &faces)
 {
-    cp = computePose;
     cout << "Face Detection Started.." << endl;
 
     if (image.empty())
+    {
         throw std::runtime_error("Empty image");
-    vector<Rect> faces;
-    detectFace(image, faces, output);
-}
+    }
 
-
-void FaceDetection::detectFace(Mat& img, vector<Rect>& faces, Mat& output)
-{
     Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    cvtColor(image, gray, COLOR_BGR2GRAY);
     equalizeHist(gray, gray);
     cascade.detectMultiScale(gray, faces);
-    //gray.copyTo(output);
-    cvtColor(gray, output, COLOR_GRAY2BGR);
-    DrawElement::drawRectangle(cp, output, faces);
 }

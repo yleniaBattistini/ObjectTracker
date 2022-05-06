@@ -28,7 +28,7 @@ void HoughTransform::houghTransform(Mat& input, Mat& output, ComputePose *cp)
             gray.rows / 5 // change this value to detect circles with different distances to each other
         );
 
-        if (circles.size() != 0) {
-            DrawElement::circleToRectangle(cp, circles, output);
-        }
+//        if (circles.size() != 0) {
+//            DrawElement::circleToRectangle(cp, circles);
+//        }
 }

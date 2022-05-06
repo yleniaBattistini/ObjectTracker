@@ -1,11 +1,11 @@
-#ifndef GEOMETRICTRANSFORMATION_H
-#define GEOMETRICTRANSFORMATION_H
+#pragma once
 
+#include <opencv2/core.hpp>
 
-class GeometricTransformation
-{
-public:
-    GeometricTransformation();
-};
+using namespace cv;
 
-#endif // GEOMETRICTRANSFORMATION_H
+Mat rot2euler(const Mat& rotationMatrix);
+
+Mat euler2rot(const Mat& euler);
+
+Mat rotBetweenVectors(const Mat &v1, const Mat &v2);

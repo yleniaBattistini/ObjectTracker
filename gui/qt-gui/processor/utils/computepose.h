@@ -19,7 +19,7 @@ private:
 public:
     ComputePose();
     void setComponent(Mat K, Mat& distCoeff);
-    void computePose(Mat &frame, vector<Point2f> imagePointsVec);
+    void computePose(Mat &frame, Mat &output, vector<Point2f> imagePointsVec);
 
 };
 

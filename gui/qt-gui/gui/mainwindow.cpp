@@ -11,6 +11,8 @@
 #include <QPixmap>
 #include <QSizePolicy>
 #include "displayutils.h"
+#include <algorithm>
+#include <initializer_list>
 
 using namespace std;
 
@@ -82,17 +84,37 @@ void MainWindow::onNewFrame()
     camera->acquireNextFrame(frame);
     rawImageViewer->setOpencvImage(frame);
 
-//    Mat undistorted;
-//    processor->processImage(frame, undistorted);
-//    processedImageViewer->setOpencvImage(undistorted);
+    Mat imageComputePose;
+    vector<Rect> faces;
+    faceDetector->detection(frame, faces);
 
-//    Mat imageDetected;
-//    faceDetector->detection(frame, imageDetected, computePose);
-//    processedImageViewer->setOpencvImage(imageDetected);
+    if (!faces.empty())
+    {
+        DrawElement::drawRectangle(frame, faces);
+        Rect biggestFace = *std::max_element(faces.begin(), faces.end(), [](const Rect a, const Rect b) { return a.area() < b.area(); });
 
-     Mat imageHough;
-     houghTransform->houghTransform(frame, imageHough, computePose);
-     processedImageViewer->setOpencvImage(imageHough);
+        float x = (float) biggestFace.x;
+        float y = (float) biggestFace.y;
+        float w = (float) biggestFace.width;
+        float h = (float) biggestFace.height;
+        vector<Point2f> corners = {
+            Point2f(x, y + h),
+            Point2f(x, y),
+            Point2f(x + w, y + h),
+            Point2f(x + w, y)
+        };
+
+        computePose->computePose(frame, imageComputePose, corners);
+        processedImageViewer->setOpencvImage(imageComputePose);
+    }
+    else
+    {
+        processedImageViewer->setOpencvImage(frame);
+    }
+
+//     Mat imageHough;
+//     houghTransform->houghTransform(frame, imageHough, computePose);
+//     processedImageViewer->setOpencvImage(imageHough);
 }
 
 void MainWindow::onStartCameraClicked()
