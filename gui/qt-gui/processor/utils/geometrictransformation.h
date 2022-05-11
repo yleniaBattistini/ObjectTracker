@@ -9,3 +9,7 @@ Mat rot2euler(const Mat& rotationMatrix);
 Mat euler2rot(const Mat& euler);
 
 Mat rotBetweenVectors(const Mat &v1, const Mat &v2);
+
+Mat rotationAroundX(double theta);
+
+Mat rotationAroundY(double theta);

@@ -32,23 +32,7 @@ bool Controller::isConnected()
     return connected;
 }
 
-void Controller::setMode(int mode)
-{
-    switch (mode)
-    {
-    case MODE_AUTO:
-        sendCommand("mode_auto");
-        break;
-    case MODE_MANUAL:
-        sendCommand("mode_manual");
-        break;
-    default:
-        throw runtime_error("Unknown mode");
-        break;
-    }
-}
-
-void Controller::setDetected(bool detectedState)
+void Controller::setDetectedState(bool detectedState)
 {
     if (detectedState)
     {
@@ -60,17 +44,16 @@ void Controller::setDetected(bool detectedState)
     }
 }
 
-tuple<double, double> Controller::getOffset()
+void Controller::setCalibrationState(bool inCalibration)
 {
-    string response = sendRequest("offset");
-    const int spacePos = response.find(' ');
-    if (spacePos == string::npos)
+    if (inCalibration)
     {
-        throw runtime_error("Invalid offset format");
+        sendCommand("calibration_on");
     }
-    string xString = response.substr(0, spacePos);
-    string yString = response.substr(spacePos + 1, response.size() - spacePos - 1);
-    return make_tuple(stod(xString), stod(yString));
+    else
+    {
+        sendCommand("calibration_off");
+    }
 }
 
 void Controller::sendCommandWithAck(string command)

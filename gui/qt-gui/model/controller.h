@@ -22,7 +22,6 @@ public:
     void connect();
     void disconnect();
     bool isConnected();
-    void setMode(int mode);
-    void setDetected(bool detectedState);
-    tuple<double, double> getOffset();
+    void setDetectedState(bool detectedState);
+    void setCalibrationState(bool inCalibration);
 };

@@ -73,9 +73,19 @@ void MainWindow::updateUiState()
 
 void MainWindow::calibrateCamera()
 {
+    if (controller != NULL)
+    {
+        controller->setCalibrationState(true);
+    }
+
     CalibrationDialog calibrationDialog(camera, computePose);
     calibrationDialog.setWindowTitle("Calibration");
     calibrationDialog.exec();
+
+    if (controller != NULL)
+    {
+        controller->setCalibrationState(false);
+    }
 }
 
 void MainWindow::onNewFrame()
@@ -88,7 +98,14 @@ void MainWindow::onNewFrame()
     vector<Rect> faces;
     faceDetector->detection(frame, faces);
 
-    if (!faces.empty())
+    bool detectedState = !faces.empty();
+    if (controller != NULL && detectedState != lastDetectedState)
+    {
+        controller->setDetectedState(detectedState);
+    }
+    lastDetectedState = detectedState;
+
+    if (detectedState)
     {
         DrawElement::drawRectangle(frame, faces);
         Rect biggestFace = *std::max_element(faces.begin(), faces.end(), [](const Rect a, const Rect b) { return a.area() < b.area(); });
@@ -121,7 +138,7 @@ void MainWindow::onStartCameraClicked()
 {
     camera = new WebCam(0);
     calibrateCamera();
-    timer.start(20);
+    timer.start(50);
     updateUiState();
 }
 

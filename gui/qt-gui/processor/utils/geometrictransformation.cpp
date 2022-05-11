@@ -93,3 +93,23 @@ Mat rotBetweenVectors(const Mat &v1, const Mat &v2)
     Rodrigues(rotationVector, rotationMatrix);
     return rotationMatrix;
 }
+
+Mat rotationAroundX(double theta)
+{
+    double s = sin(theta);
+    double c = cos(theta);
+    return (Mat_<double>(3, 3)
+          << 1, 0, 0,
+             0, c, -s,
+             0, s, c);
+}
+
+Mat rotationAroundY(double theta)
+{
+    double s = sin(theta);
+    double c = cos(theta);
+    return (Mat_<double>(3, 3)
+          << c, 0, s,
+             0, 1, 0,
+             -s, 0, c);
+}

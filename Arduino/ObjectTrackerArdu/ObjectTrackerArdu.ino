@@ -34,9 +34,6 @@ void loop() {
       digitalWrite(LEDG_PIN, LOW);
     } else if (serialReceived.equals("calibration_on")) {
       digitalWrite(LEDY_PIN, HIGH);
-      delay(1000);
-      digitalWrite(LEDY_PIN, LOW);
-      delay(1000); 
     } else if (serialReceived.equals("calibration_off")) {
       digitalWrite(LEDY_PIN, LOW);
     } else if (serialReceived.equals("disconnect")) {

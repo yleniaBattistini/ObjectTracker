@@ -23,30 +23,25 @@ void ComputePose::computePose(Mat &frame, Mat &output, vector<Point2f> imagePoin
     solvePnP(objectPoints, imagePointsVec, cameraMatrix, distortionCoefficients, rotVec, t);
     Rodrigues(rotVec, R); //trasforma il vettore 3*1 in una matrice di rotazione 3*3
 
-    // centro dell'oggetto: (0,0,0)
-    // posizione della telecamera: t
-
-    Mat forward = (Mat_<double>(3, 1) << 0.0, 0.0, 1.0);
     Mat inverseR = R.inv();
-    Mat transformedPosition = inverseR * (-t);
-    Mat rotationToPointToObject = rotBetweenVectors(transformedPosition, forward);
 
-    Mat euler = rot2euler(rotationToPointToObject);
-    euler.at<double>(2) = 0.0;
-    Mat targetRotation = euler2rot(euler).inv();
-
-    Mat restoredPosition = (R * targetRotation * transformedPosition) + t;
+    double tx = t.at<double>(0);
+    double ty = t.at<double>(1);
+    double tz = t.at<double>(2);
+    double distance = norm(t, NORM_L2);
+    double thetaY = -atan2(tx, tz);
+    double thetaX = atan2(ty, distance);
+    Mat targetRotation = rotationAroundY(thetaY) * rotationAroundX(thetaX);
 
     vector<Point3f> transformedObjectPoints;
     for (Point3f &p : this->objectPoints)
     {
-        Mat pointMatrix = (Mat_<double>(3, 1) << p.x, p.y, p.z);
-        Mat transformation = R * targetRotation * inverseR;
-        Mat offsetted = pointMatrix - t;
+        Mat point = (Mat_<double>(3, 1) << p.x, p.y, p.z);
+        Mat coordinatesInCameraWorld = (R * point) + t;
+        Mat transformed = targetRotation * coordinatesInCameraWorld;
+        Mat coordinatesInObjectWorld = inverseR * (transformed - t);
 
-        Mat x = transformation * offsetted;
-        Mat transformed = x + t;
-        transformedObjectPoints.push_back(Point3f(transformed));
+        transformedObjectPoints.push_back(Point3f(coordinatesInObjectWorld));
     }
 
     vector<Point2f> projectedPoints;

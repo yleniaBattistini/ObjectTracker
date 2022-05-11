@@ -24,13 +24,6 @@ FaceDetection::FaceDetection(): scale(1)
 
 void FaceDetection::detection(Mat& image, vector<Rect> &faces)
 {
-    cout << "Face Detection Started.." << endl;
-
-    if (image.empty())
-    {
-        throw std::runtime_error("Empty image");
-    }
-
     Mat gray;
     cvtColor(image, gray, COLOR_BGR2GRAY);
     equalizeHist(gray, gray);

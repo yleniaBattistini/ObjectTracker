@@ -39,6 +39,7 @@ private:
     HoughTransform *houghTransform;
     ComputePose *computePose;
     QTimer timer;
+    bool lastDetectedState = false;
 
 
     AspectRatioLabel *rawImageViewer;
