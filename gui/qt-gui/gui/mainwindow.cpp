@@ -11,8 +11,10 @@
 #include <QPixmap>
 #include <QSizePolicy>
 #include "displayutils.h"
+#include <QElapsedTimer>
 #include <algorithm>
 #include <initializer_list>
+#include <QDebug>
 
 using namespace std;
 
@@ -67,6 +69,7 @@ void MainWindow::updateUiState()
     ui->btnDisconnectArduino->setVisible(controller != NULL);
     ui->cmbSerialPort->setEnabled(controller == NULL);
     ui->cmbDetectionType->setVisible(camera != NULL);
+    ui->chkRemoveDistortion->setVisible(camera != NULL);
 }
 
 void MainWindow::calibrateCamera()
@@ -88,8 +91,11 @@ void MainWindow::calibrateCamera()
 
 void MainWindow::onNewFrame()
 {
+    QElapsedTimer eTimer;
+
+    eTimer.start();
     Mat frame;
-    camera->acquireNextFrame(frame);
+    camera->acquireNextFrame(frame, ui->chkRemoveDistortion->isChecked());
     rawImageViewer->setOpencvImage(frame);
 
     Mat warpedFrame;
@@ -113,7 +119,10 @@ void MainWindow::onNewFrame()
     if (detectedState)
     {
         DrawElement::drawRectangle(frame, rectangles);
-        Rect biggestRect = *std::max_element(rectangles.begin(), rectangles.end(), [](const Rect a, const Rect b) { return a.area() < b.area(); });
+        Rect biggestRect = *std::max_element(rectangles.begin(), rectangles.end(), [](const Rect a, const Rect b)
+        {
+            return a.area() < b.area();
+        });
 
         float x = (float) biggestRect.x;
         float y = (float) biggestRect.y;
@@ -129,10 +138,7 @@ void MainWindow::onNewFrame()
     }
     poseController.applyRotationToFrame(frame, warpedFrame);
     processedImageViewer->setOpencvImage(warpedFrame);
-
-//     Mat imageHough;
-//     houghTransform->houghTransform(frame, imageHough, computePose);
-//     processedImageViewer->setOpencvImage(imageHough);
+    qDebug() << "Elapsed time: " << eTimer.elapsed() << "ms";
 }
 
 void MainWindow::onStartCameraClicked()

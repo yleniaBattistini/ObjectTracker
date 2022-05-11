@@ -148,7 +148,7 @@ void CalibrationDialog::openFolder(QString folderName)
 
 void CalibrationDialog::onNewFrame()
 {
-    camera->acquireNextFrame(currentFrame, true);
+    camera->acquireNextFrame(currentFrame);
     currentCorners.clear();
     patternFoundOnCurrentFrame = calibrationProcess.detectPattern(currentFrame, currentCorners);
     if (patternFoundOnCurrentFrame)

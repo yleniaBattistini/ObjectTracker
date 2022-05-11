@@ -15,7 +15,6 @@ class FaceDetection
 {
 private:
     CascadeClassifier cascade = cv::CascadeClassifier();
-    double scale;
 
 public:
     FaceDetection();

@@ -6,14 +6,13 @@ Camera::~Camera()
 {
 }
 
-void Camera::acquireNextFrame(Mat &frame, bool ignoreCalibration)
+void Camera::acquireNextFrame(Mat &frame, bool removeDistortion)
 {
-    if (calibrated && !ignoreCalibration)
+    if (calibrated && removeDistortion)
     {
         Mat rawFrame;
         readNextFrame(rawFrame);
         undistort(rawFrame, frame, cameraMatrix, distortionCoefficients);
-        this->undistortedFrame = frame;
     }
     else
     {
