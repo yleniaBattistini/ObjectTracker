@@ -12,14 +12,12 @@
 
 #define INITIAL_SQUARE_SIZE 50.0
 
-CalibrationDialog::CalibrationDialog(Camera *camera, ComputePose *computePose, QWidget *parent) :
+CalibrationDialog::CalibrationDialog(Camera *camera, PoseController *poseController, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CalibrationDialog),
     camera(camera),
     calibrationProcess(CalibrationProcess(INITIAL_SQUARE_SIZE)),
-    computePose(computePose)
-
-
+    poseController(poseController)
 {
     ui->setupUi(this);
     timer.start(50);
@@ -219,7 +217,7 @@ void CalibrationDialog::onRunCalibrationClicked()
     Mat distortionCoefficients;
     calibrationProcess.getCalibrationResult(cameraMatrix, distortionCoefficients);
     camera->calibrate(cameraMatrix, distortionCoefficients);
-    computePose->setComponent(cameraMatrix, distortionCoefficients);
+    poseController->setCalibration(cameraMatrix, distortionCoefficients);
     close();
 }
 

@@ -10,7 +10,7 @@ using namespace cv;
 class HoughTransform
 {
 public:
-    static void houghTransform(Mat& input, Mat& output, ComputePose *cp);
+    static void houghTransform(Mat& input, vector<Rect> &circles);
 };
 
 #endif // HOUGHTRANSFORM_H

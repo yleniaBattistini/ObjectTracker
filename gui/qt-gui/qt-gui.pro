@@ -21,6 +21,7 @@ SOURCES += \
     processor/facedetection.cpp \
     processor/houghtransform.cpp \
     processor/imageprocessor.cpp        \
+    processor/posecontroller.cpp \
     processor/testprocessor.cpp         \
     processor/utils/computepose.cpp \
     processor/utils/drawelement.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     processor/facedetection.h \
     processor/houghtransform.h \
     processor/imageprocessor.h          \
+    processor/posecontroller.h \
     processor/testprocessor.h           \
     processor/utils/computepose.h \
     processor/utils/drawelement.h \

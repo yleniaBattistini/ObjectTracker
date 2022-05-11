@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w(new TestProcessor(), new FaceDetection(), new HoughTransform(), new ComputePose());
+    MainWindow w(new FaceDetection());
     w.show();
     return a.exec();
 }

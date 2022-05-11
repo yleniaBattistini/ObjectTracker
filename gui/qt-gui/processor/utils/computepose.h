@@ -10,17 +10,14 @@
 using namespace std;
 using namespace cv;
 
-class ComputePose
-{
-private:
-    Mat cameraMatrix, distortionCoefficients, undistortedFrame;
-    vector<Point3f> objectPoints;
-
-public:
-    ComputePose();
-    void setComponent(Mat K, Mat& distCoeff);
-    void computePose(Mat &frame, Mat &output, vector<Point2f> imagePointsVec);
-
-};
+void computePose(
+        const Mat &cameraMatrix,
+        const Mat &distortionCoefficients,
+        const vector<Point3f> &objectPoints,
+        const vector<Point2f> &imagePoints,
+        Mat &t,
+        Mat &rotVec,
+        double &thetaX,
+        double &thetaY);
 
 #endif // COMPUTEPOSE_H

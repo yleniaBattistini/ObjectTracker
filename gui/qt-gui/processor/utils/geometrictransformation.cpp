@@ -113,3 +113,8 @@ Mat rotationAroundY(double theta)
              0, 1, 0,
              -s, 0, c);
 }
+
+double linearInterpolation(double a, double b, double percentage)
+{
+    return a + percentage * (b - a);
+}

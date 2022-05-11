@@ -18,11 +18,7 @@ using namespace std;
 class DrawElement
 {
 public:
-    static void drawRectangle(Mat& output, vector<Rect>& faces);
-
-    static void drawCircle(Mat& output, vector<Rect>& faces);
-
-    static void circleToRectangle(vector<Vec3f> circles, Mat& output);
+    static void drawRectangle(Mat& output, vector<Rect>& rectangles);
 };
 
 #endif // DRAWELEMENT_H

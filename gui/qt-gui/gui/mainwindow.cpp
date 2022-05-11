@@ -16,14 +16,11 @@
 
 using namespace std;
 
-MainWindow::MainWindow(ImageProcessor *processor, FaceDetection *faceDetector, HoughTransform *houghTransform, ComputePose *computePose, QWidget *parent) : QMainWindow(parent),
+MainWindow::MainWindow(FaceDetection *faceDetector, QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow),
     camera(NULL),
     controller(NULL),
-    processor(processor),
-    faceDetector(faceDetector),
-    houghTransform(houghTransform),
-    computePose(computePose)
+    faceDetector(faceDetector)
 {
     ui->setupUi(this);
 
@@ -69,6 +66,7 @@ void MainWindow::updateUiState()
     ui->btnConnectArduino->setVisible(controller == NULL);
     ui->btnDisconnectArduino->setVisible(controller != NULL);
     ui->cmbSerialPort->setEnabled(controller == NULL);
+    ui->cmbDetectionType->setVisible(camera != NULL);
 }
 
 void MainWindow::calibrateCamera()
@@ -78,7 +76,7 @@ void MainWindow::calibrateCamera()
         controller->setCalibrationState(true);
     }
 
-    CalibrationDialog calibrationDialog(camera, computePose);
+    CalibrationDialog calibrationDialog(camera, &poseController);
     calibrationDialog.setWindowTitle("Calibration");
     calibrationDialog.exec();
 
@@ -94,11 +92,18 @@ void MainWindow::onNewFrame()
     camera->acquireNextFrame(frame);
     rawImageViewer->setOpencvImage(frame);
 
-    Mat imageComputePose;
-    vector<Rect> faces;
-    faceDetector->detection(frame, faces);
+    Mat warpedFrame;
+    vector<Rect> rectangles;
+    if (ui->cmbDetectionType->currentText().compare("Face Detection") == 0)
+    {
+        faceDetector->detection(frame, rectangles);
+    }
+    else
+    {
+        HoughTransform::houghTransform(frame, rectangles);
+    }
 
-    bool detectedState = !faces.empty();
+    bool detectedState = !rectangles.empty();
     if (controller != NULL && detectedState != lastDetectedState)
     {
         controller->setDetectedState(detectedState);
@@ -107,27 +112,23 @@ void MainWindow::onNewFrame()
 
     if (detectedState)
     {
-        DrawElement::drawRectangle(frame, faces);
-        Rect biggestFace = *std::max_element(faces.begin(), faces.end(), [](const Rect a, const Rect b) { return a.area() < b.area(); });
+        DrawElement::drawRectangle(frame, rectangles);
+        Rect biggestRect = *std::max_element(rectangles.begin(), rectangles.end(), [](const Rect a, const Rect b) { return a.area() < b.area(); });
 
-        float x = (float) biggestFace.x;
-        float y = (float) biggestFace.y;
-        float w = (float) biggestFace.width;
-        float h = (float) biggestFace.height;
+        float x = (float) biggestRect.x;
+        float y = (float) biggestRect.y;
+        float w = (float) biggestRect.width;
+        float h = (float) biggestRect.height;
         vector<Point2f> corners = {
             Point2f(x, y + h),
             Point2f(x, y),
             Point2f(x + w, y + h),
             Point2f(x + w, y)
         };
-
-        computePose->computePose(frame, imageComputePose, corners);
-        processedImageViewer->setOpencvImage(imageComputePose);
+        poseController.setObjectPose(corners);
     }
-    else
-    {
-        processedImageViewer->setOpencvImage(frame);
-    }
+    poseController.applyRotationToFrame(frame, warpedFrame);
+    processedImageViewer->setOpencvImage(warpedFrame);
 
 //     Mat imageHough;
 //     houghTransform->houghTransform(frame, imageHough, computePose);
