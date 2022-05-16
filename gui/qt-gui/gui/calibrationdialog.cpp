@@ -98,13 +98,12 @@ void CalibrationDialog::saveInFolder(QString folderName)
     fs << "SquareSize" << (double) calibrationProcess.getSquareSize();
     fs << "NumberOfViews" << (int) views.size();
 
-    dir.cd(VIEWS_FOLDER_NAME);
-
-    if (dir.exists())
+    if (dir.exists(VIEWS_FOLDER_NAME))
     {
+        dir.cd(VIEWS_FOLDER_NAME);
         dir.removeRecursively();
+        dir.cdUp();
     }
-    dir.cdUp();
     dir.mkdir(VIEWS_FOLDER_NAME);
     dir.cd(VIEWS_FOLDER_NAME);
     for (int i = 0; i < views.size(); i++)

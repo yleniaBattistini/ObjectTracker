@@ -6,7 +6,6 @@
 
 #include <model/controller.h>
 
-#include <processor/imageprocessor.h>
 #include <processor/facedetection.h>
 #include <processor/houghtransform.h>
 #include <gui/aspectratiolabel.h>

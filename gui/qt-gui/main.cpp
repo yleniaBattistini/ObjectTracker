@@ -4,7 +4,6 @@
 
 #include <model/webcam.h>
 
-#include <processor/testprocessor.h>
 #include <processor/utils/computepose.h>
 
 int main(int argc, char *argv[])
