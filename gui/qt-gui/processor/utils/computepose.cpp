@@ -20,6 +20,6 @@ void computePose(
     double ty = t.at<double>(1);
     double tz = t.at<double>(2);
     double distance = norm(t, NORM_L2);
-    thetaY = -atan2(tx, tz);
     thetaX = atan2(ty, distance);
+    thetaY = -atan2(tx, tz);
 }

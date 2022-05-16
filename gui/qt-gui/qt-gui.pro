@@ -20,9 +20,7 @@ SOURCES += \
     model/webcam.cpp                    \
     processor/facedetection.cpp \
     processor/houghtransform.cpp \
-    processor/imageprocessor.cpp        \
     processor/posecontroller.cpp \
-    processor/testprocessor.cpp         \
     processor/utils/computepose.cpp \
     processor/utils/drawelement.cpp \
     processor/utils/geometrictransformation.cpp \
@@ -43,9 +41,7 @@ HEADERS += \
     model/webcam.h                      \
     processor/facedetection.h \
     processor/houghtransform.h \
-    processor/imageprocessor.h          \
     processor/posecontroller.h \
-    processor/testprocessor.h           \
     processor/utils/computepose.h \
     processor/utils/drawelement.h \
     processor/utils/geometrictransformation.h \
@@ -78,6 +74,3 @@ LIBS += -L$$(OPENCV_DIR)/x64/vc16/lib         \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-
-

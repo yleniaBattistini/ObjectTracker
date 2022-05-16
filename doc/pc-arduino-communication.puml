@@ -7,15 +7,12 @@ participant "Arduino" as arduino
 pc -> arduino : ping
 arduino -> pc : ack
 
-== Mode update ==
-pc -> arduino : mode_manual
-arduino -> pc : ack
-pc -> arduino : mode_auto
-arduino -> pc : ack
-
 == State updates ==
 pc -> arduino : detected
 pc -> arduino : not_detected
+
+pc -> arduino : calibration_on
+pc -> arduino : calibration_off
 
 == Disconnection ==
 pc -> arduino : disconnect
