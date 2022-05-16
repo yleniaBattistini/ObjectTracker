@@ -91,9 +91,6 @@ void MainWindow::calibrateCamera()
 
 void MainWindow::onNewFrame()
 {
-    QElapsedTimer eTimer;
-
-    eTimer.start();
     Mat frame;
     camera->acquireNextFrame(frame, ui->chkRemoveDistortion->isChecked());
     rawImageViewer->setOpencvImage(frame);
@@ -138,7 +135,6 @@ void MainWindow::onNewFrame()
     }
     poseController.applyRotationToFrame(frame, warpedFrame);
     processedImageViewer->setOpencvImage(warpedFrame);
-    qDebug() << "Elapsed time: " << eTimer.elapsed() << "ms";
 }
 
 void MainWindow::onStartCameraClicked()
