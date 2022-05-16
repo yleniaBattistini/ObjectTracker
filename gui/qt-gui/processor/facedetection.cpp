@@ -2,16 +2,21 @@
 #include<iostream>
 #include<stdlib.h>
 #include<vector>
-#include<direct.h>
 #include<QtCore/QDir>
+#include <QDir>
+
+#include <QProcessEnvironment>
 
 using namespace cv;
 using namespace std;
 
 FaceDetection::FaceDetection()
 {
-    string my_path = "C:/Users/dente/OneDrive/Desktop/Immagini/ObjectTracker/gui/qt-gui/haarcascade_frontalface_default.xml";
-    if (!cascade.load(my_path))
+    QDir dir = QDir(QProcessEnvironment::systemEnvironment().value("OPENCV_DIR"));
+    dir.cd("etc");
+    dir.cd("haarcascades");
+    QString filePath = dir.filePath("haarcascade_frontalface_default.xml");
+    if (!cascade.load(filePath.toStdString()))
     {
         throw std::runtime_error("File not loaded");
     }
