@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <opencv2/imgcodecs.hpp>
+#include <QMessageBox>
 
 #define INITIAL_SQUARE_SIZE 50.0
 
@@ -212,12 +213,18 @@ void CalibrationDialog::onRemoveViewClicked()
 
 void CalibrationDialog::onRunCalibrationClicked()
 {
+    if (views.empty())
+    {
+        QMessageBox::information(this, "Error", "At least one view is necessary", QMessageBox::Ok);
+        return;
+    }
+
     Mat cameraMatrix;
     Mat distortionCoefficients;
     calibrationProcess.getCalibrationResult(cameraMatrix, distortionCoefficients);
     camera->calibrate(cameraMatrix, distortionCoefficients);
     poseController->setCalibration(cameraMatrix, distortionCoefficients);
-    close();
+    accept();
 }
 
 void CalibrationDialog::onSquareSizeChanged(double newValue)

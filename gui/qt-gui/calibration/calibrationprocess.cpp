@@ -95,9 +95,6 @@ void CalibrationProcess::recomputeCalibration()
         return;
     }
 
-    cameraMatrix = Mat::eye(3, 3, CV_64F);
-    distortionCoefficients = Mat::zeros(8, 1, CV_64F);
-
     vector<vector<Point3f>> objectPoints;
     objectPoints.resize(cornersPerView.size(), cornerPositions);
 

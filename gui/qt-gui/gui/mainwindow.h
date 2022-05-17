@@ -43,7 +43,7 @@ private:
     AspectRatioLabel *processedImageViewer;
 
     void updateUiState();
-    void calibrateCamera();
+    bool calibrateCamera();
 
 private slots:
     void onNewFrame();

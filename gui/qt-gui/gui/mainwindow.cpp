@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <QDebug>
+#include <QMessageBox>
 
 using namespace std;
 
@@ -72,7 +73,7 @@ void MainWindow::updateUiState()
     ui->chkRemoveDistortion->setVisible(camera != NULL);
 }
 
-void MainWindow::calibrateCamera()
+bool MainWindow::calibrateCamera()
 {
     if (controller != NULL)
     {
@@ -81,12 +82,14 @@ void MainWindow::calibrateCamera()
 
     CalibrationDialog calibrationDialog(camera, &poseController);
     calibrationDialog.setWindowTitle("Calibration");
-    calibrationDialog.exec();
+    int result = calibrationDialog.exec();
 
     if (controller != NULL)
     {
         controller->setCalibrationState(false);
     }
+
+    return result == QDialog::Accepted;
 }
 
 void MainWindow::onNewFrame()
@@ -140,7 +143,12 @@ void MainWindow::onNewFrame()
 void MainWindow::onStartCameraClicked()
 {
     camera = new WebCam(0);
-    calibrateCamera();
+    if (!calibrateCamera())
+    {
+        delete camera;
+        camera = NULL;
+        return;
+    }
     timer.start(50);
     updateUiState();
 }
